@@ -1,0 +1,22 @@
+{
+  "name": "hemera-node",
+  "version": "1.0.0",
+  "description": "全程工作台web应用",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.quancheng-ec.com:applications/hemera-node.git"
+  },
+  "keywords": [
+    "node",
+    "koa"
+  ],
+  "author": "jiaoyingjun",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.0.0"
+  }
+}
