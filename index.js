@@ -4,6 +4,12 @@
 
 'use strict';
 
-require('babel-register')();
+require('babel-register')({
+    "plugins": [
+        "transform-async-to-generator",
+        "transform-es2015-modules-commonjs"
+    ]
+});
 
-const app = require('./src/app')({root:__dirname+"/static"});
+const app = require('./server/app');
+app.call({}, {root: __dirname});
