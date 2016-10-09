@@ -1,44 +1,35 @@
 {
-  "name": "hemera-node",
-  "version": "1.0.0",
-  "description": "全程工作台web应用",
+  "name": "pomjs",
+  "version": "0.0.2",
+  "description": "Module Solution base on Vue ",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=development webpack --progress --hide-modules",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "server": "cross-env NODE_ENV=production webpack --config ./webpack.server.config.js --progress --hide-modules"
-  },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.quancheng-ec.com:applications/hemera-node.git"
+    "url": "git@github.com:quancheng-ec/pomjs.git"
   },
   "keywords": [
-    "node",
+    "module",
+    "vue",
     "koa"
   ],
-  "author": "jiaoyingjun",
-  "license": "ISC",
+  "license": "AGPL-3.0",
+  "author": "yingjunjiao",
   "dependencies": {
     "babel-plugin-transform-async-to-generator": "6.8.0",
     "babel-plugin-transform-es2015-modules-commonjs": "6.14.0",
     "babel-preset-es2015-generators-async": "6.3.13",
     "babel-register": "6.14.0",
     "glob-fs": "0.1.6",
-    "google-protobuf": "3.0.0",
-    "grpc": "1.0.0",
     "koa": "2.0.0",
     "koa-bodyparser": "3.2.0",
     "koa-convert": "1.2.0",
     "koa-csrf": "3.0.3",
     "koa-session2": "1.0.8",
     "koa-static": "2.0.0",
-    "lodash": "4.6.1",
-    "minimist": "1.2.0",
-    "vue": "2.0.0-rc.7",
+    "vue": "^2.0.1",
     "vue-resource": "^1.0.3",
-    "vue-server-renderer": "2.0.0-rc.7",
-    "vuex": "^1.0.0-rc.2"
+    "vue-server-renderer": "^2.0.1",
+    "vuex": "^1.0.0"
   },
   "devDependencies": {
     "babel-loader": "6.2.5",
@@ -47,6 +38,7 @@
     "cross-env": "1.0.6",
     "css-loader": "0.23.1",
     "file-loader": "0.8.4",
+    "memory-fs": "^0.3.0",
     "vue-loader": "9.5.0",
     "webpack": "2.1.0-beta.22",
     "webpack-dev-server": "2.1.0-beta.0"

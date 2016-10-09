@@ -4,7 +4,7 @@ var webpack = require('webpack')
 module.exports = {
     target: 'node', // !different
 
-    entry: {index: './pages/index/server-entry.js'},
+    entry: {main: './pages/main.js'},
     output: {
         path: path.resolve(__dirname, './dist/'),
         publicPath: '/dist/',
