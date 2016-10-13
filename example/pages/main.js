@@ -1,18 +1,9 @@
 import Vue from 'vue'
-//import VueResource from 'vue-resource'
-
-
-//Vue.use(VueResource);
-
-
-Vue.mixin({
-
-})
 
 
 export default function (context) {
 
-    let View = require('./' + context._page + '/App.vue');
+    let View = require('./' + context.pageContext.pageName + '/App.vue');
 
     const app = new Vue(Object.assign(View, {
         data() {
@@ -20,7 +11,7 @@ export default function (context) {
         },
         mounted: function () {
         }
-    })).$mount('#wrapper');
+    }));
 
     return Promise.resolve(app);
 };

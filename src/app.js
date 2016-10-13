@@ -2,6 +2,7 @@
  * Created by joe on 16/9/22.
  */
 
+
 const Koa = require('koa');
 const convert = require('koa-convert');
 const bodyParser = require('koa-bodyparser');
@@ -13,17 +14,27 @@ import session from "koa-session2";
 import httpWrap from './middleware/httpWrap'
 import route from './middleware/route'
 import render from './render'
+import error from './middleware/error'
 
 const app = new Koa();
 const serve = require('koa-static');
 
 var root = {};
 
-module.exports = function (opts) {
+module.exports = function (opts = {}) {
 
+    if (!opts.root) {
+        const index = __dirname.indexOf('node_modules');
+        if (index != -1) {
+            opts.root = __dirname.substring(0, index);
+        } else {
+            throw new Error('the opts.root can not null');
+        }
+    }
     root = opts.root;
 
-    const staticPath = Path.join(root, '../static');
+
+    const staticPath = opts.static || Path.join(root, 'static');
 
     app.use(convert(serve(staticPath)));
 
@@ -57,18 +68,7 @@ module.exports = function (opts) {
         ctx.set('X-Response-Time', `${ms}ms`);
     });
 
-    app.use(async(ctx, next) => {
-        try {
-            await next();
-        } catch (err) {
-            // will only respond with JSON
-            ctx.status = err.statusCode || err.status || 500;
-            ctx.body = {
-                message: err.message
-            };
-            console.error(err);
-        }
-    });
+    app.use(error());
 
     app.use(httpWrap());
     app.use(route(opts));

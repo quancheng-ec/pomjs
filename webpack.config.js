@@ -2,7 +2,7 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-    entry: {index: './pages/index/app.js'},
+    entry: {main: './pages/main.js'},
     output: {
         path: path.resolve(__dirname, '../static/dist/'),
         publicPath: '/dist/',

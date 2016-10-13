@@ -11,7 +11,7 @@ export default class Index {
 
     view(ctx) {
         // console.log(123);
-        console.log(this.href);
+        console.log("111"+this.href);
 
         this.result = {
             bb: 123
@@ -19,7 +19,7 @@ export default class Index {
         };
         return {
             title:"全程工作台",
-            msg: 'success',
+            msg: 'login success',
             text:"服务器渲染成功!!!"
         }
 

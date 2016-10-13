@@ -1,7 +1,7 @@
 <template>
     <div id="wrapper">
 
-        <h1>页面2! {{ msg }} 测试更新!!!</h1>
+        <h1>登陆页面! {{ msg }}</h1>
 
         <h2>{{ text }}</h2>
     </div>

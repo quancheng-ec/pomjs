@@ -1,86 +1,105 @@
 /**
- * 定义API解析、调用,只处理 后缀为.json 并且 method为get
+ * 处理Route模块，并执行Control逻辑
  *
- * 系统自动查找api的目录,默认查找应用根目录下的 server/api
- *
- * api url 规则:
- *   http://domain:port/xxx.json route 到  server/api/index.js -> xxx function
- *   http://domain:port/aaa/xxx.json route 到  server/api/aaa.js
  * Created by joe on 16/9/23.
  */
 
-import fs from 'fs';
 import Path from 'path';
-const apis = {};
-const apiFiles = {};
-const glob = require('glob-fs')({gitignore: true});
+
+const pageLoader = require('../util/pageLoader');
+
+const DEFAULT_NAME = 'index.js';
+const DEFAULT_FILE = 'index/index.js';
 
 
 export default function (opts = {}) {
 
-    const files = glob.readdirSync('/pages/*/index.js');
 
-    files.forEach(function (f) {
-        let a = Path.join(opts.root, f);
-        apiFiles[a] = true;
-    });
+    const pageDir = opts.page || Path.join(opts.root, 'pages');
 
+    pageLoader.init(pageDir);
+    pageLoader.findPage();
 
     return async function (ctx, next) {
-        const path = ctx.path, ext = "";
+        let reqPath = ctx.path, ext = "";
 
-        // 请求路径 /view.html ==> view
-        const viewPath = path.substring(1, path.length - 5);
-        //请求后缀 html
-        const viewExt = path.substring(path.length - 4);
-
-        if ((viewExt !== 'json' && viewExt !== 'html') || viewPath === '') {
+        if (reqPath.indexOf('.') !== -1) {
             await next();
             return;
         }
 
-        if (viewExt === 'html') {
-            ctx.type = 'text/html; charset=utf-8';
-        }
 
-        let filePath = opts.root + "/pages/";
-        let action = viewPath;
-        let page = 'index';
-        if (viewPath.indexOf('/') == -1) {
-            filePath += 'index/index.js';
+        let pageName = 'index', pagePath, controlPath, action, type = 'render';
+
+        if (reqPath === '/' || reqPath === '') {
+            controlPath = Path.join(pageDir, 'index/index.js');
+            pagePath = Path.join(pageDir, pageName);
+            action = 'view';
         } else {
-            page = viewPath.substring(0, viewPath.indexOf('/'));
-            filePath += page + '/index.js';
-            action = viewPath.substring(viewPath.indexOf('/') + 1);
+            if (reqPath.endsWith('/')) {
+                //去掉末尾的 ／
+                reqPath = reqPath.substring(0, reqPath.length - 1);
+            }
+
+            // 请求路径 /api/xxxx,执行api操作
+            // 如 /api/user/get 需要找到 pages/user/index.js.get()
+            // /api/user pages/index.js.user()
+
+            let parrs;
+            if (reqPath.startsWith('/api/')) {
+                type = 'api';
+                parrs = reqPath.substring(5).split('/');
+            } else {
+                parrs = reqPath.substring(1).split('/');
+            }
+
+            if (parrs.length === 1) {
+                controlPath = Path.join(pageDir, DEFAULT_FILE);
+                pagePath = Path.join(pageDir, pageName);
+                action = parrs[0];
+            } else if (parrs.length === 2) {
+                controlPath = Path.join(pageDir, parrs[0], DEFAULT_NAME);
+                pagePath = Path.join(pageDir, parrs[0]);
+                pageName = parrs[0];
+                action = parrs[1];
+            } else {
+                let e = new Error('the path:' + ctx.path + ' not found!');
+                e.statusCode = 404;
+                throw e;
+            }
         }
 
-        let api = apis[filePath];
-        if (!api) {
-            if (fs.existsSync(filePath)) {
-                //api = apis[filePath] = new (require(filePath)).default();
-                delete require.cache[filePath];
-                api =  new (require(filePath)).default();
-            } else {
-                await next();
-                return;
-            }
+        const control = pageLoader.getAPI(controlPath, action);
+
+        if (!control) {
+            await next();
+            return;
         }
 
         ctx.status = 200;
 
         const context = Object.assign({}, ctx._httpContext);
 
-        let result = api[action].call(context, ctx);
+        let result = control.call(context, ctx);
 
-        if (typeof result === 'object') {
-            if (viewExt === 'json') {
-                ctx.body = JSON.stringify(result);
-                return;
-            } else {
-                ctx._context = result;
-                ctx._page = page;
-            }
+        if (typeof result !== 'object') {
+            let e = new Error('the ' + api + ' result must be Object');
+            e.statusCode = 500;
+            throw e;
         }
+
+        if (type === 'api') {
+            ctx.body = JSON.stringify(result);
+            return;
+        }
+
+        ctx.context = Object.assign({}, {
+            context: context, pageContext: {
+                pagePath: pagePath,
+                pageName: pageName,
+                pageAction: action
+            }
+        }, result);
 
         await next();
     }

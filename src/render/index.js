@@ -4,6 +4,7 @@
 
 
 import fs from 'fs';
+const Path = require('path');
 const renderer = require('vue-server-renderer').createRenderer();
 //
 //
@@ -35,7 +36,6 @@ const serverCompileRun = function (compile) {
             if (err) return reject(err);
 
 
-
             console.log(stats.toString({
                 chunks: false, // Makes the build much quieter
                 colors: true
@@ -46,40 +46,56 @@ const serverCompileRun = function (compile) {
     });
 };
 
+
+const pageLoader = require('../util/pageLoader');
+
+
 export default function (opts = {}) {
+
+    const layouts = opts.layouts || Path.join(opts.root, "layouts");
+
+    serverConfig.entry = pageLoader.getServerEntry();
+
 
     const serverCompiler = webpack(serverConfig);
     serverCompiler.outputFileSystem = serverFs;
 
+    let stats;
+    serverCompileRun(serverCompiler).then(function (f) {
+        stats = f;
+    }).catch(function (error) {
+        console.error(error);
+    });
+
     return async function (ctx, next) {
 
-        if (!ctx._page) {
+        if (!ctx.context) {
             await next();
             return;
         }
 
-        let body = fs.readFileSync(opts.root + "/layouts/default.html").toString();
+        const pageContext = ctx.context.pageContext;
 
-        body = body.replace('{{ title }}', ctx._context.title || "hello pomjs!");
+        let body = fs.readFileSync(Path.join(layouts, "default.html")).toString();
 
-        const contextData = "var __vue_context_data=" + JSON.stringify(ctx._context) + ";";
+        body = body.replace('{{ title }}', ctx.context.title || "hello pomjs!");
 
-        const sr = " <script>" + contextData + "</script>\n <script src='/dist/" + ctx._page + ".bundle.js'></script>";
+        const contextData = "var __vue_context_data=" + JSON.stringify(ctx.context) + ";";
+
+        const sr = " <script>" + contextData + "</script>\n <script src='/dist/" + pageContext.pageName + ".bundle.js'></script>";
         body = body.replace('{{ page.js }}', sr);
 
+        if (process.env.NODE_ENV !== 'production') {
+            stats = await serverCompileRun(serverCompiler);
+        }
+        const renderJS = stats.compilation.assets[pageContext.pageName+'.bundle.js'].existsAt;//serverCompiler.outputPath+"/main.bundle.js";
 
-       const stats = await serverCompileRun(serverCompiler);
-
-
-        ctx._context._page = ctx._page;
-
-        const renderJS = stats.compilation.assets['main.bundle.js'].existsAt;//serverCompiler.outputPath+"/main.bundle.js";
-
-        const html = await renderPromise(serverFs.readFileSync(renderJS, 'utf8'), ctx._context);
+        const html = await renderPromise(serverFs.readFileSync(renderJS, 'utf8'), ctx.context);
 
         body = body.replace('{{ html }}', html);
         ctx.body = body;
 
+        ctx.type = 'text/html; charset=utf-8';
 
     }
 }
