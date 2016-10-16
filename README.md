@@ -52,8 +52,8 @@ http://localhost/api/user/get --》pages/user/index.js get()
 
 ```
 
-http://localhost/user/login --》pages/user/index.js.login() + pages/user/login.vue
-http://localhost/user|/ --》pages/index/index.js.user() + pages/index/user.vue
+http://localhost/user/login --》pages/user/render.js.login() + pages/user/login.vue
+http://localhost/user|/ --》pages/index/render.js.user() + pages/index/user.vue
 
 ```
 

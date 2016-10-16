@@ -10,7 +10,7 @@
 module.exports = function (opts = {}) {
 
 
-    return async function (ctx, next) {
+    return async function http(ctx, next) {
 
         const context = {
             url: ctx.url,

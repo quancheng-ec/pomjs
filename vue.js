@@ -8,8 +8,8 @@ export default function (context) {
     let View = require('./' + action + '.vue');
 
     const app = new Vue(Object.assign(View, {
-        data() {
-            return context
+        data:function(){
+            return context;
         },
         mounted: function () {
         }

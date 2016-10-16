@@ -11,10 +11,11 @@ const Path = require('path');
 
 import CSRF from 'koa-csrf'
 import session from "koa-session2";
-import httpWrap from './middleware/httpWrap'
-import route from './middleware/route'
-import render from './render'
-import error from './middleware/error'
+import httpWrap from './middleware/http';
+import route from './middleware/route';
+import render from './middleware/render';
+import error from './middleware/error';
+import bundle from './middleware/bundle';
 
 const app = new Koa();
 const serve = require('koa-static');
@@ -32,16 +33,11 @@ module.exports = function (opts = {}) {
         }
     }
     root = opts.root;
-
-
     const staticPath = opts.static || Path.join(root, 'static');
 
-    app.use(convert(serve(staticPath)));
-
-
+    app.use(convert(serve(staticPath, {maxage: 60 * 60 * 24 * 365})));
     // set the session keys
     app.keys = ['qc'];
-
     // add session support
     app.use(session({
         key: "SESSIONID"   //default "koa:sess"
@@ -69,12 +65,10 @@ module.exports = function (opts = {}) {
     });
 
     app.use(error());
-
     app.use(httpWrap());
+    app.use(bundle())
     app.use(route(opts));
-
     app.use(render(opts));
-
 
     app.listen(3000);
 

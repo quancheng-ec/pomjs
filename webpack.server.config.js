@@ -7,18 +7,12 @@ module.exports = {
     entry: {main: './pages/main.js'},
     output: {
         path: path.resolve(__dirname, './dist/'),
-        publicPath: '/dist/',
+        publicPath: '/bundle/',
         filename: "[name].bundle.js",
         libraryTarget: 'commonjs2', // !different
     },
-    resolveLoader: {
-        root: path.join(__dirname, 'node_modules'),
-    },
-    // externals: {
-    //   vue: 'Vue'
-    // },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.vue$/,
                 loader: 'vue'
@@ -27,6 +21,13 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'babel',
                 exclude: /node_modules/
+            },
+            {
+                test: /\.(png|jpg|gif|svg)$/,
+                loader: 'file',
+                query: {
+                    name: '[name].[ext]?[hash]'
+                }
             }
         ]
     },

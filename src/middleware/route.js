@@ -14,20 +14,16 @@ const DEFAULT_FILE = 'index/index.js';
 
 export default function (opts = {}) {
 
+    pageLoader.init(opts);
+    const pageDir = pageLoader.getPageDir();
 
-    const pageDir = opts.page || Path.join(opts.root, 'pages');
-
-    pageLoader.init(pageDir);
-    pageLoader.findPage();
-
-    return async function (ctx, next) {
+    return async function route(ctx, next) {
         let reqPath = ctx.path, ext = "";
 
         if (reqPath.indexOf('.') !== -1) {
             await next();
             return;
         }
-
 
         let pageName = 'index', pagePath, controlPath, action, type = 'render';
 

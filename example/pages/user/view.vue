@@ -3,29 +3,32 @@
 
         <h1>登陆页面! {{ msg }}</h1>
 
-        <h2>{{ text }}</h2>
+        <img src="/logo.png"/>
+
+        <img src="../../static/logo.png"/>
+
+
+        <h2><a href="#" @click.stop.prevent="doSomething">{{ text }}</a></h2>
     </div>
 </template>
 
 <script>
-    // import HeaderComponent from './components/header.vue'
-
-    var data = {};
 
     export default{
 
         methods: {
-
-            fetchAPI: function (data) {
-                this.msg = data.msg;
-                this.text = data.text;
-            },
-
             doSomething: function (event) {
-                console.log(this.ek);
-                alert('Hello ' + this.ek + '!')
+                console.log(this.msg);
+                alert('Hello ' + this.msg + '!')
             }
         }
 
     }
 </script>
+
+<style scoped>
+
+    h1 {
+        color: red;
+    }
+</style>
