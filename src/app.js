@@ -11,11 +11,14 @@ const Path = require('path');
 
 import CSRF from 'koa-csrf'
 import session from "koa-session2";
+
+
 import httpWrap from './middleware/http';
 import route from './middleware/route';
 import render from './middleware/render';
 import error from './middleware/error';
 import bundle from './middleware/bundle';
+import user from './middleware/user';
 
 const app = new Koa();
 const serve = require('koa-static');
@@ -67,6 +70,7 @@ module.exports = function (opts = {}) {
     app.use(error());
     app.use(httpWrap());
     app.use(bundle())
+    //app.use(user());
     app.use(route(opts));
     app.use(render(opts));
 

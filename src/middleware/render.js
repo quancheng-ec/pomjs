@@ -6,23 +6,24 @@
 import fs from 'fs';
 const Path = require('path');
 const renderer = require('vue-server-renderer').createRenderer();
-//
-//
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer;
+const cache = {};
+const pageLoader = require('../util/pageLoader');
 
 
-const renderPromise = function (code, context) {
+const renderPromise = function (pageName, code, context) {
     return new Promise(function (resolve, reject) {
-
-        createBundleRenderer(code).renderToString(context, (err, html) => {
+        let cr = cache[pageName];
+        if (!cr || !pageLoader.isProduction()) {
+            cr = createBundleRenderer(code);
+            cache[pageName] = cr;
+        }
+        cr.renderToString(context, (err, html) => {
             if (err) return reject(err);
             resolve(html);
         });
     });
 };
-
-
-const pageLoader = require('../util/pageLoader');
 
 
 export default function (opts = {}) {
@@ -54,7 +55,7 @@ export default function (opts = {}) {
             await pageLoader.compileRun();
         }
 
-        const html = await renderPromise(pageLoader.readServerFileSync(scriptName), ctx.context);
+        const html = await renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
 
         body = body.replace('{{ html }}', html);
         ctx.body = body;

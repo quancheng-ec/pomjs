@@ -1,6 +1,5 @@
 var path = require('path')
 var webpack = require('webpack')
-var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 module.exports = {
     entry: {main: './pages/main.js'},
@@ -14,15 +13,7 @@ module.exports = {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue',
-                options: {
-                    loaders: {
-                        css: ExtractTextPlugin.extract({
-                            loader: 'css-loader',
-                            fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
-                        })
-                    }
-                }
+                loader: 'vue'
             },
             {
                 test: /\.js$/,
@@ -38,9 +29,6 @@ module.exports = {
             }
         ]
     },
-    plugins: [
-       // new ExtractTextPlugin("style.css")
-    ],
     devServer: {
         historyApiFallback: true,
         noInfo: true

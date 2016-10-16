@@ -12,6 +12,8 @@ module.exports = function (opts = {}) {
 
     return async function http(ctx, next) {
 
+        ctx.opts = opts;
+
         const context = {
             url: ctx.url,
             href: ctx.href,

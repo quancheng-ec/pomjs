@@ -11,7 +11,7 @@ export default class Index {
 
     view(ctx) {
         // console.log(123);
-        console.log("111"+this.href);
+        console.log("test:"+this.href);
 
         this.result = {
             bb: 123

@@ -62,8 +62,37 @@ function doCompileAsync(serverCompiler, isServer, cb) {
         console.error(error);
     });
 }
+
+const find = function (f) {
+    const api = Path.join(f, 'index.js')
+    if (!isProduction) {
+        delete require.cache[api];
+    }
+    apis[api] = new (require(api)).default();
+
+    if (api.indexOf('src/pages') !== -1) {
+        return;
+    }
+
+    const vue = Path.join(f, '.s');
+    temps.push(vue);
+    const dir = f.substring(0, f.length - 1);
+    const pageName = dir.substring(dir.lastIndexOf('/') + 1);
+    if (!fs.exists(vue)) {
+        fs.copy(Path.join(__dirname, '../../vue.js'), vue);
+    }
+    serverEntry[pageName] = vue;
+
+    const c = Path.join(f, '.c');
+    temps.push(c);
+    if (!fs.exists(c)) {
+        fs.copy(Path.join(__dirname, '../../client.js'), c);
+    }
+    clientEntry[pageName] = c;
+}
+
 /**
- * 清楚临时文件
+ * 清除临时文件
  */
 function clear() {
     temps.forEach(function (f) {
@@ -89,29 +118,8 @@ module.exports = {
     },
     //查找page目录
     initPage: function () {
-        glob.sync(Path.join(pageDir, "*/")).forEach(function (f) {
-            const api = Path.join(f, 'index.js')
-            if (!isProduction) {
-                delete require.cache[api];
-            }
-            apis[api] = new (require(api)).default();
-
-            const vue = Path.join(f, '.s');
-            temps.push(vue);
-            const dir = f.substring(0, f.length - 1);
-            const pageName = dir.substring(dir.lastIndexOf('/') + 1);
-            if (!fs.exists(vue)) {
-                fs.copy(Path.join(__dirname, '../../vue.js'), vue);
-            }
-            serverEntry[pageName] = vue;
-
-            const c = Path.join(f, '.c');
-            temps.push(c);
-            if (!fs.exists(c)) {
-                fs.copy(Path.join(__dirname, '../../client.js'), c);
-            }
-            clientEntry[pageName] = c;
-        });
+        glob.sync(Path.join(pageDir, "*/")).forEach(find);
+        glob.sync(Path.join(__dirname, "../pages/*/")).forEach(find);
     },
     getAPI: function (name, action) {
         if (!apis[name] || !apis[name][action] || process.env.NODE_ENV !== 'production') {
@@ -125,10 +133,10 @@ module.exports = {
     },
     initCompile: function () {
         serverConfig.entry = serverEntry;
-        serverConfig.output.path = Path.join(staticDir,'../bundle');
+        serverConfig.output.path = Path.join(staticDir, '../bundle');
 
         clientConfig.entry = clientEntry;
-        clientConfig.output.path = Path.join(staticDir,'bundle');
+        clientConfig.output.path = Path.join(staticDir, 'bundle');
 
         serverCompiler = webpack(serverConfig);
         clientCompiler = webpack(clientConfig);

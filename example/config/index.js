@@ -10,7 +10,8 @@ const opts = {
     page: path.join(__dirname, '../pages'),
     components: path.join(__dirname, '../components')
     //build: './build', //编译后的目录
-    , root: path.join(__dirname, '../')
+    , root: path.join(__dirname, '../'),
+    domain:'localhost'
 
 }
 

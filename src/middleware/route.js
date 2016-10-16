@@ -25,12 +25,13 @@ export default function (opts = {}) {
             return;
         }
 
-        let pageName = 'index', pagePath, controlPath, action, type = 'render';
+        let control,pageName = 'index', pagePath, controlPath, action, type = 'render';
 
         if (reqPath === '/' || reqPath === '') {
             controlPath = Path.join(pageDir, 'index/index.js');
             pagePath = Path.join(pageDir, pageName);
             action = 'view';
+            control = pageLoader.getAPI(controlPath, action);
         } else {
             if (reqPath.endsWith('/')) {
                 //去掉末尾的 ／
@@ -53,11 +54,18 @@ export default function (opts = {}) {
                 controlPath = Path.join(pageDir, DEFAULT_FILE);
                 pagePath = Path.join(pageDir, pageName);
                 action = parrs[0];
+                control = pageLoader.getAPI(controlPath, action);
             } else if (parrs.length === 2) {
                 controlPath = Path.join(pageDir, parrs[0], DEFAULT_NAME);
                 pagePath = Path.join(pageDir, parrs[0]);
                 pageName = parrs[0];
                 action = parrs[1];
+                control = pageLoader.getAPI(controlPath, action);
+                if(!control){
+                    controlPath = Path.join(__dirname,'../pages', parrs[0], DEFAULT_NAME);
+                    control = pageLoader.getAPI(controlPath, action);
+                }
+
             } else {
                 let e = new Error('the path:' + ctx.path + ' not found!');
                 e.statusCode = 404;
@@ -65,7 +73,7 @@ export default function (opts = {}) {
             }
         }
 
-        const control = pageLoader.getAPI(controlPath, action);
+
 
         if (!control) {
             await next();
