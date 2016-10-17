@@ -15,7 +15,7 @@ const DEFAULT_FILE = 'index/index.js';
 export default function (opts = {}) {
 
     pageLoader.init(opts);
-    const pageDir = pageLoader.getPageDir();
+    const pageDir = opts.isProduction ? opts.page.build : opts.page.src;
 
     return async function route(ctx, next) {
         let reqPath = ctx.path, ext = "";
@@ -25,7 +25,7 @@ export default function (opts = {}) {
             return;
         }
 
-        let control,pageName = 'index', pagePath, controlPath, action, type = 'render';
+        let control, pageName = 'index', pagePath, controlPath, action, type = 'render';
 
         if (reqPath === '/' || reqPath === '') {
             controlPath = Path.join(pageDir, 'index/index.js');
@@ -61,8 +61,8 @@ export default function (opts = {}) {
                 pageName = parrs[0];
                 action = parrs[1];
                 control = pageLoader.getAPI(controlPath, action);
-                if(!control){
-                    controlPath = Path.join(__dirname,'../pages', parrs[0], DEFAULT_NAME);
+                if (!control) {
+                    controlPath = Path.join(__dirname, '../pages', parrs[0], DEFAULT_NAME);
                     control = pageLoader.getAPI(controlPath, action);
                 }
 
@@ -72,7 +72,6 @@ export default function (opts = {}) {
                 throw e;
             }
         }
-
 
 
         if (!control) {

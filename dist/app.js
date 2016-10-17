@@ -106,6 +106,7 @@ module.exports = function () {
     //app.use(user());
     app.use((0, _route2.default)(opts));
     app.use((0, _render2.default)(opts));
-
-    app.listen(3000);
+    var port = opts.port || 3000;
+    app.listen(port);
+    console.log('listening on ', port);
 };

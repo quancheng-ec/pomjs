@@ -20,7 +20,7 @@ var serverConfig = require('../../webpack.server.config');
 var Path = require('path');
 var apis = {};
 var pageDir, staticDir, serverStats, clientStats, serverCompiler, clientCompiler;
-var _isProduction = process.env.NODE_ENV === 'production';
+var _isProduction = false; //process.env.NODE_ENV === 'production';
 //缓存文件
 var temps = [];
 
@@ -33,36 +33,24 @@ var clientEntry = {};
  * @param cb
  * @returns {Promise}
  */
-var webpackCompileRun = function webpackCompileRun(compile, cb) {
+var webpackCompileRun = function webpackCompileRun(tag, compile, cb) {
     return new Promise(function (resolve, reject) {
         compile.run(function (err, stats) {
-
-            if (cb) {
-                cb();
-            }
             if (err) {
                 console.error(err);
                 return reject(err);
             }
-            console.log(stats.toString({
+            console.log(tag, stats.toString({
                 chunks: false, // Makes the build much quieter
                 colors: true
             }));
             resolve(stats);
+            if (cb) {
+                cb(stats);
+            }
         });
     });
 };
-function doCompileAsync(serverCompiler, isServer, cb) {
-    webpackCompileRun(serverCompiler, cb).then(function (f) {
-        if (isServer) {
-            serverStats = f;
-        } else {
-            clientStats = f;
-        }
-    }).catch(function (error) {
-        console.error(error);
-    });
-}
 
 var find = function find(f) {
     var api = Path.join(f, 'index.js');
@@ -71,9 +59,9 @@ var find = function find(f) {
     }
     apis[api] = new (require(api).default)();
 
-    if (api.indexOf('src/pages') !== -1) {
-        return;
-    }
+    // if (api.indexOf('src/pages') !== -1) {
+    //     return;
+    // }
 
     var vue = Path.join(f, '.s');
     temps.push(vue);
@@ -97,19 +85,30 @@ var find = function find(f) {
  */
 function clear() {
     temps.forEach(function (f) {
-        if (FS.existsSync(f)) {
-            try {
-                FS.unlinkSync(f);
-            } catch (e) {}
+        if (fs.exists(f)) {
+            fs.remove(f);
         }
     });
     temps = [];
 }
 
+var root = '';
+var vue_build_path = void 0;
+var build = void 0;
+
 module.exports = {
 
     init: function init(opts) {
-        pageDir = opts.page || Path.join(opts.root, 'pages');
+        root = opts.root;
+        if (!opts.page) {
+            throw new Error("the opts page can't be null");
+        }
+        if (opts.isProduction) {
+            _isProduction = true;
+            vue_build_path = Path.join(root, 'vue_build.json');
+            build = require(vue_build_path);
+        }
+        pageDir = _isProduction ? opts.page.build : opts.page.src; //|| Path.join(opts.root, 'pages');
         staticDir = opts.static || Path.join(root, 'static');
         module.exports.initPage();
     },
@@ -122,7 +121,7 @@ module.exports = {
         glob.sync(Path.join(__dirname, "../pages/*/")).forEach(find);
     },
     getAPI: function getAPI(name, action) {
-        if (!apis[name] || !apis[name][action] || process.env.NODE_ENV !== 'production') {
+        if (!apis[name] || !apis[name][action] || !_isProduction) {
             module.exports.initPage();
         }
         var api = apis[name];
@@ -148,10 +147,27 @@ module.exports = {
     },
     compileRun: function () {
         var _ref = _asyncToGenerator(function* () {
-            serverStats = yield webpackCompileRun(serverCompiler);
-            clientStats = yield webpackCompileRun(clientCompiler, function () {
+            serverStats = yield webpackCompileRun('server build:', serverCompiler);
+            clientStats = yield webpackCompileRun('client build:', clientCompiler, function () {
                 clear();
             });
+
+            if (_isProduction) {
+                if (fs.exists(vue_build_path)) {
+                    fs.remove(vue_build_path);
+                }
+                var s = {};
+                for (var i in serverStats.compilation.assets) {
+                    s[i] = serverStats.compilation.assets[i].existsAt;
+                }
+                var c = {};
+                for (var _i in clientStats.compilation.assets) {
+                    c[_i] = clientStats.compilation.assets[_i].existsAt;
+                }
+                var j = { server: s, client: c };
+                var js = JSON.stringify(j);
+                fs.write(vue_build_path, js);
+            }
         });
 
         function compileRun() {
@@ -164,11 +180,11 @@ module.exports = {
         return _isProduction;
     },
     readServerFileSync: function readServerFileSync(pageName) {
-        var p = serverStats.compilation.assets[pageName].existsAt;
+        var p = _isProduction ? build.server[pageName] : serverStats.compilation.assets[pageName].existsAt;
         return (_isProduction ? FS : serverFs).readFileSync(p, 'utf8');
     },
     readClientFile: function readClientFile(pageName) {
-        var p = clientStats.compilation.assets[pageName].existsAt;
+        var p = _isProduction ? build.client[pageName] : clientStats.compilation.assets[pageName].existsAt;
         return clientFs.readFileSync(p);
     },
     getClientFilePath: function getClientFilePath(pageName) {

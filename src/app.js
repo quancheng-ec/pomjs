@@ -73,8 +73,8 @@ module.exports = function (opts = {}) {
     //app.use(user());
     app.use(route(opts));
     app.use(render(opts));
-
-    app.listen(3000);
-
+    const port = opts.port||3000;
+    app.listen(port);
+    console.log('listening on ',port);
 
 }

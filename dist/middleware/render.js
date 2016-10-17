@@ -9,8 +9,9 @@ exports.default = function () {
 
 
     var layouts = opts.layouts || Path.join(opts.root, "layouts");
-
-    pageLoader.initCompile();
+    if (!opts.isProduction) {
+        pageLoader.initCompile();
+    }
 
     return function () {
         var _ref = _asyncToGenerator(function* (ctx, next) {

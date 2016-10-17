@@ -11,7 +11,7 @@ exports.default = function () {
 
 
     pageLoader.init(opts);
-    var pageDir = pageLoader.getPageDir();
+    var pageDir = opts.isProduction ? opts.page.build : opts.page.src;
 
     return function () {
         var _ref = _asyncToGenerator(function* (ctx, next) {

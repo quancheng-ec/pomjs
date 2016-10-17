@@ -29,8 +29,9 @@ const renderPromise = function (pageName, code, context) {
 export default function (opts = {}) {
 
     const layouts = opts.layouts || Path.join(opts.root, "layouts");
-
-    pageLoader.initCompile();
+    if (!opts.isProduction) {
+        pageLoader.initCompile();
+    }
 
     return async function render(ctx, next) {
 
