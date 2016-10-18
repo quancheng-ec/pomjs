@@ -49,6 +49,9 @@ exports.default = function () {
                 if (reqPath.startsWith('/api/')) {
                     type = 'api';
                     parrs = reqPath.substring(5).split('/');
+                } else if (reqPath.startsWith('/event/')) {
+                    type = 'event';
+                    parrs = reqPath.substring(7).split('/');
                 } else {
                     parrs = reqPath.substring(1).split('/');
                 }
@@ -84,12 +87,16 @@ exports.default = function () {
 
             var context = Object.assign({}, ctx._httpContext);
 
-            var result = control.call(context, ctx);
+            var result = yield control(ctx);
 
             if ((typeof result === 'undefined' ? 'undefined' : _typeof(result)) !== 'object') {
                 var _e = new Error('the ' + api + ' result must be Object');
                 _e.statusCode = 500;
                 throw _e;
+            }
+
+            if (type === 'event') {
+                return;
             }
 
             if (type === 'api') {
@@ -127,6 +134,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                                                                                                                                                                                                                                                                                                                                                                                                                                                             *
                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * Created by joe on 16/9/23.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                             */
+
+var fetch = require('node-fetch');
 
 var pageLoader = require('../util/pageLoader');
 

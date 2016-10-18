@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
@@ -8,6 +8,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
  *
  * Created by joe on 16/9/23.
  */
+
+var fetch = require('node-fetch');
 
 module.exports = function () {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -27,6 +29,7 @@ module.exports = function () {
                 param: Object.assign({}, ctx.request.query, ctx.request.body)
             };
             ctx._httpContext = context;
+            ctx.fetch = fetch;
 
             yield next();
         });

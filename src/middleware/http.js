@@ -5,6 +5,7 @@
  * Created by joe on 16/9/23.
  */
 
+var fetch = require('node-fetch');
 
 
 module.exports = function (opts = {}) {
@@ -23,7 +24,7 @@ module.exports = function (opts = {}) {
             param: Object.assign({}, ctx.request.query, ctx.request.body)
         }
         ctx._httpContext = context;
-
+        ctx.fetch = fetch;
 
         await next();
     }

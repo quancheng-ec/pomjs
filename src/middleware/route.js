@@ -5,6 +5,7 @@
  */
 
 import Path from 'path';
+var fetch = require('node-fetch');
 
 const pageLoader = require('../util/pageLoader');
 
@@ -46,6 +47,9 @@ export default function (opts = {}) {
             if (reqPath.startsWith('/api/')) {
                 type = 'api';
                 parrs = reqPath.substring(5).split('/');
+            } else if (reqPath.startsWith('/event/')) {
+                type = 'event';
+                parrs = reqPath.substring(7).split('/');
             } else {
                 parrs = reqPath.substring(1).split('/');
             }
@@ -83,12 +87,16 @@ export default function (opts = {}) {
 
         const context = Object.assign({}, ctx._httpContext);
 
-        let result = control.call(context, ctx);
+        let result = await control(ctx);
 
         if (typeof result !== 'object') {
             let e = new Error('the ' + api + ' result must be Object');
             e.statusCode = 500;
             throw e;
+        }
+
+        if (type === 'event') {
+            return;
         }
 
         if (type === 'api') {

@@ -42,7 +42,9 @@ export default function (opts = {}) {
 
         const pageContext = ctx.context.pageContext;
 
-        let body = fs.readFileSync(Path.join(layouts, "default.html")).toString();
+        console.log(ctx.context.layout);
+
+        let body = fs.readFileSync(Path.join(layouts, ctx.context.layout||"default.html")).toString();
         body = body.replace('{{ title }}', ctx.context.title || "hello pomjs!");
 
         const scriptName = pageContext.pageName + ".bundle.js";

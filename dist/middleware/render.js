@@ -23,7 +23,9 @@ exports.default = function () {
 
             var pageContext = ctx.context.pageContext;
 
-            var body = _fs2.default.readFileSync(Path.join(layouts, "default.html")).toString();
+            console.log(ctx.context.layout);
+
+            var body = _fs2.default.readFileSync(Path.join(layouts, ctx.context.layout || "default.html")).toString();
             body = body.replace('{{ title }}', ctx.context.title || "hello pomjs!");
 
             var scriptName = pageContext.pageName + ".bundle.js";
