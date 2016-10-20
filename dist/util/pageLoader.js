@@ -54,14 +54,12 @@ var webpackCompileRun = function webpackCompileRun(tag, compile, cb) {
 
 var find = function find(f) {
     var api = Path.join(f, 'index.js');
-    if (!_isProduction) {
+
+    if (!_isProduction && apis[api]) {
         delete require.cache[api];
     }
-    apis[api] = new (require(api).default)();
 
-    // if (api.indexOf('src/pages') !== -1) {
-    //     return;
-    // }
+    apis[api] = new (require(api).default)();
 
     var vue = Path.join(f, '.s');
     temps.push(vue);

@@ -51,15 +51,13 @@ const webpackCompileRun = function (tag, compile, cb) {
 };
 
 const find = function (f) {
-    const api = Path.join(f, 'index.js')
-    if (!isProduction) {
+    const api = Path.join(f, 'index.js');
+
+    if (!isProduction && apis[api]) {
         delete require.cache[api];
     }
-    apis[api] = new (require(api)).default();
 
-    // if (api.indexOf('src/pages') !== -1) {
-    //     return;
-    // }
+    apis[api] = new (require(api)).default();
 
     const vue = Path.join(f, '.s');
     temps.push(vue);

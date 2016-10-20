@@ -87,6 +87,14 @@ exports.default = function () {
 
             var context = Object.assign({}, ctx._httpContext);
 
+            ctx.context = Object.assign({}, context, {
+                context: context, pageContext: {
+                    pagePath: pagePath,
+                    pageName: pageName,
+                    pageAction: action
+                }, csrf: ctx.csrf
+            });
+
             var result = yield control(ctx);
 
             if ((typeof result === 'undefined' ? 'undefined' : _typeof(result)) !== 'object') {
@@ -104,13 +112,7 @@ exports.default = function () {
                 return;
             }
 
-            ctx.context = Object.assign({}, {
-                context: context, pageContext: {
-                    pagePath: pagePath,
-                    pageName: pageName,
-                    pageAction: action
-                }
-            }, result);
+            ctx.context = Object.assign(ctx.context, result);
 
             yield next();
         });

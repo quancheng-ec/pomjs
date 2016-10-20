@@ -87,6 +87,14 @@ export default function (opts = {}) {
 
         const context = Object.assign({}, ctx._httpContext);
 
+        ctx.context = Object.assign({},context, {
+            context: context, pageContext: {
+                pagePath: pagePath,
+                pageName: pageName,
+                pageAction: action
+            }, csrf: ctx.csrf
+        });
+
         let result = await control(ctx);
 
         if (typeof result !== 'object') {
@@ -104,13 +112,7 @@ export default function (opts = {}) {
             return;
         }
 
-        ctx.context = Object.assign({}, {
-            context: context, pageContext: {
-                pagePath: pagePath,
-                pageName: pageName,
-                pageAction: action
-            }
-        }, result);
+        ctx.context = Object.assign(ctx.context, result);
 
         await next();
     }

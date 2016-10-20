@@ -42,8 +42,6 @@ export default function (opts = {}) {
 
         const pageContext = ctx.context.pageContext;
 
-        console.log(ctx.context.layout);
-
         let body = fs.readFileSync(Path.join(layouts, ctx.context.layout||"default.html")).toString();
         body = body.replace('{{ title }}', ctx.context.title || "hello pomjs!");
 
