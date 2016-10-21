@@ -102,7 +102,9 @@ module.exports = {
         if (opts.isProduction) {
             isProduction = true;
             vue_build_path = Path.join(root, 'vue_build.json');
-            build = require(vue_build_path);
+            if (fs.exists(vue_build_path)) {
+                build = require(vue_build_path);
+            }
         }
         pageDir = isProduction ? opts.page.build : opts.page.src; //|| Path.join(opts.root, 'pages');
         staticDir = opts.static || Path.join(root, 'static');
