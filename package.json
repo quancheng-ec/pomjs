@@ -1,6 +1,6 @@
 {
   "name": "pomjs",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -43,6 +43,8 @@
     "koa-static": "2.0.0",
     "memory-fs": "^0.3.0",
     "node-fetch": "^1.6.3",
+    "node-sass": "^3.10.1",
+    "sass-loader": "^4.0.2",
     "uglify-js": "^2.7.3",
     "uid-safe": "^2.1.2",
     "vue": "^2.0.3",

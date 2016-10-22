@@ -141,6 +141,7 @@ module.exports = {
         if (!isProduction) {
             serverCompiler.outputFileSystem = serverFs;
             clientCompiler.outputFileSystem = clientFs;
+            fs.remove(clientConfig.output.path);
         }
     },
     compileRun: async function () {
@@ -156,10 +157,12 @@ module.exports = {
             const s = {};
             for (let i in serverStats.compilation.assets) {
                 s[i] = serverStats.compilation.assets[i].existsAt;
+                s[i] = s[i].substring(root.length);
             }
             const c = {};
             for (let i in clientStats.compilation.assets) {
                 c[i] = clientStats.compilation.assets[i].existsAt;
+                c[i] = c[i].substring(root.length);
             }
             const j = {server: s, client: c};
             const js = JSON.stringify(j);

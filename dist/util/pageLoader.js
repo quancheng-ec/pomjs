@@ -143,6 +143,7 @@ module.exports = {
         if (!_isProduction) {
             serverCompiler.outputFileSystem = serverFs;
             clientCompiler.outputFileSystem = clientFs;
+            fs.remove(clientConfig.output.path);
         }
     },
     compileRun: function () {
@@ -159,10 +160,12 @@ module.exports = {
                 var s = {};
                 for (var i in serverStats.compilation.assets) {
                     s[i] = serverStats.compilation.assets[i].existsAt;
+                    s[i] = s[i].substring(root.length);
                 }
                 var c = {};
                 for (var _i in clientStats.compilation.assets) {
                     c[_i] = clientStats.compilation.assets[_i].existsAt;
+                    c[_i] = c[_i].substring(root.length);
                 }
                 var j = { server: s, client: c };
                 var js = JSON.stringify(j);

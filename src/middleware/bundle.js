@@ -10,11 +10,11 @@ const fs = require('fs');
 
 export default function (opts = {}) {
 
-   // const maxAge = 60 * 60 * 24 * 365;//1年
+    // const maxAge = 60 * 60 * 24 * 365;//1年
 
     return async function bundle(ctx, next) {
         let reqPath = ctx.url;
-        if (pageLoader.isProduction()||!reqPath.startsWith('/bundle')) {
+        if (pageLoader.isProduction() || !reqPath.startsWith('/bundle')) {
             await next();
             return;
         }
