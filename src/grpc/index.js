@@ -1,45 +1,17 @@
 /**
- * Created by joe on 2016/10/20.
+ * Created by joe on 2016/10/23.
  */
 
+const consul = require('./consul');
+const client = require('./client');
 
-var consul = require('consul')({
-    host: 'daily.quancheng-ec.com',
-    port: '8500'
-});
+const _apis = {};
 
-
-
-consul.catalog.service.nodes('Saluki_jimmy', function(err, result) {
-    if (err) throw err;
-
-    //console.log(result);
-
-    const services = {};
-    result.forEach(function (s) {
-        services[s.ServiceID]=s;
-    })
-
-
-    consul.agent.check.list(function(err, cresult) {
-        if (err) throw err;
-
-
-        for(var i in cresult){
-            const name = i.replace('service:',"");
-            if(services[name]&&cresult[i].Status==='passing'){
-                console.log(name,services[name]);
-
-                const serviceDef = services[name];
-
-                decodeURIComponent(serviceDef.ServiceTags[0]);
-
-            }
-
-        }
-
-
-    });
-
-
-});
+module.exports = {
+    init: async function (opts = {}) {
+        const services = opts.saluki || {};
+        await consul.init(opts);
+        Object.assign(_apis, client.init(opts.saluki));
+    },
+    services: _apis
+}

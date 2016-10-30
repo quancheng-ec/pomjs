@@ -1,5 +1,15 @@
 'use strict';
 
+var middleware = function () {
+    var _ref = _asyncToGenerator(function* (opts) {
+        yield require('./grpc/index').init(opts);
+    });
+
+    return function middleware(_x) {
+        return _ref.apply(this, arguments);
+    };
+}();
+
 var _koaCsrf = require('koa-csrf');
 
 var _koaCsrf2 = _interopRequireDefault(_koaCsrf);
@@ -66,6 +76,8 @@ module.exports = function () {
     root = opts.root;
     var staticPath = opts.static || Path.join(root, 'static');
 
+    middleware(opts);
+
     app.use(convert(serve(staticPath, { maxage: 60 * 60 * 24 * 365 })));
     // set the session keys
     app.keys = ['qc'];
@@ -88,15 +100,15 @@ module.exports = function () {
     }));
 
     app.use(function () {
-        var _ref = _asyncToGenerator(function* (ctx, next) {
+        var _ref2 = _asyncToGenerator(function* (ctx, next) {
             var start = new Date();
             yield next();
             var ms = new Date() - start;
             ctx.set('X-Response-Time', ms + 'ms');
         });
 
-        return function (_x2, _x3) {
-            return _ref.apply(this, arguments);
+        return function (_x3, _x4) {
+            return _ref2.apply(this, arguments);
         };
     }());
 

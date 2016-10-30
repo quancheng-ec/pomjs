@@ -54,8 +54,8 @@ var webpackCompileRun = function webpackCompileRun(tag, compile, cb) {
 
 var find = function find(f) {
     var api = Path.join(f, 'index.js');
-
-    if (!_isProduction && apis[api]) {
+    //只有开发环境才会打开热更新逻辑，热更新会导致webstorm debug 失败，所以可以接受 DEBUG参数
+    if (!_isProduction && apis[api] && !process.env.DEBUG) {
         delete require.cache[api];
     }
 

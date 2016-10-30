@@ -25,6 +25,10 @@ const serve = require('koa-static');
 
 var root = {};
 
+async function middleware(opts) {
+    await require('./grpc/index').init(opts);
+}
+
 module.exports = function (opts = {}) {
 
     if (!opts.root) {
@@ -37,6 +41,8 @@ module.exports = function (opts = {}) {
     }
     root = opts.root;
     const staticPath = opts.static || Path.join(root, 'static');
+
+    middleware(opts);
 
     app.use(convert(serve(staticPath, {maxage: 60 * 60 * 24 * 365})));
     // set the session keys
@@ -73,8 +79,8 @@ module.exports = function (opts = {}) {
     //app.use(user());
     app.use(route(opts));
     app.use(render(opts));
-    const port = opts.port||3000;
+    const port = opts.port || 3000;
     app.listen(port);
-    console.log('listening on ',port);
+    console.log('listening on ', port);
 
 }
