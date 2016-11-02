@@ -78,11 +78,36 @@ pomjs 集成了saluki https://github.com/quancheng-ec/saluki
 
 ```
 
-使用方式
+使用方式,在function中添加 service的参数声明
 
 ```
 
+const context = {
+    title: "qc",
+    layout: 'admin.html'
+}
 
+export default class Index {
+
+    constructor() {
+
+    }
+
+    async login(ctx,services) {
+
+        const hello = services.helloService;
+        try {
+            const r = await hello.sayHello({name: 'world'});
+            console.log(r);
+            return  Object.assign(r, context)
+        } catch (e) {
+            console.error(e);
+        }
+        return Object.assign({}, context);
+    }
+}    
 
 
 ```
+
+完整的例子需要看example，后续补上
