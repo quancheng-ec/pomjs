@@ -16,6 +16,10 @@ module.exports = {
         var _ref = _asyncToGenerator(function* () {
             var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+            if (!opts.saluki) {
+                console.log('no saluki config,ignore this step!');
+                return;
+            }
             var services = opts.saluki || {};
             yield consul.init(opts);
             Object.assign(_apis, client.init(opts.saluki));

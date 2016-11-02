@@ -44,6 +44,9 @@ export default function (opts = {}) {
 
         let body = fs.readFileSync(Path.join(layouts, ctx.context.layout||"default.html")).toString();
         body = body.replace('{{ title }}', ctx.context.title || "hello pomjs!");
+        body = body.replace('{{ keywords }}', ctx.context.keywords || "");
+        body = body.replace('{{ description }}', ctx.context.description || "");
+
 
         const scriptName = pageContext.pageName + ".bundle.js";
         const script = "/bundle/" + scriptName;

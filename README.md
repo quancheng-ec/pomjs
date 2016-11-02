@@ -46,7 +46,7 @@ http://localhost/api/user/get --》pages/user/index.js get()
 
 ```
 
-3. SSR
+## SSR
 
 服务端渲染会先执行API Control，然后执行vue渲染
 
@@ -57,7 +57,7 @@ http://localhost/user|/ --》pages/index/render.js.user() + pages/index/user.vue
 
 ```
 
-4.RPC
+## RPC
 
 pomjs 集成了saluki https://github.com/quancheng-ec/saluki
 这是基于grpc的完整rpc商用解决方案

@@ -25,6 +25,8 @@ exports.default = function () {
 
             var body = _fs2.default.readFileSync(Path.join(layouts, ctx.context.layout || "default.html")).toString();
             body = body.replace('{{ title }}', ctx.context.title || "hello pomjs!");
+            body = body.replace('{{ keywords }}', ctx.context.keywords || "");
+            body = body.replace('{{ description }}', ctx.context.description || "");
 
             var scriptName = pageContext.pageName + ".bundle.js";
             var script = "/bundle/" + scriptName;
