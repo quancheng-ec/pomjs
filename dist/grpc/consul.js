@@ -7,13 +7,11 @@ var _init = function () {
             consul_node = consulNode;
         }
 
-        var services = {};
-
         var checks = yield _consul.health.service({
             service: consul_node,
             passing: true
         });
-
+        var services = {};
         checks[0].forEach(function (c) {
             var s = c.Service;
 
@@ -30,11 +28,8 @@ var _init = function () {
             Object.assign(service, serviceURLObj.query);
             if (!services[service.name]) {
                 services[service.name] = [];
-            } else {
-                services[service.name].push(service);
             }
-
-            services.push(service);
+            services[service.name].push(service);
         });
 
         return services;
@@ -84,7 +79,6 @@ function fromCallback(fn) {
 var _consul;
 
 var consul_node = void 0;
-
 var _services = {};
 
 module.exports = {

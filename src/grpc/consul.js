@@ -35,20 +35,20 @@ function fromCallback(fn) {
 var _consul;
 
 let consul_node;
+let _services = {};
 
 async function _init(consulNode) {
 
     if (consulNode && !consul_node) {
         consul_node = consulNode;
     }
-
-    const services = {};
+    let checks ;
 
     let checks = await _consul.health.service({
         service: consul_node,
         passing: true
     });
-
+    const services = {};
     checks[0].forEach(function (c) {
         const s = c.Service;
 
@@ -65,18 +65,14 @@ async function _init(consulNode) {
         Object.assign(service, serviceURLObj.query);
         if (!services[service.name]) {
             services[service.name] = [];
-        } else {
-            services[service.name].push(service);
         }
-
-        services.push(service);
+        services[service.name].push(service);
     });
 
     return services;
+
 }
 
-
-let _services = {};
 
 module.exports = {
 
