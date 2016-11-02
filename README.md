@@ -57,4 +57,32 @@ http://localhost/user|/ --》pages/index/render.js.user() + pages/index/user.vue
 
 ```
 
+4.RPC
 
+pomjs 集成了saluki https://github.com/quancheng-ec/saluki
+这是基于grpc的完整rpc商用解决方案
+
+在config配置里增加service的声明即可使用了
+
+```
+ {saluki: {
+        root:path.join(__dirname,'../node_modules/quancheng-service-api/src/main/proto'),// PB的定义文件路径
+        group: 'Default',// 环境分组信息
+        host: 'daily.quancheng-ec.com',// saluki的注册中心地址
+        port: '8500',//saluki的注册中心端口
+        services: {
+            helloService: 'com.quancheng.examples.service.HelloService:Default:1.0.0' // name:serviceName:serviceGroup:serviceVersion
+        }
+    }
+ }   
+
+```
+
+使用方式
+
+```
+
+
+
+
+```

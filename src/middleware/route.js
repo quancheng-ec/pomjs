@@ -12,6 +12,8 @@ const pageLoader = require('../util/pageLoader');
 const DEFAULT_NAME = 'index.js';
 const DEFAULT_FILE = 'index/index.js';
 
+const services = require('../grpc/index').services();
+
 
 export default function (opts = {}) {
 
@@ -95,7 +97,7 @@ export default function (opts = {}) {
             }, csrf: ctx.csrf
         });
 
-        let result = await control(ctx);
+        let result = await control(ctx,services);
 
         if (typeof result !== 'object') {
             let e = new Error('the ' + api + ' result must be Object');

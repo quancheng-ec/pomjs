@@ -26,6 +26,8 @@ module.exports = function (opts = {}) {
         ctx._httpContext = context;
         ctx.fetch = fetch;
 
+
+
         await next();
     }
 }

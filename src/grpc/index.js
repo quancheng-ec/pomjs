@@ -13,5 +13,7 @@ module.exports = {
         await consul.init(opts);
         Object.assign(_apis, client.init(opts.saluki));
     },
-    services: _apis
+    services: function () {
+        return _apis;
+    }
 }

@@ -27,5 +27,7 @@ module.exports = {
 
         return init;
     }(),
-    services: _apis
+    services: function services() {
+        return _apis;
+    }
 };

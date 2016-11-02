@@ -95,7 +95,7 @@ exports.default = function () {
                 }, csrf: ctx.csrf
             });
 
-            var result = yield control(ctx);
+            var result = yield control(ctx, services);
 
             if ((typeof result === 'undefined' ? 'undefined' : _typeof(result)) !== 'object') {
                 var _e = new Error('the ' + api + ' result must be Object');
@@ -143,3 +143,5 @@ var pageLoader = require('../util/pageLoader');
 
 var DEFAULT_NAME = 'index.js';
 var DEFAULT_FILE = 'index/index.js';
+
+var services = require('../grpc/index').services();

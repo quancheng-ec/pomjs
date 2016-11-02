@@ -42,7 +42,6 @@ async function _init(consulNode) {
     if (consulNode && !consul_node) {
         consul_node = consulNode;
     }
-    let checks ;
 
     let checks = await _consul.health.service({
         service: consul_node,
