@@ -100,8 +100,24 @@ keywords: 网页的关键字，seo用 可以不填写
 
 description: 网页的描述，seo用 可以不填写
 
-title: 网页的title
+title: 必须参数 网页的title
 
-html: 渲染内容 动态生成
+html: 必须参数 渲染内容 动态生成
 
-page.js: 前端js 动态生成
+page.js: 必须参数 前端js 动态生成 
+
+
+title、description、keywords 可以在api的返回模型里包含该字段，就可以反映到前台上
+
+```
+    view(ctx) {
+
+        return {
+            title:'hello'
+        }
+    }
+```
+
+#### 1.3 src
+
+
