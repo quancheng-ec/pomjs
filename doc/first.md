@@ -100,8 +100,41 @@ keywords: 网页的关键字，seo用 可以不填写
 
 description: 网页的描述，seo用 可以不填写
 
-title: 网页的title
+title: 必须参数 网页的title
 
-html: 渲染内容 动态生成
+html: 必须参数 渲染内容 动态生成
 
-page.js: 前端js 动态生成
+page.js: 必须参数 前端js 动态生成 
+
+
+title、description、keywords 可以在api的返回模型里包含该字段，就可以反映到前台上
+
+```
+    view(ctx) {
+
+        return {
+            title:'hello'
+        }
+    }
+```
+
+#### 1.3 src
+
+存放代码的地方。遵循几个格式 
+
+1、目录结构如下 src->pages->pageName
+
+2. 每个page下面存在index.js、xx.vue 分布处理web server端逻辑和前端视图层逻辑
+
+3、index.js遵循 es6语法
+
+```
+
+|--src              | 源码
+|----pages          | 页面模块
+|------index        | 首页，默认的页面
+|--------index.js   | node api，执行服务端逻辑
+|--------xx.vue     | 各种view视图
+
+```
+
