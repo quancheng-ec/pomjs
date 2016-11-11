@@ -3,9 +3,7 @@
 
         <h1>登陆页面! {{ msg }}</h1>
 
-        <img src="/logo.png"/>
-
-        <img src="../../static/logo.png"/>
+        <img src="../../../static/logo.png"/>
 
 
         <h2><a href="#" @click.stop.prevent="doSomething">{{ text }}</a></h2>

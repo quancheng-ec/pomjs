@@ -29,3 +29,9 @@
 
     }
 </script>
+
+<style>
+    body{
+        background: #444;
+    }
+</style>
