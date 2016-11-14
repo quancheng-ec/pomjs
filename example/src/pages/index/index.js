@@ -11,22 +11,22 @@ export default class Index {
 
     view(ctx) {
         // console.log(123);
-        console.log("test:"+this.href);
+        console.log(ctx.href);
 
-        this.result = {
+        ctx.result = {
             bb: 123
 
         };
         return {
             title:"全程工作台",
-            msg: 'login success',
+            msg: 'success',
             text:"服务器渲染成功!!!"
         }
 
     }
 
-    get(){
-        this.result = {
+    get(ctx){
+        ctx.result = {
             cc:1
         };
 

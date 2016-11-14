@@ -62,6 +62,11 @@ export default function (opts = {}) {
         const html = await renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
 
         body = body.replace('{{ html }}', html);
+
+        const styles = pageLoader.readClientFile(pageContext.pageName+".style.css").toString()
+
+        body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>"+styles+"</style>")
+
         ctx.body = body;
 
         ctx.type = 'text/html; charset=utf-8';
