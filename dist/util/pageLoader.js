@@ -183,8 +183,9 @@ module.exports = {
         return _isProduction;
     },
     readServerFileSync: function readServerFileSync(pageName) {
+        var rootPath = Path.resolve(staticDir, '../');
         var p = _isProduction ? build.server[pageName] : serverStats.compilation.assets[pageName].existsAt;
-        return (_isProduction ? FS : serverFs).readFileSync(p, 'utf8');
+        return (_isProduction ? FS : serverFs).readFileSync(Path.resolve(rootPath, p), 'utf8');
     },
     readClientFile: function readClientFile(pageName) {
         var p = _isProduction ? build.client[pageName] : clientStats.compilation.assets[pageName].existsAt;

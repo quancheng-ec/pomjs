@@ -42,6 +42,14 @@ exports.default = function () {
             var html = yield renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
 
             body = body.replace('{{ html }}', html);
+
+            if (process.env.NODE_ENV === 'production') {
+                body = body.replace('{{ stylesheet }}', "<link href='/bundle/" + pageContext.pageName + ".style.css' rel='stylesheet'></link>");
+            } else {
+                var styles = pageLoader.readClientFile(pageContext.pageName + ".style.css").toString();
+                body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>" + styles + "</style>");
+            }
+
             ctx.body = body;
 
             ctx.type = 'text/html; charset=utf-8';
