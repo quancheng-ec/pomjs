@@ -174,8 +174,9 @@ module.exports = {
         return isProduction;
     },
     readServerFileSync: function (pageName) {
+        const rootPath = Path.resolve(staticDir,'../');
         const p = isProduction ? build.server[pageName] : serverStats.compilation.assets[pageName].existsAt;
-        return (isProduction ? FS : serverFs).readFileSync(p, 'utf8');
+        return (isProduction ? FS : serverFs).readFileSync(Path.resolve(rootPath,p), 'utf8');
     },
     readClientFile: function (pageName) {
         const p = isProduction ? build.client[pageName] : clientStats.compilation.assets[pageName].existsAt;
