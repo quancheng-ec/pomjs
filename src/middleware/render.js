@@ -63,9 +63,12 @@ export default function (opts = {}) {
 
         body = body.replace('{{ html }}', html);
 
-        const styles = pageLoader.readClientFile(pageContext.pageName+".style.css").toString()
-
-        body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>"+styles+"</style>")
+        if (process.env.NODE_ENV === 'production'){
+          body = body.replace('{{ stylesheet }}', "<link href='/bundle/"+pageContext.pageName+".style.css' rel='stylesheet'></link>")
+        }else{
+          const styles = pageLoader.readClientFile(pageContext.pageName+".style.css").toString()
+          body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>"+styles+"</style>")
+        }
 
         ctx.body = body;
 
