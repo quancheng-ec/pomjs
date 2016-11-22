@@ -7,6 +7,10 @@ npm-debug.log*
 
 .idea/
 
+# Example build
+example/dist/
+example/vue_build.json
+
 # Runtime data
 pids
 *.pid
