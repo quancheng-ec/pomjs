@@ -1,6 +1,7 @@
 var path = require('path')
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var autoprefixer = require('autoprefixer')
 
 module.exports = {
     entry: {main: './pages/main.js'},
@@ -20,7 +21,8 @@ module.exports = {
                     css: ExtractTextPlugin.extract({
                       loader: 'css-loader',
                       fallbackLoader: 'vue-style-loader'
-                    })
+                    }),
+                    js: 'babel-loader'
                   }
                 }
             },
@@ -43,7 +45,12 @@ module.exports = {
         noInfo: true
     },
     plugins:[
-        new ExtractTextPlugin("[name].style.css")
+        new ExtractTextPlugin("[name].style.css"),
+        new webpack.LoaderOptionsPlugin({
+          vue: {
+            postcss: [autoprefixer('last 3 versions', '> 1%')]
+          }
+        })
     ],
     devtool: '#eval-source-map'
 }
