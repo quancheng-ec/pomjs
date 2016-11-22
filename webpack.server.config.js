@@ -15,16 +15,16 @@ module.exports = {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue'
+                loader: 'vue-loader'
             },
             {
                 test: /\.js$/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 exclude: /node_modules/
             },
             {
                 test: /\.(png|jpg|gif|svg)$/,
-                loader: 'file',
+                loader: 'file-loader',
                 query: {
                     name: '[name].[ext]?[hash]'
                 }
@@ -54,4 +54,3 @@ if (process.env.NODE_ENV === 'production') {
         })
     ])
 }
-

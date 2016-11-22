@@ -174,11 +174,13 @@ module.exports = {
         return isProduction;
     },
     readServerFileSync: function (pageName) {
-        const p = isProduction ? build.server[pageName] : serverStats.compilation.assets[pageName].existsAt;
+        const rootPath = Path.resolve(staticDir,'../');
+        const p = isProduction ? Path.resolve(rootPath, build.server[pageName]) : serverStats.compilation.assets[pageName].existsAt;
         return (isProduction ? FS : serverFs).readFileSync(p, 'utf8');
     },
     readClientFile: function (pageName) {
-        const p = isProduction ? build.client[pageName] : clientStats.compilation.assets[pageName].existsAt;
+        const rootPath = Path.resolve(staticDir,'../');
+        const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientStats.compilation.assets[pageName].existsAt;
         return clientFs.readFileSync(p);
     },
     getClientFilePath: function (pageName) {
