@@ -30,8 +30,8 @@
     }
 </script>
 
-<style>
-    body{
-        background: #444;
-    }
+<style lang="stylus">
+  body
+    background #444
+
 </style>

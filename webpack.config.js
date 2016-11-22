@@ -22,6 +22,10 @@ module.exports = {
                       loader: 'css-loader',
                       fallbackLoader: 'vue-style-loader'
                     }),
+                    stylus: ExtractTextPlugin.extract({
+                      loader: 'css-loader!stylus-loader',
+                      fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
+                    }),
                     js: 'babel-loader'
                   }
                 }
