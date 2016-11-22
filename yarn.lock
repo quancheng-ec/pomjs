@@ -34,6 +34,10 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
   version "1.0.2"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
 
+amdefine@>=0.0.4:
+  version "1.0.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
+
 ansi-regex@^2.0.0:
   version "2.0.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/ansi-regex/-/ansi-regex-2.0.0.tgz#c5061b6e0ef8a81775e50f5d66151bf6bf371107"
@@ -167,6 +171,17 @@ async@2.0.0-rc.4:
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
+
+autoprefixer:
+  version "6.5.3"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/autoprefixer/-/autoprefixer-6.5.3.tgz#2d853af66d04449fcf50db3066279ab54c3e4b01"
+  dependencies:
+    browserslist "~1.4.0"
+    caniuse-db "^1.0.30000578"
+    normalize-range "^0.1.2"
+    num2fraction "^1.2.2"
+    postcss "^5.2.5"
+    postcss-value-parser "^3.2.3"
 
 autoprefixer@^6.3.1:
   version "6.5.2"
@@ -883,6 +898,10 @@ caniuse-db@^1.0.30000539, caniuse-db@^1.0.30000576:
   version "1.0.30000578"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/caniuse-db/-/caniuse-db-1.0.30000578.tgz#fc4106bda3ca19df4bd9f35e491063f3d498ff31"
 
+caniuse-db@^1.0.30000578:
+  version "1.0.30000585"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/caniuse-db/-/caniuse-db-1.0.30000585.tgz#9509aeb2bd1df72155cc7d80074f2ad79560ae28"
+
 caseless@~0.11.0:
   version "0.11.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/caseless/-/caseless-0.11.0.tgz#715b96ea9841593cc33067923f5ec60ebda4f7d7"
@@ -1090,6 +1109,18 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
+cosmiconfig@^2.1.0:
+  version "2.1.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/cosmiconfig/-/cosmiconfig-2.1.0.tgz#26e384a2055ea4e087050e5e08d53eb4eac8f86e"
+  dependencies:
+    graceful-fs "^4.1.2"
+    js-yaml "^3.4.3"
+    minimist "^1.2.0"
+    object-assign "^4.1.0"
+    os-homedir "^1.0.1"
+    parse-json "^2.2.0"
+    require-from-string "^1.1.0"
+
 create-ecdh@^4.0.0:
   version "4.0.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/create-ecdh/-/create-ecdh-4.0.0.tgz#888c723596cdf7612f6498233eebd7a35301737d"
@@ -1183,6 +1214,10 @@ css-loader@0.23.1:
     postcss-modules-scope "^1.0.0"
     postcss-modules-values "^1.1.0"
     source-list-map "^0.1.4"
+
+css-parse@1.7.x:
+  version "1.7.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/css-parse/-/css-parse-1.7.0.tgz#321f6cf73782a6ff751111390fc05e2c657d8c9b"
 
 css-selector-tokenizer@^0.5.1:
   version "0.5.4"
@@ -1672,6 +1707,17 @@ glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.0, glob@^7.1.1, glob@~7.1.1:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
+glob@7.0.x:
+  version "7.0.6"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/glob/-/glob-7.0.6.tgz#211bafaf49e525b8cd93260d14ab136152b3f57a"
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.0.2"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
 globals@^9.0.0:
   version "9.12.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/globals/-/globals-9.12.0.tgz#992ce90828c3a55fa8f16fada177adb64664cf9d"
@@ -2039,6 +2085,13 @@ js-tokens@^2.0.0:
   version "2.0.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/js-tokens/-/js-tokens-2.0.0.tgz#79903f5563ee778cc1162e6dcf1a0027c97f9cb5"
 
+js-yaml@^3.4.3:
+  version "3.7.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/js-yaml/-/js-yaml-3.7.0.tgz#5c967ddd837a9bfdca5f2de84253abe8a1c03b80"
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^2.6.0"
+
 js-yaml@~3.6.1:
   version "3.6.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/js-yaml/-/js-yaml-3.6.1.tgz#6e5fe67d8b205ce4d22fad05b7781e8dadcc4b30"
@@ -2207,7 +2260,7 @@ loader-runner@^2.2.0:
   version "2.2.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/loader-runner/-/loader-runner-2.2.0.tgz#824c1b699c4e7a2b6501b85902d5b862bf45b3fa"
 
-loader-utils@^0.2.10, loader-utils@^0.2.11, loader-utils@^0.2.15, loader-utils@^0.2.3, loader-utils@^0.2.7, loader-utils@~0.2.2, loader-utils@~0.2.5:
+loader-utils@^0.2.10, loader-utils@^0.2.11, loader-utils@^0.2.15, loader-utils@^0.2.16, loader-utils@^0.2.3, loader-utils@^0.2.7, loader-utils@^0.2.9, loader-utils@~0.2.2, loader-utils@~0.2.5:
   version "0.2.16"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/loader-utils/-/loader-utils-0.2.16.tgz#f08632066ed8282835dff88dfb52704765adee6d"
   dependencies:
@@ -2451,7 +2504,7 @@ minimist@0.0.8:
   version "0.0.8"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
 
-mkdirp@^0.5.0, mkdirp@^0.5.1, "mkdirp@>=0.5 0", mkdirp@~0.5.0, mkdirp@~0.5.1:
+mkdirp@^0.5.0, mkdirp@^0.5.1, "mkdirp@>=0.5 0", mkdirp@~0.5.0, mkdirp@~0.5.1, mkdirp@0.5.x:
   version "0.5.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
@@ -2677,7 +2730,7 @@ os-browserify@~0.2.0:
   version "0.2.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/os-browserify/-/os-browserify-0.2.1.tgz#63fc4ccee5d2d7763d26bbf8601078e6c2e0044f"
 
-os-homedir@^1.0.0:
+os-homedir@^1.0.0, os-homedir@^1.0.1:
   version "1.0.2"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/os-homedir/-/os-homedir-1.0.2.tgz#ffbc4988336e0e833de0c168c7ef152121aa7fb3"
 
@@ -2855,6 +2908,38 @@ postcss-filter-plugins@^2.0.0:
   dependencies:
     postcss "^5.0.4"
     uniqid "^4.0.0"
+
+postcss-load-config@^1.0.0:
+  version "1.0.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/postcss-load-config/-/postcss-load-config-1.0.0.tgz#1399f60dcd6bd9c3124b2eb22960f77f9dc08b3d"
+  dependencies:
+    cosmiconfig "^2.1.0"
+    object-assign "^4.1.0"
+    postcss-load-options "^1.0.2"
+    postcss-load-plugins "^2.0.0"
+
+postcss-load-options@^1.0.2:
+  version "1.0.2"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/postcss-load-options/-/postcss-load-options-1.0.2.tgz#b99eb5759a588f4b2dd8b6471c6985f72060e7b0"
+  dependencies:
+    cosmiconfig "^2.1.0"
+    object-assign "^4.1.0"
+
+postcss-load-plugins@^2.0.0:
+  version "2.0.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/postcss-load-plugins/-/postcss-load-plugins-2.0.0.tgz#2840d8df1d1c57ebcb1d41b5f60d45796504b43f"
+  dependencies:
+    cosmiconfig "^2.1.0"
+    object-assign "^4.1.0"
+
+postcss-loader:
+  version "1.1.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/postcss-loader/-/postcss-loader-1.1.1.tgz#cbc4cb75fbdcfa6c9fc3c7ec342ae04064f1c8fb"
+  dependencies:
+    loader-utils "^0.2.16"
+    object-assign "^4.1.0"
+    postcss "^5.2.5"
+    postcss-load-config "^1.0.0"
 
 postcss-merge-idents@^2.1.5:
   version "2.1.7"
@@ -3300,6 +3385,10 @@ require-directory@^2.1.1:
   version "2.1.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
 
+require-from-string@^1.1.0:
+  version "1.2.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/require-from-string/-/require-from-string-1.2.1.tgz#529c9ccef27380adfec9a2f965b649bbee636418"
+
 require-main-filename@^1.0.1:
   version "1.0.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/require-main-filename/-/require-main-filename-1.0.1.tgz#97f717b69d48784f5f526a6c5aa8ffdda055a4d1"
@@ -3350,6 +3439,10 @@ sass-loader@^4.0.2:
 sax@~1.2.1:
   version "1.2.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/sax/-/sax-1.2.1.tgz#7b8e656190b228e81a66aea748480d828cd2d37a"
+
+sax@0.5.x:
+  version "0.5.8"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/sax/-/sax-0.5.8.tgz#d472db228eb331c2506b0e8c15524adb939d12c1"
 
 semver@~5.3.0, "semver@2 || 3 || 4 || 5", "semver@2.x || 3.x || 4 || 5":
   version "5.3.0"
@@ -3410,6 +3503,12 @@ source-map-support@^0.4.2:
 source-map@^0.5.0, source-map@^0.5.3, source-map@^0.5.6, source-map@~0.5.1, source-map@~0.5.3:
   version "0.5.6"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/source-map/-/source-map-0.5.6.tgz#75ce38f52bf0733c5a7f0c118d81334a2bb5f412"
+
+source-map@0.1.x:
+  version "0.1.43"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/source-map/-/source-map-0.1.43.tgz#c24bc146ca517c1471f5dacbe2571b2b7f9e3346"
+  dependencies:
+    amdefine ">=0.0.4"
 
 spdx-correct@~1.0.0:
   version "1.0.2"
@@ -3496,6 +3595,24 @@ strip-indent@^1.0.1:
 strip-json-comments@~1.0.4:
   version "1.0.4"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/strip-json-comments/-/strip-json-comments-1.0.4.tgz#1e15fbcac97d3ee99bf2d73b4c656b082bbafb91"
+
+stylus:
+  version "0.54.5"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/stylus/-/stylus-0.54.5.tgz#42b9560931ca7090ce8515a798ba9e6aa3d6dc79"
+  dependencies:
+    css-parse "1.7.x"
+    debug "*"
+    glob "7.0.x"
+    mkdirp "0.5.x"
+    sax "0.5.x"
+    source-map "0.1.x"
+
+stylus-loader:
+  version "2.3.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/stylus-loader/-/stylus-loader-2.3.1.tgz#cf8872c68e9f98d5b4262f672b69cf082377b30e"
+  dependencies:
+    loader-utils "^0.2.9"
+    when "~3.6.x"
 
 supports-color@^2.0.0:
   version "2.0.0"
@@ -3802,6 +3919,10 @@ webpack@^2.1.0-beta.25:
 whatwg-fetch@^1.0.0:
   version "1.0.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/whatwg-fetch/-/whatwg-fetch-1.0.0.tgz#01c2ac4df40e236aaa18480e3be74bd5c8eb798e"
+
+when@~3.6.x:
+  version "3.6.4"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/when/-/when-3.6.4.tgz#473b517ec159e2b85005497a13983f095412e34e"
 
 whet.extend@~0.9.9:
   version "0.9.9"

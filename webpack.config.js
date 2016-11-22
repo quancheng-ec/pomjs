@@ -1,6 +1,7 @@
 var path = require('path')
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var autoprefixer = require('autoprefixer')
 
 module.exports = {
     entry: {main: './pages/main.js'},
@@ -14,24 +15,29 @@ module.exports = {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue',
+                loader: 'vue-loader',
                 options: {
                   loaders: {
                     css: ExtractTextPlugin.extract({
                       loader: 'css-loader',
                       fallbackLoader: 'vue-style-loader'
-                    })
+                    }),
+                    stylus: ExtractTextPlugin.extract({
+                      loader: 'css-loader!stylus-loader',
+                      fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
+                    }),
+                    js: 'babel-loader'
                   }
                 }
             },
             {
                 test: /\.js$/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 exclude: /node_modules/
             },
             {
                 test: /\.(png|jpg|gif|svg)$/,
-                loader: 'file',
+                loader: 'file-loader',
                 query: {
                     name: '[name].[ext]?[hash]'
                 }
@@ -43,7 +49,12 @@ module.exports = {
         noInfo: true
     },
     plugins:[
-        new ExtractTextPlugin("[name].style.css")
+        new ExtractTextPlugin("[name].style.css"),
+        new webpack.LoaderOptionsPlugin({
+          vue: {
+            postcss: [autoprefixer('last 3 versions', '> 1%')]
+          }
+        })
     ],
     devtool: '#eval-source-map'
 }

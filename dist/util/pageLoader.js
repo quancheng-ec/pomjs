@@ -183,11 +183,13 @@ module.exports = {
         return _isProduction;
     },
     readServerFileSync: function readServerFileSync(pageName) {
-        var p = _isProduction ? build.server[pageName] : serverStats.compilation.assets[pageName].existsAt;
+        var rootPath = Path.resolve(staticDir, '../');
+        var p = _isProduction ? Path.resolve(rootPath, build.server[pageName]) : serverStats.compilation.assets[pageName].existsAt;
         return (_isProduction ? FS : serverFs).readFileSync(p, 'utf8');
     },
     readClientFile: function readClientFile(pageName) {
-        var p = _isProduction ? build.client[pageName] : clientStats.compilation.assets[pageName].existsAt;
+        var rootPath = Path.resolve(staticDir, '../');
+        var p = _isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientStats.compilation.assets[pageName].existsAt;
         return clientFs.readFileSync(p);
     },
     getClientFilePath: function getClientFilePath(pageName) {

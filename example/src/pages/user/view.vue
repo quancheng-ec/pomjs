@@ -24,9 +24,8 @@
     }
 </script>
 
-<style scoped>
+<style lang="stylus" rel="stylesheet/stylus" scoped>
+    h1
+      color red
 
-    h1 {
-        color: red;
-    }
 </style>
