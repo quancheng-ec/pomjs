@@ -108,7 +108,7 @@ exports.default = function () {
             }
 
             if (type === 'api') {
-                ctx.body = JSON.stringify(result);
+                ctx.body = result;
                 return;
             }
 
