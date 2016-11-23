@@ -110,7 +110,7 @@ export default function (opts = {}) {
         }
 
         if (type === 'api') {
-            ctx.body = JSON.stringify(result);
+            ctx.body = result;
             return;
         }
 
