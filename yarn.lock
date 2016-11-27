@@ -42,7 +42,7 @@ ansi-regex@^2.0.0:
   version "2.0.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/ansi-regex/-/ansi-regex-2.0.0.tgz#c5061b6e0ef8a81775e50f5d66151bf6bf371107"
 
-ansi-styles@^2.2.1:
+ansi-styles@^2.1.0, ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
@@ -99,6 +99,10 @@ array-index@^1.0.0:
     debug "^2.2.0"
     es6-symbol "^3.0.2"
 
+array-uniq@^1.0.0:
+  version "1.0.3"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/array-uniq/-/array-uniq-1.0.3.tgz#af6ac877a25cc7f74e058894753858dfdb24fdb6"
+
 array-unique@^0.2.1:
   version "0.2.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/array-unique/-/array-unique-0.2.1.tgz#a1d97ccafcbc2625cc70fadceb36a50c58b01a53"
@@ -152,12 +156,6 @@ async@^1.3.0, async@^1.5.0:
   version "1.5.2"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
-async@^2.0.1:
-  version "2.1.2"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/async/-/async-2.1.2.tgz#612a4ab45ef42a70cde806bad86ee6db047e8385"
-  dependencies:
-    lodash "^4.14.0"
-
 async@~0.2.6:
   version "0.2.10"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/async/-/async-0.2.10.tgz#b6bbe0b0674b9d719708ca38de8c237cb526c3d1"
@@ -202,21 +200,26 @@ aws4@^1.2.1:
   version "1.5.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/aws4/-/aws4-1.5.0.tgz#0a29ffb79c31c9e712eeb087e8e7a64b4a56d755"
 
-babel-cli@^6.16.0:
-  version "6.18.0"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/babel-cli/-/babel-cli-6.18.0.tgz#92117f341add9dead90f6fa7d0a97c0cc08ec186"
+babel-cli@6.16.0:
+  version "6.16.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/babel-cli/-/babel-cli-6.16.0.tgz#4e0d1cf40442ef78330f7fef88eb3a0a1b16bd37"
   dependencies:
-    babel-core "^6.18.0"
+    babel-core "^6.16.0"
     babel-polyfill "^6.16.0"
-    babel-register "^6.18.0"
+    babel-register "^6.16.0"
     babel-runtime "^6.9.0"
+    bin-version-check "^2.1.0"
+    chalk "1.1.1"
     commander "^2.8.1"
     convert-source-map "^1.1.0"
-    fs-readdir-recursive "^1.0.0"
+    fs-readdir-recursive "^0.1.0"
     glob "^5.0.5"
     lodash "^4.2.0"
+    log-symbols "^1.0.2"
     output-file-sync "^1.1.0"
+    path-exists "^1.0.0"
     path-is-absolute "^1.0.0"
+    request "^2.65.0"
     slash "^1.0.0"
     source-map "^0.5.0"
     v8flags "^2.0.10"
@@ -231,7 +234,7 @@ babel-code-frame@^6.16.0:
     esutils "^2.0.2"
     js-tokens "^2.0.0"
 
-babel-core@^6.17.0, babel-core@^6.18.0:
+babel-core@^6.16.0, babel-core@^6.18.0:
   version "6.18.2"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/babel-core/-/babel-core-6.18.2.tgz#d8bb14dd6986fa4f3566a26ceda3964fa0e04e5b"
   dependencies:
@@ -253,6 +256,44 @@ babel-core@^6.17.0, babel-core@^6.18.0:
     path-is-absolute "^1.0.0"
     private "^0.1.6"
     slash "^1.0.0"
+    source-map "^0.5.0"
+
+babel-core@6.17.0:
+  version "6.17.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/babel-core/-/babel-core-6.17.0.tgz#6c4576447df479e241e58c807e4bc7da4db7f425"
+  dependencies:
+    babel-code-frame "^6.16.0"
+    babel-generator "^6.17.0"
+    babel-helpers "^6.16.0"
+    babel-messages "^6.8.0"
+    babel-register "^6.16.0"
+    babel-runtime "^6.9.1"
+    babel-template "^6.16.0"
+    babel-traverse "^6.16.0"
+    babel-types "^6.16.0"
+    babylon "^6.11.0"
+    convert-source-map "^1.1.0"
+    debug "^2.1.1"
+    json5 "^0.4.0"
+    lodash "^4.2.0"
+    minimatch "^3.0.2"
+    path-exists "^1.0.0"
+    path-is-absolute "^1.0.0"
+    private "^0.1.6"
+    shebang-regex "^1.0.0"
+    slash "^1.0.0"
+    source-map "^0.5.0"
+
+babel-generator@^6.17.0:
+  version "6.19.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/babel-generator/-/babel-generator-6.19.0.tgz#9b2f244204777a3d6810ec127c673c87b349fac5"
+  dependencies:
+    babel-messages "^6.8.0"
+    babel-runtime "^6.9.0"
+    babel-types "^6.19.0"
+    detect-indent "^4.0.0"
+    jsesc "^1.3.0"
+    lodash "^4.2.0"
     source-map "^0.5.0"
 
 babel-generator@^6.18.0:
@@ -648,7 +689,7 @@ babel-preset-es2015@6.13.2:
     babel-plugin-transform-es2015-unicode-regex "^6.3.13"
     babel-plugin-transform-regenerator "^6.9.0"
 
-babel-register@^6.18.0:
+babel-register@^6.16.0, babel-register@^6.18.0:
   version "6.18.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/babel-register/-/babel-register-6.18.0.tgz#892e2e03865078dd90ad2c715111ec4449b32a68"
   dependencies:
@@ -707,6 +748,15 @@ babel-types@^6.14.0, babel-types@^6.16.0, babel-types@^6.18.0, babel-types@^6.8.
     lodash "^4.2.0"
     to-fast-properties "^1.0.1"
 
+babel-types@^6.19.0:
+  version "6.19.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/babel-types/-/babel-types-6.19.0.tgz#8db2972dbed01f1192a8b602ba1e1e4c516240b9"
+  dependencies:
+    babel-runtime "^6.9.1"
+    esutils "^2.0.2"
+    lodash "^4.2.0"
+    to-fast-properties "^1.0.1"
+
 babylon@^6.11.0:
   version "6.13.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/babylon/-/babylon-6.13.1.tgz#adca350e088f0467647157652bafead6ddb8dfdb"
@@ -727,6 +777,10 @@ base64-url@1.2.2:
   version "1.2.2"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/base64-url/-/base64-url-1.2.2.tgz#90af26ef8b0b67bc801b05eccf943345649008b3"
 
+base64-url@1.3.2:
+  version "1.3.2"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/base64-url/-/base64-url-1.3.2.tgz#4b08113b49d23889f306be64372762d31412f7a8"
+
 base64-url@1.3.3:
   version "1.3.3"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/base64-url/-/base64-url-1.3.3.tgz#f8b6c537f09a4fc58c99cb86e0b0e9c61461a20f"
@@ -745,6 +799,21 @@ big.js@^3.1.3:
   version "3.1.3"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/big.js/-/big.js-3.1.3.tgz#4cada2193652eb3ca9ec8e55c9015669c9806978"
 
+bin-version-check@^2.1.0:
+  version "2.1.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/bin-version-check/-/bin-version-check-2.1.0.tgz#e4e5df290b9069f7d111324031efc13fdd11a5b0"
+  dependencies:
+    bin-version "^1.0.0"
+    minimist "^1.1.0"
+    semver "^4.0.3"
+    semver-truncate "^1.0.0"
+
+bin-version@^1.0.0:
+  version "1.0.4"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/bin-version/-/bin-version-1.0.4.tgz#9eb498ee6fd76f7ab9a7c160436f89579435d78e"
+  dependencies:
+    find-versions "^1.0.0"
+
 binary-extensions@^1.0.0:
   version "1.7.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/binary-extensions/-/binary-extensions-1.7.0.tgz#6c1610db163abfb34edfe42fa423343a1e01185d"
@@ -755,7 +824,7 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bluebird@^3.0.5, bluebird@^3.1.1, bluebird@^3.4.6:
+bluebird@^3.0.5, bluebird@^3.1.1, bluebird@3.4.6:
   version "3.4.6"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/bluebird/-/bluebird-3.4.6.tgz#01da8d821d87813d158967e743d5fe6c62cf8c0f"
 
@@ -861,15 +930,20 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
+bufferview@~1:
+  version "1.0.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/bufferview/-/bufferview-1.0.1.tgz#7afd74a45f937fa422a1d338c08bbfdc76cd725d"
+
 builtin-modules@^1.0.0:
   version "1.1.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
 
-bytebuffer@~5:
-  version "5.0.1"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/bytebuffer/-/bytebuffer-5.0.1.tgz#582eea4b1a873b6d020a48d58df85f0bba6cfddd"
+"bytebuffer@~4 >=4.1":
+  version "4.1.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/bytebuffer/-/bytebuffer-4.1.0.tgz#4c58269e052ab1e4b1f7ff364fdfb3ce882906aa"
   dependencies:
-    long "~3"
+    bufferview "~1"
+    long "~2 >=2.3.0"
 
 bytes@2.4.0:
   version "2.4.0"
@@ -913,11 +987,21 @@ center-align@^0.1.1:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
 
-chalk@^1.1.0, chalk@^1.1.1, chalk@^1.1.3:
+chalk@^1.0.0, chalk@^1.1.0, chalk@^1.1.1, chalk@^1.1.3:
   version "1.1.3"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/chalk/-/chalk-1.1.3.tgz#a8115c55e4a702fe4d150abd3872822a7e09fc98"
   dependencies:
     ansi-styles "^2.2.1"
+    escape-string-regexp "^1.0.2"
+    has-ansi "^2.0.0"
+    strip-ansi "^3.0.0"
+    supports-color "^2.0.0"
+
+chalk@1.1.1:
+  version "1.1.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/chalk/-/chalk-1.1.1.tgz#509afb67066e7499f7eb3535c77445772ae2d019"
+  dependencies:
+    ansi-styles "^2.1.0"
     escape-string-regexp "^1.0.2"
     has-ansi "^2.0.0"
     strip-ansi "^3.0.0"
@@ -1076,7 +1160,7 @@ constants-browserify@^1.0.0:
   version "1.0.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/constants-browserify/-/constants-browserify-1.0.0.tgz#c20b96d8c617748aaf1c16021760cd27fcb8cb75"
 
-consul@^0.27.0:
+consul@0.27.0:
   version "0.27.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/consul/-/consul-0.27.0.tgz#3d8c88c2a0d875369afc46098830499528fc74c4"
   dependencies:
@@ -1553,6 +1637,15 @@ find-up@^1.0.0:
     path-exists "^2.0.0"
     pinkie-promise "^2.0.0"
 
+find-versions@^1.0.0:
+  version "1.2.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/find-versions/-/find-versions-1.2.1.tgz#cbde9f12e38575a0af1be1b9a2c5d5fd8f186b62"
+  dependencies:
+    array-uniq "^1.0.0"
+    get-stdin "^4.0.1"
+    meow "^3.5.0"
+    semver-regex "^1.0.0"
+
 flatten@^1.0.2:
   version "1.0.2"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
@@ -1583,11 +1676,11 @@ fresh@^0.3.0:
   version "0.3.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/fresh/-/fresh-0.3.0.tgz#651f838e22424e7566de161d8358caa199f83d4f"
 
-fs-readdir-recursive@^1.0.0:
-  version "1.0.0"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/fs-readdir-recursive/-/fs-readdir-recursive-1.0.0.tgz#8cd1745c8b4f8a29c8caec392476921ba195f560"
+fs-readdir-recursive@^0.1.0:
+  version "0.1.2"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/fs-readdir-recursive/-/fs-readdir-recursive-0.1.2.tgz#315b4fb8c1ca5b8c47defef319d073dad3568059"
 
-fs-sync@^1.0.3:
+fs-sync@1.0.3:
   version "1.0.3"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/fs-sync/-/fs-sync-1.0.3.tgz#a541f3fa94a64a6b736519ed13146e40f5b2d29c"
   dependencies:
@@ -1696,7 +1789,7 @@ glob@^5.0.10, glob@^5.0.5:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.0, glob@^7.1.1, glob@~7.1.1:
+glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.0, glob@~7.1.1, glob@7.1.1:
   version "7.1.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
   dependencies:
@@ -1738,15 +1831,14 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.4:
   version "1.0.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-grpc@^1.0.1-pre1:
-  version "1.0.1"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/grpc/-/grpc-1.0.1.tgz#e965544b5e56c998058102184e2ab1f27f123afd"
+grpc@1.0.1-pre1:
+  version "1.0.1-pre1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/grpc/-/grpc-1.0.1-pre1.tgz#fdf934df26c2958a16f40f6c4cf4b25fdcf7bbf1"
   dependencies:
     arguejs "^0.2.3"
-    lodash "^4.15.0"
+    lodash "^3.9.3"
     nan "^2.0.0"
-    node-pre-gyp "^0.6.0"
-    protobufjs "^5.0.0"
+    protobufjs "^4.0.0"
 
 har-validator@~2.0.6:
   version "2.0.6"
@@ -2125,6 +2217,10 @@ json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
+json5@^0.4.0:
+  version "0.4.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/json5/-/json5-0.4.0.tgz#054352e4c4c80c86c0923877d449de176a732c8d"
+
 json5@^0.5.0:
   version "0.5.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/json5/-/json5-0.5.0.tgz#9b20715b026cbe3778fd769edccd822d8332a5b2"
@@ -2155,7 +2251,7 @@ kind-of@^3.0.2:
   dependencies:
     is-buffer "^1.0.2"
 
-koa-bodyparser@^3.2.0:
+koa-bodyparser@3.2.0:
   version "3.2.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/koa-bodyparser/-/koa-bodyparser-3.2.0.tgz#b916de17e2039fe82650481973d7c294f10b5719"
   dependencies:
@@ -2167,16 +2263,16 @@ koa-compose@^3.0.0:
   dependencies:
     any-promise "^1.1.0"
 
-koa-convert@^1.2.0:
+koa-convert@^1.2.0, koa-convert@1.2.0:
   version "1.2.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/koa-convert/-/koa-convert-1.2.0.tgz#da40875df49de0539098d1700b50820cebcd21d0"
   dependencies:
     co "^4.6.0"
     koa-compose "^3.0.0"
 
-koa-csrf@^3.0.3:
-  version "3.0.4"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/koa-csrf/-/koa-csrf-3.0.4.tgz#87a346f17b726c2e565f2210630c59b0875873b9"
+koa-csrf@3.0.3:
+  version "3.0.3"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/koa-csrf/-/koa-csrf-3.0.3.tgz#b90819182690cbdd35f0e11e8b55824b116f828d"
   dependencies:
     csrf "^3.0.3"
 
@@ -2193,7 +2289,7 @@ koa-send@~3.1.0:
     mz "^2.3.1"
     resolve-path "^1.3.1"
 
-koa-session2@^1.0.8:
+koa-session2@1.0.8:
   version "1.0.8"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/koa-session2/-/koa-session2-1.0.8.tgz#9639ae3c27b2b98ec2f855304a370ff93048dd9b"
   dependencies:
@@ -2260,7 +2356,7 @@ loader-runner@^2.2.0:
   version "2.2.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/loader-runner/-/loader-runner-2.2.0.tgz#824c1b699c4e7a2b6501b85902d5b862bf45b3fa"
 
-loader-utils@^0.2.10, loader-utils@^0.2.11, loader-utils@^0.2.15, loader-utils@^0.2.16, loader-utils@^0.2.3, loader-utils@^0.2.7, loader-utils@^0.2.9, loader-utils@~0.2.2, loader-utils@~0.2.5:
+loader-utils@^0.2.10, loader-utils@^0.2.11, loader-utils@^0.2.16, loader-utils@^0.2.3, loader-utils@^0.2.7, loader-utils@^0.2.9, loader-utils@~0.2.2, loader-utils@~0.2.5:
   version "0.2.16"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/loader-utils/-/loader-utils-0.2.16.tgz#f08632066ed8282835dff88dfb52704765adee6d"
   dependencies:
@@ -2369,13 +2465,27 @@ lodash.words@^3.0.0:
   dependencies:
     lodash._root "^3.0.0"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.1, lodash@^4.16.4, lodash@^4.2.0, lodash@^4.3.0, lodash@~4.16.4:
+lodash@^3.9.3:
+  version "3.10.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
+
+lodash@^4.0.0, lodash@^4.16.1, lodash@^4.2.0, lodash@^4.3.0, lodash@~4.16.4:
   version "4.16.6"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/lodash/-/lodash-4.16.6.tgz#d22c9ac660288f3843e16ba7d2b5d06cca27d777"
 
-long@~3:
-  version "3.2.0"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/long/-/long-3.2.0.tgz#d821b7138ca1cb581c172990ef14db200b5c474b"
+lodash@4.16.4:
+  version "4.16.4"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/lodash/-/lodash-4.16.4.tgz#01ce306b9bad1319f2a5528674f88297aeb70127"
+
+log-symbols@^1.0.2:
+  version "1.0.2"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/log-symbols/-/log-symbols-1.0.2.tgz#376ff7b58ea3086a0f09facc74617eca501e1a18"
+  dependencies:
+    chalk "^1.0.0"
+
+"long@~2 >=2.3.0":
+  version "2.4.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/long/-/long-2.4.0.tgz#9fa180bb1d9500cdc29c4156766a1995e1f4524f"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -2429,14 +2539,14 @@ media-typer@0.3.0:
   version "0.3.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
 
-memory-fs@^0.3.0, memory-fs@~0.3.0:
+memory-fs@^0.3.0, memory-fs@~0.3.0, memory-fs@0.3.0:
   version "0.3.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/memory-fs/-/memory-fs-0.3.0.tgz#7bcc6b629e3a43e871d7e29aca6ae8a7f15cbb20"
   dependencies:
     errno "^0.1.3"
     readable-stream "^2.0.1"
 
-meow@^3.7.0:
+meow@^3.5.0, meow@^3.7.0:
   version "3.7.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/meow/-/meow-3.7.0.tgz#72cb668b425228290abbfa856892587308a801fb"
   dependencies:
@@ -2496,7 +2606,7 @@ minimatch@^3.0.0, minimatch@^3.0.2, minimatch@~3.0.2, "minimatch@2 || 3":
   dependencies:
     brace-expansion "^1.0.0"
 
-minimist@^1.1.3, minimist@^1.2.0:
+minimist@^1.1.0, minimist@^1.1.3, minimist@^1.2.0:
   version "1.2.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
 
@@ -2534,7 +2644,7 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-node-fetch@^1.6.3:
+node-fetch@1.6.3:
   version "1.6.3"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/node-fetch/-/node-fetch-1.6.3.tgz#dc234edd6489982d58e8f0db4f695029abcd8c04"
   dependencies:
@@ -2588,7 +2698,7 @@ node-libs-browser@^1.0.0:
     util "~0.10.3"
     vm-browserify "0.0.4"
 
-node-pre-gyp@^0.6.0, node-pre-gyp@^0.6.29:
+node-pre-gyp@^0.6.29:
   version "0.6.31"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/node-pre-gyp/-/node-pre-gyp-0.6.31.tgz#d8a00ddaa301a940615dbcc8caad4024d58f6017"
   dependencies:
@@ -2602,9 +2712,9 @@ node-pre-gyp@^0.6.0, node-pre-gyp@^0.6.29:
     tar "~2.2.1"
     tar-pack "~3.3.0"
 
-node-sass@^3.10.1:
-  version "3.11.2"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/node-sass/-/node-sass-3.11.2.tgz#ba3bef8cd46bd1698c2bdb2b6d2af1f9e7d7878f"
+node-sass@3.10.1:
+  version "3.10.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/node-sass/-/node-sass-3.10.1.tgz#c535b2e1a5439240591e06d7308cb663820d616c"
   dependencies:
     async-foreach "^0.1.3"
     chalk "^1.1.1"
@@ -2805,6 +2915,10 @@ path-array@^1.0.0:
 path-browserify@0.0.0:
   version "0.0.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/path-browserify/-/path-browserify-0.0.0.tgz#a0b870729aae214005b7d5032ec2cbbb0fb4451a"
+
+path-exists@^1.0.0:
+  version "1.0.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/path-exists/-/path-exists-1.0.0.tgz#d5a8998eb71ef37a74c34eb0d9eba6e878eea081"
 
 path-exists@^2.0.0:
   version "2.1.0"
@@ -3138,12 +3252,12 @@ proto-list@~1.2.1:
   version "1.2.4"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/proto-list/-/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
 
-protobufjs@^5.0.0:
-  version "5.0.1"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/protobufjs/-/protobufjs-5.0.1.tgz#589ecdda1a555fd69df4699adc142d36f133aa0b"
+protobufjs@^4.0.0:
+  version "4.1.3"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/protobufjs/-/protobufjs-4.1.3.tgz#8e36d1b0226cbb68d647e4b44c2a144f37f2779e"
   dependencies:
     ascli "~1"
-    bytebuffer "~5"
+    bytebuffer "~4 >=4.1"
     glob "^5.0.10"
     yargs "^3.10.0"
 
@@ -3381,6 +3495,31 @@ request@^2.61.0, request@^2.75.0, request@2:
     tough-cookie "~2.3.0"
     tunnel-agent "~0.4.1"
 
+request@^2.65.0:
+  version "2.79.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
+  dependencies:
+    aws-sign2 "~0.6.0"
+    aws4 "^1.2.1"
+    caseless "~0.11.0"
+    combined-stream "~1.0.5"
+    extend "~3.0.0"
+    forever-agent "~0.6.1"
+    form-data "~2.1.1"
+    har-validator "~2.0.6"
+    hawk "~3.1.3"
+    http-signature "~1.1.0"
+    is-typedarray "~1.0.0"
+    isstream "~0.1.2"
+    json-stringify-safe "~5.0.1"
+    mime-types "~2.1.7"
+    oauth-sign "~0.8.1"
+    qs "~6.3.0"
+    stringstream "~0.0.4"
+    tough-cookie "~2.3.0"
+    tunnel-agent "~0.4.1"
+    uuid "^3.0.0"
+
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
@@ -3428,14 +3567,6 @@ sass-graph@^2.1.1:
     lodash "^4.0.0"
     yargs "^4.7.1"
 
-sass-loader@^4.0.2:
-  version "4.0.2"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/sass-loader/-/sass-loader-4.0.2.tgz#a616eb770366543e64f547c8630f39c4da75f15d"
-  dependencies:
-    async "^2.0.1"
-    loader-utils "^0.2.15"
-    object-assign "^4.1.0"
-
 sax@~1.2.1:
   version "1.2.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/sax/-/sax-1.2.1.tgz#7b8e656190b228e81a66aea748480d828cd2d37a"
@@ -3444,7 +3575,21 @@ sax@0.5.x:
   version "0.5.8"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/sax/-/sax-0.5.8.tgz#d472db228eb331c2506b0e8c15524adb939d12c1"
 
-semver@~5.3.0, "semver@2 || 3 || 4 || 5", "semver@2.x || 3.x || 4 || 5":
+semver-regex@^1.0.0:
+  version "1.0.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/semver-regex/-/semver-regex-1.0.0.tgz#92a4969065f9c70c694753d55248fc68f8f652c9"
+
+semver-truncate@^1.0.0:
+  version "1.1.2"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/semver-truncate/-/semver-truncate-1.1.2.tgz#57f41de69707a62709a7e0104ba2117109ea47e8"
+  dependencies:
+    semver "^5.3.0"
+
+semver@^4.0.3:
+  version "4.3.6"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/semver/-/semver-4.3.6.tgz#300bc6e0e86374f7ba61068b5b1ecd57fc6532da"
+
+semver@^5.3.0, semver@~5.3.0, "semver@2 || 3 || 4 || 5", "semver@2.x || 3.x || 4 || 5":
   version "5.3.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
 
@@ -3465,6 +3610,10 @@ sha.js@^2.3.6:
   resolved "http://repo.quancheng-ec.com/repository/npm-public/sha.js/-/sha.js-2.4.8.tgz#37068c2c476b6baf402d14a49c67f597921f634f"
   dependencies:
     inherits "^2.0.1"
+
+shebang-regex@^1.0.0:
+  version "1.0.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
 sigmund@^1.0.1:
   version "1.0.1"
@@ -3716,9 +3865,18 @@ type-is@^1.5.5, type-is@~1.6.6:
     media-typer "0.3.0"
     mime-types "~2.1.11"
 
-uglify-js@^2.7.3, uglify-js@~2.7.3:
+uglify-js@~2.7.3:
   version "2.7.4"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/uglify-js/-/uglify-js-2.7.4.tgz#a295a0de12b6a650c031c40deb0dc40b14568bd2"
+  dependencies:
+    async "~0.2.6"
+    source-map "~0.5.1"
+    uglify-to-browserify "~1.0.0"
+    yargs "~3.10.0"
+
+uglify-js@2.7.3:
+  version "2.7.3"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/uglify-js/-/uglify-js-2.7.3.tgz#39b3a7329b89f5ec507e344c6e22568698ef4868"
   dependencies:
     async "~0.2.6"
     source-map "~0.5.1"
@@ -3733,7 +3891,7 @@ uid-number@~0.0.6:
   version "0.0.6"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/uid-number/-/uid-number-0.0.6.tgz#0ea10e8035e8eb5b8e4449f06da1c730663baa81"
 
-uid-safe@^2.1.1, uid-safe@^2.1.2:
+uid-safe@^2.1.1:
   version "2.1.3"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/uid-safe/-/uid-safe-2.1.3.tgz#077e264a00b3187936b270bb7376a26473631071"
   dependencies:
@@ -3745,6 +3903,13 @@ uid-safe@2.1.1:
   resolved "http://repo.quancheng-ec.com/repository/npm-public/uid-safe/-/uid-safe-2.1.1.tgz#3dbf9436b528be9f52882c05a6216c3763db3666"
   dependencies:
     base64-url "1.2.2"
+    random-bytes "~1.0.0"
+
+uid-safe@2.1.2:
+  version "2.1.2"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/uid-safe/-/uid-safe-2.1.2.tgz#c934b3caead0fdcd0fb2cff3a8876d06fe0ee0fd"
+  dependencies:
+    base64-url "1.3.2"
     random-bytes "~1.0.0"
 
 uniq@^1.0.1:
@@ -3786,6 +3951,10 @@ util@~0.10.3, util@0.10.3:
   dependencies:
     inherits "2.0.1"
 
+uuid@^3.0.0:
+  version "3.0.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/uuid/-/uuid-3.0.0.tgz#6728fc0459c450d796a99c31837569bdf672d728"
+
 v8flags@^2.0.10:
   version "2.0.11"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/v8flags/-/v8flags-2.0.11.tgz#bca8f30f0d6d60612cc2c00641e6962d42ae6881"
@@ -3823,9 +3992,9 @@ vue-hot-reload-api@^2.0.1:
   version "2.0.6"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-hot-reload-api/-/vue-hot-reload-api-2.0.6.tgz#817d4bfb30f55428aa1012d029499e07f3147d21"
 
-vue-loader:
-  version "9.8.1"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-loader/-/vue-loader-9.8.1.tgz#40dde1cb7fdb2d8e4718df6acfa7f679bf30fcb9"
+vue-loader@10.0.0:
+  version "10.0.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-loader/-/vue-loader-10.0.0.tgz#4adc4b911367c8b68f635d99158ed8ef5739a52b"
   dependencies:
     consolidate "^0.14.0"
     hash-sum "^1.0.2"
@@ -3838,16 +4007,15 @@ vue-loader:
     source-map "^0.5.6"
     vue-hot-reload-api "^2.0.1"
     vue-style-loader "^1.0.0"
-    vue-template-compiler "^2.0.4"
-    vue-template-es2015-compiler "^1.0.0"
+    vue-template-es2015-compiler "^1.2.2"
 
-vue-resource@^1.0.3:
+vue-resource@1.0.3:
   version "1.0.3"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-resource/-/vue-resource-1.0.3.tgz#8d52d0d8a9ed5f2ae704c68d530c84ceaf97be14"
 
-vue-server-renderer@^2.0.5:
-  version "2.0.5"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-server-renderer/-/vue-server-renderer-2.0.5.tgz#c5637b5fc2ab5c0c1e7f30cdf64949663248f430"
+vue-server-renderer@2.1.3:
+  version "2.1.3"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-server-renderer/-/vue-server-renderer-2.1.3.tgz#40aafd2354e2ffdaf64a8593c06adb10375c1eb8"
   dependencies:
     de-indent "^1.0.2"
     he "^1.1.0"
@@ -3858,24 +4026,24 @@ vue-style-loader@^1.0.0:
   dependencies:
     loader-utils "^0.2.7"
 
-vue-template-compiler@^2.0.4, vue-template-compiler@^2.0.5:
-  version "2.0.5"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-template-compiler/-/vue-template-compiler-2.0.5.tgz#6a8c454e7d4ed03cc295ae9733a432e31df25ea3"
+vue-template-compiler@2.1.3:
+  version "2.1.3"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-template-compiler/-/vue-template-compiler-2.1.3.tgz#af252df5848c15980cbf32d88a253db053290949"
   dependencies:
     de-indent "^1.0.2"
     he "^1.1.0"
 
-vue-template-es2015-compiler@^1.0.0:
-  version "1.1.1"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.1.1.tgz#ae1ddcf9f6c7eb95df304560ba9a803f3ec9ffb4"
+vue-template-es2015-compiler@^1.2.2:
+  version "1.3.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.3.0.tgz#4a0f2a0bbef8b5731f78add8263cd86fe4f643ca"
 
-vue@^2.0.5:
-  version "2.0.5"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue/-/vue-2.0.5.tgz#b99dc7180a802d1148a508db3d84b52c09b5ca8e"
+vue@2.1.3:
+  version "2.1.3"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/vue/-/vue-2.1.3.tgz#20161b8684777754fd9823134b38f13c1e197882"
 
-vuex@^1.0.0:
-  version "1.0.0"
-  resolved "http://repo.quancheng-ec.com/repository/npm-public/vuex/-/vuex-1.0.0.tgz#824f7a0c52b36a8040522dec62455f58434cb43a"
+vuex@2.0.0:
+  version "2.0.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/vuex/-/vuex-2.0.0.tgz#26befa44de220f009e432d1027487bff29571cee"
 
 watchpack@^1.0.0:
   version "1.1.0"
@@ -3892,7 +4060,7 @@ webpack-sources@^0.1.0:
     source-list-map "~0.1.0"
     source-map "~0.5.3"
 
-webpack@^2.1.0-beta.25:
+webpack@2.1.0-beta.25:
   version "2.1.0-beta.25"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/webpack/-/webpack-2.1.0-beta.25.tgz#c35ff4da4ee70344a2f14c35258d95412709e9ed"
   dependencies:
@@ -3916,7 +4084,7 @@ webpack@^2.1.0-beta.25:
     webpack-sources "^0.1.0"
     yargs "^4.7.1"
 
-whatwg-fetch@^1.0.0:
+whatwg-fetch@1.0.0:
   version "1.0.0"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/whatwg-fetch/-/whatwg-fetch-1.0.0.tgz#01c2ac4df40e236aaa18480e3be74bd5c8eb798e"
 

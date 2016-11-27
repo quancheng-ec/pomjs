@@ -98,9 +98,12 @@ module.exports = {
 
     init: function init(opts) {
         root = opts.root;
-        if (!opts.page) {
-            throw new Error("the opts page can't be null");
-        }
+
+        opts.page = {
+            src: Path.join(opts.src, 'pages'),
+            build: Path.join(opts.build, 'pages')
+        };
+
         if (opts.isProduction) {
             _isProduction = true;
             vue_build_path = Path.join(root, 'vue_build.json');

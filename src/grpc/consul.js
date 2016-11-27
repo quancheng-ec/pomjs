@@ -60,7 +60,7 @@ async function _init(consulNode) {
             host: serviceURLObj.host,
             address: s.Address,
             port: s.Port
-        }
+        };
         Object.assign(service, serviceURLObj.query);
         if (!services[service.name]) {
             services[service.name] = [];
@@ -90,7 +90,7 @@ module.exports = {
         const func = async function () {
             _services = await _init(group);
             setTimeout(func, 10000);
-        }
+        };
         setTimeout(func, 0);
     },
     setServices: function (services) {

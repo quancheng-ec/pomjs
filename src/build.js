@@ -8,10 +8,10 @@ const fs = require('fs-sync');
 
 module.exports = async function (opts = {}) {
     opts.isProduction = true;
-    fs.copy(opts.page.src,opts.page.build);
+    fs.copy(opts.src, opts.build, {force: true});
 
     pageLoader.init(opts);
     pageLoader.initCompile();
     await pageLoader.compileRun();
 
-}
+};

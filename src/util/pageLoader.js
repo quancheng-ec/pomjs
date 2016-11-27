@@ -96,9 +96,12 @@ module.exports = {
 
     init: function (opts) {
         root = opts.root;
-        if (!opts.page) {
-            throw new Error("the opts page can't be null");
-        }
+
+        opts.page = {
+            src: Path.join(opts.src, 'pages'),
+            build: Path.join(opts.build, 'pages')
+        };
+
         if (opts.isProduction) {
             isProduction = true;
             vue_build_path = Path.join(root, 'vue_build.json');
@@ -174,12 +177,12 @@ module.exports = {
         return isProduction;
     },
     readServerFileSync: function (pageName) {
-        const rootPath = Path.resolve(staticDir,'../');
+        const rootPath = Path.resolve(staticDir, '../');
         const p = isProduction ? Path.resolve(rootPath, build.server[pageName]) : serverStats.compilation.assets[pageName].existsAt;
         return (isProduction ? FS : serverFs).readFileSync(p, 'utf8');
     },
     readClientFile: function (pageName) {
-        const rootPath = Path.resolve(staticDir,'../');
+        const rootPath = Path.resolve(staticDir, '../');
         const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientStats.compilation.assets[pageName].existsAt;
         return clientFs.readFileSync(p);
     },

@@ -14,7 +14,7 @@ module.exports = function () {
         var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
         opts.isProduction = true;
-        fs.copy(opts.page.src, opts.page.build);
+        fs.copy(opts.src, opts.build, { force: true });
 
         pageLoader.init(opts);
         pageLoader.initCompile();
