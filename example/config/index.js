@@ -6,17 +6,13 @@ const path = require('path')
 const opts = {
     static: path.join(__dirname, '../static'),// 静态文件目录
     layout: path.join(__dirname, '../layouts'),// layout文件目录
-    page: {
-        src: path.join(__dirname, '../src/pages'),
-        build: path.join(__dirname, '../dist/pages')
-    },
-    components: path.join(__dirname, '../components')
+    src: path.join(__dirname, '../src'),
+    build: path.join(__dirname, '../dist')
     //build: './build', //编译后的目录
     , root: path.join(__dirname, '../'),
-    domain:'localhost'
+    domain: 'localhost'
 
-}
-
+};
 
 
 module.exports = opts;

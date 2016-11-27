@@ -89,7 +89,7 @@ export default function (opts = {}) {
 
         const context = Object.assign({}, ctx._httpContext);
 
-        ctx.context = Object.assign({},context, {
+        ctx.context = Object.assign({}, context, {
             context: context, pageContext: {
                 pagePath: pagePath,
                 pageName: pageName,
@@ -97,24 +97,37 @@ export default function (opts = {}) {
             }, csrf: ctx.csrf
         });
 
-        let result = await control(ctx,services);
+        let controlResult = {
+            isSuccess: true,
+            errorCode: 0,
+            errorMessage: '',
+            data: {}
+        };
 
-        if (typeof result !== 'object') {
-            let e = new Error('the ' + api + ' result must be Object');
-            e.statusCode = 500;
-            throw e;
+        try {
+            controlResult.data = await control(ctx, services);
+        } catch (e) {
+            controlResult.isSuccess = false;
+            controlResult.errorCode = e.code;
+            controlResult.errorMessage = e.message;
         }
+
+        // if (typeof result !== 'object') {
+        //     let e = new Error('the ' + api + ' result must be Object');
+        //     e.statusCode = 500;
+        //     throw e;
+        // }
 
         if (type === 'event') {
             return;
         }
 
         if (type === 'api') {
-            ctx.body = result;
+            ctx.body = controlResult;
             return;
         }
 
-        ctx.context = Object.assign(ctx.context, result);
+        ctx.context = Object.assign(ctx.context, controlResult.data);
 
         await next();
     }

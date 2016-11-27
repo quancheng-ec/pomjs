@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 exports.default = function () {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -95,24 +93,37 @@ exports.default = function () {
                 }, csrf: ctx.csrf
             });
 
-            var result = yield control(ctx, services);
+            var controlResult = {
+                isSuccess: true,
+                errorCode: 0,
+                errorMessage: '',
+                data: {}
+            };
 
-            if ((typeof result === 'undefined' ? 'undefined' : _typeof(result)) !== 'object') {
-                var _e = new Error('the ' + api + ' result must be Object');
-                _e.statusCode = 500;
-                throw _e;
+            try {
+                controlResult.data = yield control(ctx, services);
+            } catch (e) {
+                controlResult.isSuccess = false;
+                controlResult.errorCode = e.code;
+                controlResult.errorMessage = e.message;
             }
+
+            // if (typeof result !== 'object') {
+            //     let e = new Error('the ' + api + ' result must be Object');
+            //     e.statusCode = 500;
+            //     throw e;
+            // }
 
             if (type === 'event') {
                 return;
             }
 
             if (type === 'api') {
-                ctx.body = result;
+                ctx.body = controlResult;
                 return;
             }
 
-            ctx.context = Object.assign(ctx.context, result);
+            ctx.context = Object.assign(ctx.context, controlResult.data);
 
             yield next();
         });
