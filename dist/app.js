@@ -38,6 +38,10 @@ var _bundle = require('./middleware/bundle');
 
 var _bundle2 = _interopRequireDefault(_bundle);
 
+var _multer = require('./middleware/multer');
+
+var _multer2 = _interopRequireDefault(_multer);
+
 var _user = require('./middleware/user');
 
 var _user2 = _interopRequireDefault(_user);
@@ -85,6 +89,9 @@ module.exports = function () {
     app.use((0, _koaSession2.default)({
         key: "SESSIONID" //default "koa:sess"
     }));
+
+    // add multipart/form-data parsing
+    app.use((0, _multer2.default)(opts.uploadConfig || {}));
 
     // add body parsing
     app.use(bodyParser());
