@@ -18,6 +18,7 @@ import route from './middleware/route';
 import render from './middleware/render';
 import error from './middleware/error';
 import bundle from './middleware/bundle';
+import multer from './middleware/multer';
 import user from './middleware/user';
 
 const app = new Koa();
@@ -51,6 +52,9 @@ module.exports = function (opts = {}) {
     app.use(session({
         key: "SESSIONID"   //default "koa:sess"
     }));
+
+    // add multipart/form-data parsing
+    app.use(multer(opts.uploadConfig || {}));
 
     // add body parsing
     app.use(bodyParser());
