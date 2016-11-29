@@ -15,7 +15,7 @@ module.exports = {
         }
         const services = opts.saluki || {};
         await consul.init(opts);
-        Object.assign(_apis, client.init(opts.saluki));
+        Object.assign(_apis, await client.init(opts.saluki));
     },
     services: function () {
         return _apis;

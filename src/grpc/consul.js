@@ -39,12 +39,8 @@ let _services = {};
 
 async function _init(consulNode) {
 
-    if (consulNode && !consul_node) {
-        consul_node = consulNode;
-    }
-
     let checks = await _consul.health.service({
-        service: consul_node,
+        service: consulNode,
         passing: true
     });
     const services = {};
@@ -83,12 +79,18 @@ module.exports = {
             host: saluki.host || '127.0.0.1',
             port: saluki.port || '8500'
         });
-        const group = saluki.group ? 'Saluki_' + saluki.group : 'Saluki_dev';
-
-        console.log('init consul client!');
-
+        const group = saluki.group ? saluki.group : 'default';
+        module.exports.initWidthGroup(group);
+    },
+    /**
+     * 初始化group
+     * @param group
+     */
+    initWidthGroup: async function (group) {
+        console.log('init consul client widthgroup ' + group);
+        const sgroup = 'Saluki_' + group;
         const func = async function () {
-            _services = await _init(group);
+            _services[group] = await _init(sgroup);
             setTimeout(func, 10000);
         };
         setTimeout(func, 0);
@@ -98,7 +100,13 @@ module.exports = {
     },
     getALL: function () {
         return _services;
+    },
+    getService: function (api) {
+        if (_services[api.group]) {
+            return _services[api.group][api.name];
+        }
+        return _services;
     }
 
-}
+};
 

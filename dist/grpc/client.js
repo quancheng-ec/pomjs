@@ -1,5 +1,101 @@
 'use strict';
 
+var initClient = function () {
+    var _ref = _asyncToGenerator(function* (saluki) {
+
+        console.log('init saluki client!');
+
+        var root = saluki.root; //'/Users/joe/work/service-all/api/src/main/proto/';
+        glob.sync(Path.join(root, "**/*_service.proto")).forEach(function (f) {
+            var proto = grpc.load({ root: root, file: f.substring(root.length) });
+            protos = _.defaultsDeep(protos, proto);
+        });
+
+        var apis = {};
+        var groups = {};
+
+        var _loop = function _loop(i) {
+            var serviceDef = saluki.services[i];
+            var ss = serviceDef.split('@');
+            var sds = ss[0].split(':');
+            var api = {};
+
+            if (ss[1]) {
+                api.target = ss[1];
+            }
+            if (sds.length === 3) {
+                // name:group:version
+                api.name = sds[0];
+                api.group = sds[1];
+                api.version = sds[2];
+            } else if (sds.length === 2) {
+                // name:version
+                api.name = sds[0];
+                api.group = saluki.salukiGroup || 'default';
+                api.version = sds[1];
+            } else if (sds.length === 1) {
+                // name
+                api.name = sds[0];
+                api.group = saluki.salukiGroup || 'default';
+                api.version = '1.0.0';
+            }
+            var names = api.name.split('.');
+            var instances = protos;
+            names.forEach(function (n) {
+                instances = !instances ? null : instances[n];
+            });
+            if (!instances) {
+                console.error('the proto not found', serviceDef);
+                return 'continue';
+            }
+            api.methods = {};
+            api._grpc = instances;
+            api._clientPool = {};
+            apis[i] = wrapService(api);
+            groups[api.group] = true;
+        };
+
+        for (var i in saluki.services) {
+            var _ret = _loop(i);
+
+            if (_ret === 'continue') continue;
+        }
+        yield initConsuls(groups);
+        return apis;
+    });
+
+    return function initClient(_x) {
+        return _ref.apply(this, arguments);
+    };
+}();
+
+/**
+ * 初始化Consul配置
+ * @param apis
+ */
+
+
+var initConsuls = function () {
+    var _ref2 = _asyncToGenerator(function* (groups) {
+        for (var i in groups) {
+            yield consul.initWidthGroup(i);
+        }
+    });
+
+    return function initConsuls(_x2) {
+        return _ref2.apply(this, arguments);
+    };
+}();
+
+/**
+ * 获取api对应的grpc的连接
+ * @param api
+ * @returns {*}
+ */
+
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 /**
  * Created by joe on 2016/10/22.
  */
@@ -28,82 +124,7 @@ var metadataUpdater = function metadataUpdater(service_url, callback) {
 var mcreds = grpc.credentials.createFromMetadataGenerator(metadataUpdater);
 var combined_creds = grpc.credentials.combineChannelCredentials(ssl_creds, mcreds);
 
-// const consul ={
-//     getALL: function () {
-//         return {
-//             'com.quancheng.examples.service.HelloService': [{
-//                 name: 'com.quancheng.examples.service.HelloService',
-//                 host: '127.0.0.1:5051'
-//             }, {
-//                 name: 'com.quancheng.examples.service.HelloService',
-//                 host: '127.0.0.1:5052'
-//             }]
-//         };
-//     }
-// };
-
-
 var protos = {};
-
-function initClient(saluki) {
-
-    console.log('init saluki client!');
-
-    var root = saluki.root; //'/Users/joe/work/service-all/api/src/main/proto/';
-    glob.sync(Path.join(root, "**/*_service.proto")).forEach(function (f) {
-        var proto = grpc.load({ root: root, file: f.substring(root.length) });
-        protos = _.defaultsDeep(protos, proto);
-    });
-
-    var apis = {};
-
-    var _loop = function _loop() {
-        var serviceDef = saluki.services[i];
-        var ss = serviceDef.split('@');
-        var sds = ss[0].split(':');
-        var api = {};
-
-        if (ss[1]) {
-            api.target = ss[1];
-        }
-        if (sds.length === 3) {
-            // name:group:version
-            api.name = sds[0];
-            api.group = sds[1];
-            api.version = sds[2];
-        } else if (sds.length === 2) {
-            // name:version
-            api.name = sds[0];
-            api.group = saluki.salukiGroup || 'default';
-            api.version = sds[1];
-        } else if (sds.length === 1) {
-            // name
-            api.name = sds[0];
-            api.group = saluki.salukiGroup || 'default';
-            api.version = '1.0.0';
-        }
-        var names = api.name.split('.');
-        var instances = protos;
-        names.forEach(function (n) {
-            instances = !instances ? null : instances[n];
-        });
-        if (!instances) {
-            console.error('the proto not found', serviceDef);
-            return 'continue';
-        }
-        api.methods = {};
-        api._grpc = instances;
-        api._clientPool = {};
-        apis[i] = wrapService(api);
-    };
-
-    for (var i in saluki.services) {
-        var _ret = _loop();
-
-        if (_ret === 'continue') continue;
-    }
-    return apis;
-}
 
 function getClient(api) {
 
@@ -116,7 +137,7 @@ function getClient(api) {
         return api.client;
     }
 
-    var provider = consul.getALL()[api.name];
+    var provider = consul.getService(api);
     if (!provider) {
         console.error('the service provider not found', api.name);
         return null;
@@ -125,7 +146,7 @@ function getClient(api) {
     var providerHosts = [];
     provider.forEach(function (s) {
         //匹配provide和当前的service声明，如果相同则记录下来
-        if (s.group || 'default' === api.group && s.version || '1.0.0' === api.version) {
+        if ((s.group || 'default') === api.group && (s.version || '1.0.0') === api.version) {
             providerHosts.push(s.host);
         }
     });

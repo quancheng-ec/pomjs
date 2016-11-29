@@ -17,7 +17,7 @@ var grpcOptions = {
 var ssl_creds = grpc.credentials.createSsl(FS.readFileSync(Path.join(__dirname, '../../server.pem')));
 var creds = grpc.credentials.createInsecure();
 
-var metadataUpdater = function(service_url, callback) {
+var metadataUpdater = function (service_url, callback) {
     var metadata = new grpc.Metadata();
     metadata.set('plugin_key', 'plugin_value');
     callback(null, metadata);
@@ -28,25 +28,10 @@ var mcreds = grpc.credentials.createFromMetadataGenerator(metadataUpdater);
 var combined_creds = grpc.credentials.combineChannelCredentials(
     ssl_creds, mcreds);
 
-// const consul ={
-//     getALL: function () {
-//         return {
-//             'com.quancheng.examples.service.HelloService': [{
-//                 name: 'com.quancheng.examples.service.HelloService',
-//                 host: '127.0.0.1:5051'
-//             }, {
-//                 name: 'com.quancheng.examples.service.HelloService',
-//                 host: '127.0.0.1:5052'
-//             }]
-//         };
-//     }
-// };
-
-
 let protos = {};
 
 
-function initClient(saluki) {
+async function initClient(saluki) {
 
     console.log('init saluki client!');
 
@@ -57,7 +42,8 @@ function initClient(saluki) {
     });
 
     const apis = {};
-    for (var i in saluki.services) {
+    const groups = {};
+    for (let i in saluki.services) {
         const serviceDef = saluki.services[i];
         const ss = serviceDef.split('@');
         const sds = ss[0].split(':');
@@ -95,10 +81,27 @@ function initClient(saluki) {
         api._grpc = instances;
         api._clientPool = {};
         apis[i] = wrapService(api);
+        groups[api.group] = true;
     }
+    await initConsuls(groups);
     return apis;
 }
 
+/**
+ * 初始化Consul配置
+ * @param apis
+ */
+async function initConsuls(groups) {
+    for (let i in groups) {
+        await consul.initWidthGroup(i);
+    }
+}
+
+/**
+ * 获取api对应的grpc的连接
+ * @param api
+ * @returns {*}
+ */
 function getClient(api) {
 
     if (api.target) {
@@ -110,8 +113,7 @@ function getClient(api) {
         return api.client;
     }
 
-
-    const provider = consul.getALL()[api.name];
+    const provider = consul.getService(api);
     if (!provider) {
         console.error('the service provider not found', api.name);
         return null;
@@ -120,10 +122,10 @@ function getClient(api) {
     const providerHosts = [];
     provider.forEach(function (s) {
         //匹配provide和当前的service声明，如果相同则记录下来
-        if (s.group || 'default' === api.group && s.version || '1.0.0' === api.version) {
+        if ((s.group || 'default') === api.group && (s.version || '1.0.0') === api.version) {
             providerHosts.push(s.host);
         }
-    })
+    });
     if (providerHosts.length === 0) {
         console.error('the service provider not found', api.name, 'please check saluki service config');
         return null;
@@ -174,7 +176,7 @@ function promising(api, name) {
                 callback(err, resp);
             }
         });
-    }
+    };
 
     return function (req, callback) {
         let index = 0;
@@ -200,4 +202,4 @@ function getRandomIntInclusive(min, max) {
 
 module.exports = {
     init: initClient
-}
+};

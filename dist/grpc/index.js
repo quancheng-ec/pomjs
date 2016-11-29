@@ -22,7 +22,7 @@ module.exports = {
             }
             var services = opts.saluki || {};
             yield consul.init(opts);
-            Object.assign(_apis, client.init(opts.saluki));
+            Object.assign(_apis, (yield client.init(opts.saluki)));
         });
 
         function init(_x) {

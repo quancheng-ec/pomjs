@@ -3,12 +3,8 @@
 var _init = function () {
     var _ref = _asyncToGenerator(function* (consulNode) {
 
-        if (consulNode && !consul_node) {
-            consul_node = consulNode;
-        }
-
         var checks = yield _consul.health.service({
-            service: consul_node,
+            service: consulNode,
             passing: true
         });
         var services = {};
@@ -94,21 +90,8 @@ module.exports = {
                 host: saluki.host || '127.0.0.1',
                 port: saluki.port || '8500'
             });
-            var group = saluki.group ? 'Saluki_' + saluki.group : 'Saluki_dev';
-
-            console.log('init consul client!');
-
-            var func = function () {
-                var _ref3 = _asyncToGenerator(function* () {
-                    _services = yield _init(group);
-                    setTimeout(func, 10000);
-                });
-
-                return function func() {
-                    return _ref3.apply(this, arguments);
-                };
-            }();
-            setTimeout(func, 0);
+            var group = saluki.group ? saluki.group : 'default';
+            module.exports.initWidthGroup(group);
         });
 
         function init(_x2) {
@@ -117,10 +100,43 @@ module.exports = {
 
         return init;
     }(),
+    /**
+     * 初始化group
+     * @param group
+     */
+    initWidthGroup: function () {
+        var _ref3 = _asyncToGenerator(function* (group) {
+            console.log('init consul client widthgroup ' + group);
+            var sgroup = 'Saluki_' + group;
+            var func = function () {
+                var _ref4 = _asyncToGenerator(function* () {
+                    _services[group] = yield _init(sgroup);
+                    setTimeout(func, 10000);
+                });
+
+                return function func() {
+                    return _ref4.apply(this, arguments);
+                };
+            }();
+            setTimeout(func, 0);
+        });
+
+        function initWidthGroup(_x4) {
+            return _ref3.apply(this, arguments);
+        }
+
+        return initWidthGroup;
+    }(),
     setServices: function setServices(services) {
         _services = services;
     },
     getALL: function getALL() {
+        return _services;
+    },
+    getService: function getService(api) {
+        if (_services[api.group]) {
+            return _services[api.group][api.name];
+        }
         return _services;
     }
 
