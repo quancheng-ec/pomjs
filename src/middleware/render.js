@@ -59,7 +59,48 @@ export default function (opts = {}) {
             await pageLoader.compileRun();
         }
 
-        const html = await renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
+        let html = await renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
+
+        if(ctx.dingTalk){
+          html += `
+          <script src="http://g.alicdn.com/dingding/open-develop/0.8.4/dingtalk.js"></script>
+          <script>
+            dd.config({
+              agentId: 123,
+              corpId: '${ctx.dingTalk.corpid}',
+              timeStamp: '${ctx.dingTalk.timestamp}',
+              nonceStr: '${ctx.dingTalk.noncestr}',
+              signature: '${ctx.dingTalk.signature}',
+              jsApiList: [
+                  'runtime.info',
+                  'device.notification.prompt',
+                  'biz.chat.pickConversation',
+                  'device.notification.confirm',
+                  'device.notification.alert',
+                  'device.notification.prompt',
+                  'biz.chat.open',
+                  'biz.util.open',
+                  'biz.user.get',
+                  'biz.contact.choose',
+                  'biz.telephone.call',
+                  'biz.ding.post']
+            });
+            dd.ready(function() {
+              dd.runtime.info({
+                  onSuccess: function(info) {
+                      console.info('runtime info: ' + JSON.stringify(info));
+                  },
+                  onFail: function(err) {
+                      console.error('fail: ' + JSON.stringify(err));
+                  }
+              });
+            });
+            dd.error(function(error){
+              alert('dd error: ' + JSON.stringify(err));
+            });
+          </script>
+          `
+        }
 
         body = body.replace('{{ html }}', html);
 

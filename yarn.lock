@@ -1545,6 +1545,12 @@ fastparse@^1.1.1:
   version "1.1.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/fastparse/-/fastparse-1.1.1.tgz#d1e2643b38a94d7583b479060e6c4affc94071f8"
 
+fetchman:
+  version "1.0.0"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/fetchman/-/fetchman-1.0.0.tgz#f9fb3b37da9d84556b959f32ba3d664091688749"
+  dependencies:
+    isomorphic-fetch "^2.2.1"
+
 file-loader@0.8.4:
   version "0.8.4"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/file-loader/-/file-loader-0.8.4.tgz#36cb91a1e07fb59817432a76b8408d66fbaa69c6"
@@ -2069,6 +2075,13 @@ isobject@^2.0.0:
   dependencies:
     isarray "1.0.0"
 
+isomorphic-fetch@^2.2.1:
+  version "2.2.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
+  dependencies:
+    node-fetch "^1.0.1"
+    whatwg-fetch ">=0.10.0"
+
 isstream@~0.1.2:
   version "0.1.2"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
@@ -2574,7 +2587,7 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-node-fetch@1.6.3:
+node-fetch@^1.0.1, node-fetch@1.6.3:
   version "1.6.3"
   resolved "http://repo.quancheng-ec.com/repository/npm-public/node-fetch/-/node-fetch-1.6.3.tgz#dc234edd6489982d58e8f0db4f695029abcd8c04"
   dependencies:
@@ -3964,6 +3977,10 @@ webpack@2.1.0-beta.25:
     watchpack "^1.0.0"
     webpack-sources "^0.1.0"
     yargs "^4.7.1"
+
+whatwg-fetch@>=0.10.0:
+  version "2.0.1"
+  resolved "http://repo.quancheng-ec.com/repository/npm-public/whatwg-fetch/-/whatwg-fetch-2.0.1.tgz#078b9461bbe91cea73cbce8bb122a05f9e92b772"
 
 whatwg-fetch@1.0.0:
   version "1.0.0"

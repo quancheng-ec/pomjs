@@ -21,6 +21,8 @@ import bundle from './middleware/bundle';
 import multer from './middleware/multer';
 import user from './middleware/user';
 
+import dingTalk from './middleware/dingTalk'
+
 const app = new Koa();
 const serve = require('koa-static');
 
@@ -60,14 +62,14 @@ module.exports = function (opts = {}) {
     app.use(bodyParser());
 
     // add the CSRF middleware
-    app.use(new CSRF({
-        invalidSessionSecretMessage: 'Invalid session secret',
-        invalidSessionSecretStatusCode: 403,
-        invalidTokenMessage: 'Invalid CSRF token',
-        invalidTokenStatusCode: 403,
-        excludedMethods: ['GET', 'HEAD', 'OPTIONS'],
-        disableQuery: false
-    }));
+    // app.use(new CSRF({
+    //     invalidSessionSecretMessage: 'Invalid session secret',
+    //     invalidSessionSecretStatusCode: 403,
+    //     invalidTokenMessage: 'Invalid CSRF token',
+    //     invalidTokenStatusCode: 403,
+    //     excludedMethods: ['GET', 'HEAD', 'OPTIONS'],
+    //     disableQuery: false
+    // }));
 
 
     app.use(async function (ctx, next) {
@@ -79,7 +81,9 @@ module.exports = function (opts = {}) {
 
     app.use(error());
     app.use(httpWrap());
-    app.use(bundle())
+    app.use(bundle());
+
+    app.use(dingTalk(opts.dingTalk));
     //app.use(user());
     app.use(route(opts));
     app.use(render(opts));

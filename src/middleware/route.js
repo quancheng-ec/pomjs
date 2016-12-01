@@ -123,7 +123,7 @@ export default function (opts = {}) {
         }
 
         if (type === 'api') {
-            ctx.body = controlResult;
+            ctx.body = controlResult.data;
             return;
         }
 
