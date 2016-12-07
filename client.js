@@ -21,13 +21,13 @@ Vue.use(fetchPlugin);
 
 const context = __vue_context_data;
 
-Vue.mixin({
-    data: function () {
-        return context;
-    }
-})
-
 const view = require('./' + context.pageContext.pageAction + '.vue');
+
+view.mixins = [{
+  data: function () {
+    return context;
+  }
+}];
 
 new Vue(view).$mount('#wrapper');
 

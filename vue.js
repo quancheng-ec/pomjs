@@ -6,12 +6,11 @@ export default function (context) {
 
     let View = require('./' + action + '.vue');
 
-
-    Vue.mixin({
+    View.mixins = [{
         data: function () {
-            return context;
+          return context;
         }
-    })
+    }];
 
     const app = new Vue(Object.assign(View, {
         // data:function(){
