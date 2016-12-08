@@ -127,7 +127,7 @@ module.exports = {
         }
         const api = apis[name];
         if (api && api[action]) {
-            return api[action];
+            return api[action].bind(api);
         }
         return null;
     },
