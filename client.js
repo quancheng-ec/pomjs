@@ -21,6 +21,8 @@ Vue.use(fetchPlugin);
 
 const context = __vue_context_data;
 
+Vue.http.headers.common["X-CSRF-Token"] = context.csrf
+
 const view = require('./' + context.pageContext.pageAction + '.vue');
 
 view.mixins = [{
