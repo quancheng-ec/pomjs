@@ -81,7 +81,7 @@ module.exports = function (opts = {}) {
     app.use(error());
     app.use(httpWrap());
     app.use(bundle());
-    app.use(auth());
+    app.use(auth(opts.auth));
     app.use(route(opts));
     app.use(render(opts));
     const port = opts.port || 3000;

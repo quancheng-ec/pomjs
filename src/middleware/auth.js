@@ -6,20 +6,22 @@
  */
 
 
+
+const verify = function (ctx){
+    let token = ctx.cookies.get('token');
+    //todo fetch userinfo from accountService by token
+    return false;
+};
+
 module.exports = function(opts = {}) {
 
-    const MISS_TOKEN = 3;
-    const verify = function (token = ''){
-        return true;
-    };
-
     return async function auth(ctx,next) {
-        if(true) {
-            this.status = 301;
-            await this.redirect('back','http://localhost:3000');
+        if(verify(ctx) ) {
+            ctx.status = 401;
+            return ctx.redirect('http://www.baidu.com');
         }
 
-        ctx.auth = 'tokens information';
+        ctx.auth = ctx.headers;
         await next();
         //检查请求头部是否包含token，没有直接抛，或者在开发环境做个配置
         //获取token
