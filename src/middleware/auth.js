@@ -6,29 +6,64 @@
  */
 
 
+import get from 'lodash/get';
+import grpc from '../grpc/index';
+const services = grpc.services();
 
-const verify = function (ctx){
-    let token = ctx.cookies.get('token');
-    //todo fetch userinfo from accountService by token
-    return false;
-};
+
+const waveMenu = function(array)
+{
+    let fathers = [],children = [];
+    array = array.map(res=>{
+        res['href']=res['url'];
+        res['isActive'] = false;
+        res['icon']='icon-home';
+        return res;
+    });
+
+    for( let val of array) {
+        if(val['pid'] >0) {
+            children.push(val);
+        }
+        else{
+            fathers.push(val);
+        }
+    }
+    for(let i = 0 ; i < fathers.length ; i++) {
+        let tmp = [];
+        for( let child of  children) {
+            if(child['pid'] == fathers[i]['authRuleEntityId']) {
+                tmp.push(child);
+            }
+        }
+        if(tmp.length >0) fathers[i].childrens = tmp;
+    }
+    return fathers;
+}
+
 
 module.exports = function(opts = {}) {
 
     return async function auth(ctx,next) {
-        if(verify(ctx) ) {
-            ctx.status = 401;
-            return ctx.redirect('http://www.baidu.com');
-        }
 
-        ctx.auth = ctx.headers;
+        //  let userId = 2516582864;//ctx.cookies.get('userId');
+        //  //其实应该先判断服务是否正确配置,再调用？
+        //  let accountData = await services.AccountService.query({userIds:[userId]});
+        //  let realName = get(accountData,'accounts[0]["cnName"]','default');
+        //  console.log(accountData);
+        //  //如果未能正常取得用户名则跳转
+        //  if(realName == 'default') {
+        //      ctx.status = 401;
+        //      return ctx.redirect('http://www.baidu.com');
+        //  }
+        //
+        // let authData = await services.AuthService.getMenuList({objectId:100});
+        // let lists = authData.menuList || [];
+        // let menu  = waveMenu(lists);
+        console.log('again');
+        ctx.menus = 'menu';
+        ctx.realName = 'realName';
         await next();
-        //检查请求头部是否包含token，没有直接抛，或者在开发环境做个配置
-        //获取token
-        //用token 去请求用户信息
-        //整理用户信息，不存在抛
-        //拿用户信息链接Grpc验证权限
-        //得出结论，此次请求ctx.request是否允许，不允许报message
-        //若一切都允许，则render一个html代码，经过组织的菜单页面。
+
     }
 };
