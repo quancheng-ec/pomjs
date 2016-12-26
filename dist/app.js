@@ -42,6 +42,10 @@ var _multer = require('./middleware/multer');
 
 var _multer2 = _interopRequireDefault(_multer);
 
+var _auth = require('./middleware/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
 var _user = require('./middleware/user');
 
 var _user2 = _interopRequireDefault(_user);
@@ -122,7 +126,7 @@ module.exports = function () {
     app.use((0, _error2.default)());
     app.use((0, _http2.default)());
     app.use((0, _bundle2.default)());
-    //app.use(user());
+    app.use((0, _auth2.default)(opts.auth));
     app.use((0, _route2.default)(opts));
     app.use((0, _render2.default)(opts));
     var port = opts.port || 3000;

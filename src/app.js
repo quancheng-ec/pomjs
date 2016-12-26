@@ -19,6 +19,7 @@ import render from './middleware/render';
 import error from './middleware/error';
 import bundle from './middleware/bundle';
 import multer from './middleware/multer';
+import auth from './middleware/auth';
 import user from './middleware/user';
 
 const app = new Koa();
@@ -79,8 +80,8 @@ module.exports = function (opts = {}) {
 
     app.use(error());
     app.use(httpWrap());
-    app.use(bundle())
-    //app.use(user());
+    app.use(bundle());
+    app.use(auth(opts));
     app.use(route(opts));
     app.use(render(opts));
     const port = opts.port || 3000;
