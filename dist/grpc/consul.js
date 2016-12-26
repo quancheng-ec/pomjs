@@ -1,7 +1,7 @@
 'use strict';
 
 var _init = function () {
-    var _ref = _asyncToGenerator(function* (consulNode) {
+    var _ref = _asyncToGenerator(function* (consulNode, group) {
 
         var checks = yield _consul.health.service({
             service: consulNode,
@@ -10,28 +10,28 @@ var _init = function () {
         var services = {};
         checks[0].forEach(function (c) {
             var s = c.Service;
-
-            var serviceUrl = decodeURIComponent(s.Tags[0]);
-            serviceUrl = serviceUrl.substring(serviceUrl.indexOf('Grpc://'));
-
-            var serviceURLObj = URL.parse(serviceUrl, true);
+            var ids = s.ID.split('-');
+            var name = ids[1];
             var service = {
-                name: serviceURLObj.pathname.substring(1),
-                host: serviceURLObj.host,
+                name: name,
+                host: ids[0],
                 address: s.Address,
-                port: s.Port
+                port: s.Port,
+                version: ids[2],
+                group: group
             };
-            Object.assign(service, serviceURLObj.query);
-            if (!services[service.name]) {
-                services[service.name] = [];
+            var ss = [];
+            if (services[service.name]) {
+                ss = services[service.name];
+            } else {
+                services[service.name] = ss;
             }
             services[service.name].push(service);
         });
-
         return services;
     });
 
-    return function _init(_x) {
+    return function _init(_x, _x2) {
         return _ref.apply(this, arguments);
     };
 }();
@@ -73,7 +73,6 @@ function fromCallback(fn) {
 }
 
 var _consul;
-
 var _services = {};
 
 module.exports = {
@@ -93,7 +92,7 @@ module.exports = {
             module.exports.initWidthGroup(group);
         });
 
-        function init(_x2) {
+        function init(_x3) {
             return _ref2.apply(this, arguments);
         }
 
@@ -109,7 +108,7 @@ module.exports = {
             var sgroup = 'saluki_' + group;
             var func = function () {
                 var _ref4 = _asyncToGenerator(function* () {
-                    _services[group] = yield _init(sgroup);
+                    _services[group] = yield _init(sgroup, group);
                     setTimeout(func, 10000);
                 });
 
@@ -120,7 +119,7 @@ module.exports = {
             setTimeout(func, 0);
         });
 
-        function initWidthGroup(_x4) {
+        function initWidthGroup(_x5) {
             return _ref3.apply(this, arguments);
         }
 
@@ -138,5 +137,4 @@ module.exports = {
         }
         return _services;
     }
-
 };

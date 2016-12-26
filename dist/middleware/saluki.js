@@ -9,7 +9,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
  * Created by joe on 16/12/26.
  */
 
-var consul = require('./consul');
+var consul = require('../grpc/consul');
 module.exports = function () {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 

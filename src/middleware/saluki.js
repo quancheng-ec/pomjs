@@ -6,7 +6,7 @@
  */
 
 
-const consul = require('./consul');
+const consul = require('../grpc/consul');
 module.exports = function (opts = {}) {
 
 

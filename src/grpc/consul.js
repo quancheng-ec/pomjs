@@ -33,10 +33,9 @@ function fromCallback(fn) {
 }
 
 var _consul;
-
 let _services = {};
 
-async function _init(consulNode) {
+async function _init(consulNode,group) {
 
     let checks = await _consul.health.service({
         service: consulNode,
@@ -45,26 +44,25 @@ async function _init(consulNode) {
     const services = {};
     checks[0].forEach(function (c) {
         const s = c.Service;
-
-        let serviceUrl = decodeURIComponent(s.Tags[0]);
-        serviceUrl = serviceUrl.substring(serviceUrl.indexOf('Grpc://'));
-
-        const serviceURLObj = URL.parse(serviceUrl, true);
+        const ids = s.ID.split('-');
+        const name = ids [1];
         let service = {
-            name: serviceURLObj.pathname.substring(1),
-            host: serviceURLObj.host,
+            name: name,
+            host: ids[0],
             address: s.Address,
-            port: s.Port
+            port: s.Port,
+            version: ids[2],
+            group:group
         };
-        Object.assign(service, serviceURLObj.query);
-        if (!services[service.name]) {
-            services[service.name] = [];
+        let ss = [];
+        if (services[service.name]) {
+            ss = services[service.name];
+        } else {
+            services[service.name] = ss;
         }
         services[service.name].push(service);
     });
-
     return services;
-
 }
 
 
@@ -89,7 +87,7 @@ module.exports = {
         console.log('init consul client widthgroup ' + group);
         const sgroup = 'saluki_' + group;
         const func = async function () {
-            _services[group] = await _init(sgroup);
+            _services[group] = await _init(sgroup,group);
             setTimeout(func, 10000);
         };
         setTimeout(func, 0);
@@ -106,6 +104,5 @@ module.exports = {
         }
         return _services;
     }
-
 };
 
