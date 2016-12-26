@@ -20,6 +20,7 @@ import error from './middleware/error';
 import bundle from './middleware/bundle';
 import multer from './middleware/multer';
 import user from './middleware/user';
+import saluki from './middleware/saluki';
 
 const app = new Koa();
 const serve = require('koa-static');
@@ -78,8 +79,9 @@ module.exports = function (opts = {}) {
     });
 
     app.use(error());
+    app.use(saluki());
     app.use(httpWrap());
-    app.use(bundle())
+    app.use(bundle());
     //app.use(user());
     app.use(route(opts));
     app.use(render(opts));

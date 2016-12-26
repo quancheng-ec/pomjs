@@ -74,7 +74,6 @@ function fromCallback(fn) {
 
 var _consul;
 
-var consul_node = void 0;
 var _services = {};
 
 module.exports = {
@@ -107,7 +106,7 @@ module.exports = {
     initWidthGroup: function () {
         var _ref3 = _asyncToGenerator(function* (group) {
             console.log('init consul client widthgroup ' + group);
-            var sgroup = 'Saluki_' + group;
+            var sgroup = 'saluki_' + group;
             var func = function () {
                 var _ref4 = _asyncToGenerator(function* () {
                     _services[group] = yield _init(sgroup);

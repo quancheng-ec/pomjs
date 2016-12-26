@@ -34,7 +34,6 @@ function fromCallback(fn) {
 
 var _consul;
 
-let consul_node;
 let _services = {};
 
 async function _init(consulNode) {
@@ -88,7 +87,7 @@ module.exports = {
      */
     initWidthGroup: async function (group) {
         console.log('init consul client widthgroup ' + group);
-        const sgroup = 'Saluki_' + group;
+        const sgroup = 'saluki_' + group;
         const func = async function () {
             _services[group] = await _init(sgroup);
             setTimeout(func, 10000);
