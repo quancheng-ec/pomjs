@@ -21,7 +21,7 @@ module.exports = function () {
         yield pageLoader.compileRun();
     });
 
-    return function (_x) {
+    return function () {
         return _ref.apply(this, arguments);
     };
 }();
