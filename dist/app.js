@@ -131,14 +131,14 @@ module.exports = function () {
     app.use(bodyParser());
 
     // add the CSRF middleware
-    app.use(new _koaCsrf2.default({
+    app.use(new _koaCsrf2.default(Object.assign({
         invalidSessionSecretMessage: 'Invalid session secret',
         invalidSessionSecretStatusCode: 403,
         invalidTokenMessage: 'Invalid CSRF token',
         invalidTokenStatusCode: 403,
         excludedMethods: ['GET', 'HEAD', 'OPTIONS'],
         disableQuery: false
-    }));
+    }, opts.csrf)));
 
     app.use(function () {
         var _ref2 = _asyncToGenerator(function* (ctx, next) {
