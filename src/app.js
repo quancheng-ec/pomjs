@@ -51,8 +51,10 @@ function mergeEnv(opts) {
                 // 替换 xxx_xxx_xxx --> {'xxx':{'xxx':'xxx'}}
                 for (let index = 0; index < vs.length; index++) {
                     temp += '.' + vs[index];
-                    const tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
-                    eval(temp + '=' + tempValue);
+                    if (!eval(temp)) {
+                        const tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
+                        eval(temp + '=' + tempValue);
+                    }
                 }
             }
         }
@@ -96,7 +98,7 @@ module.exports = function (opts = {}) {
         invalidTokenStatusCode: 403,
         excludedMethods: ['GET', 'HEAD', 'OPTIONS'],
         disableQuery: false
-    },opts.csrf)));
+    }, opts.csrf)));
 
 
     app.use(async function (ctx, next) {
@@ -113,8 +115,11 @@ module.exports = function (opts = {}) {
     //app.use(user());
     app.use(route(opts));
     app.use(render(opts));
-    const port = opts.port || 3000;
+    let port = opts.port || 3000;
+    if (typeof port === 'string') {
+        port = parseInt(port);
+    }
     app.listen(port);
     console.log('listening on ', port);
 
-}
+};

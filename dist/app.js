@@ -91,8 +91,10 @@ function mergeEnv(opts) {
                 // 替换 xxx_xxx_xxx --> {'xxx':{'xxx':'xxx'}}
                 for (var index = 0; index < vs.length; index++) {
                     temp += '.' + vs[index];
-                    var tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
-                    eval(temp + '=' + tempValue);
+                    if (!eval(temp)) {
+                        var tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
+                        eval(temp + '=' + tempValue);
+                    }
                 }
             }
         }
@@ -161,6 +163,9 @@ module.exports = function () {
     app.use((0, _route2.default)(opts));
     app.use((0, _render2.default)(opts));
     var port = opts.port || 3000;
+    if (typeof port === 'string') {
+        port = parseInt(port);
+    }
     app.listen(port);
     console.log('listening on ', port);
 };

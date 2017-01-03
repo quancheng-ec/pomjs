@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 /**
  *
  *{
@@ -91,8 +93,7 @@ init({
  * 合并环境变量和配置变量，以环境变量为准
  * @param opts
  */
-function mergeEnv(opts) {
-    var env = process.env;
+function mergeEnv(opts, env) {
     //用环境变量替换当前配置
     for (var i in env) {
         //console.log("", i);
@@ -106,14 +107,23 @@ function mergeEnv(opts) {
                 var vs = config.split('_');
                 for (var index = 0; index < vs.length; index++) {
                     temp += '.' + vs[index];
-                    var tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
-                    eval(temp + '=' + tempValue);
+                    //console.log(temp, eval(temp));
+                    if (!eval(temp)) {
+                        var tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
+                        eval(temp + '=' + tempValue);
+                    }
                 }
             }
         }
     }
+
+    console.log(opts);
 }
 
-mergeEnv({
-    'pomjs_JAVA_HOME': '1233'
+console.log(_typeof('300'));
+console.log(_typeof(300));
+
+mergeEnv({ saluki: { host: 1 } }, {
+    "pomjs_saluki_services_terraBillService": "com.quancheng.terra.service.base.TerraOrderBillService:terra-service:1.0.0.aliyun",
+    "pomjs_saluki_services_terraQuotationPlanService": "com.quancheng.terra.service.biz.TerraQuotationPlanService:terra-service:1.0.0.aliyun"
 });

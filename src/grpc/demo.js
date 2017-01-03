@@ -91,8 +91,7 @@ init({
  * 合并环境变量和配置变量，以环境变量为准
  * @param opts
  */
-function mergeEnv(opts) {
-    const env = process.env;
+function mergeEnv(opts, env) {
     //用环境变量替换当前配置
     for (let i in env) {
         //console.log("", i);
@@ -106,14 +105,24 @@ function mergeEnv(opts) {
                 let vs = config.split('_');
                 for (let index = 0; index < vs.length; index++) {
                     temp += '.' + vs[index];
-                    const tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
-                    eval(temp + '=' + tempValue);
+                    //console.log(temp, eval(temp));
+                    if (!eval(temp)) {
+                        const tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
+                        eval(temp + '=' + tempValue);
+                    }
                 }
             }
         }
     }
+
+    console.log(opts);
 }
 
-mergeEnv({
-    'pomjs_JAVA_HOME': '1233'
+console.log(typeof '300');
+console.log(typeof 300);
+
+
+mergeEnv({saluki: {host: 1}}, {
+    "pomjs_saluki_services_terraBillService": "com.quancheng.terra.service.base.TerraOrderBillService:terra-service:1.0.0.aliyun",
+    "pomjs_saluki_services_terraQuotationPlanService": "com.quancheng.terra.service.biz.TerraQuotationPlanService:terra-service:1.0.0.aliyun"
 });
