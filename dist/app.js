@@ -102,7 +102,6 @@ function mergeEnv(opts) {
 module.exports = function () {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-
     if (!opts.root) {
         var index = __dirname.indexOf('node_modules');
         if (index != -1) {
@@ -111,6 +110,7 @@ module.exports = function () {
             throw new Error('the opts.root can not null');
         }
     }
+    mergeEnv(opts);
     root = opts.root;
     var staticPath = opts.static || Path.join(root, 'static');
 

@@ -60,7 +60,6 @@ function mergeEnv(opts) {
 }
 
 module.exports = function (opts = {}) {
-
     if (!opts.root) {
         const index = __dirname.indexOf('node_modules');
         if (index != -1) {
@@ -69,6 +68,7 @@ module.exports = function (opts = {}) {
             throw new Error('the opts.root can not null');
         }
     }
+    mergeEnv(opts);
     root = opts.root;
     const staticPath = opts.static || Path.join(root, 'static');
 
