@@ -91,7 +91,7 @@ function mergeEnv(opts) {
                 // 替换 xxx_xxx_xxx --> {'xxx':{'xxx':'xxx'}}
                 for (var index = 0; index < vs.length; index++) {
                     temp += '.' + vs[index];
-                    if (!eval(temp)) {
+                    if (!eval(temp) || index === vs.length - 1) {
                         var tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
                         eval(temp + '=' + tempValue);
                     }
@@ -113,6 +113,7 @@ module.exports = function () {
         }
     }
     mergeEnv(opts);
+    console.log('start pomjs with config:', opts);
     root = opts.root;
     var staticPath = opts.static || Path.join(root, 'static');
 

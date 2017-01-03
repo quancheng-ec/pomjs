@@ -151,7 +151,7 @@ function getClient(api) {
         }
     });
     if (providerHosts.length === 0) {
-        console.error('the service provider not found', api.name, 'please check saluki service config');
+        console.error('the service provider not found', api, 'please check saluki service config');
         return null;
     }
 

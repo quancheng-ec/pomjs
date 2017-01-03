@@ -106,7 +106,7 @@ function mergeEnv(opts, env) {
                 for (let index = 0; index < vs.length; index++) {
                     temp += '.' + vs[index];
                     //console.log(temp, eval(temp));
-                    if (!eval(temp)) {
+                    if (!eval(temp) || index === vs.length - 1) {
                         const tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
                         eval(temp + '=' + tempValue);
                     }
@@ -115,14 +115,29 @@ function mergeEnv(opts, env) {
         }
     }
 
-    console.log(opts);
+    console.log(opts.saluki);
 }
 
-console.log(typeof '300');
-console.log(typeof 300);
+//console.log(typeof '300');
+//console.log(typeof 300);
 
 
-mergeEnv({saluki: {host: 1}}, {
+mergeEnv({
+    saluki: {
+        group: 'terra-service',
+        host: 'daily.quancheng-ec.com',
+        port: '8500',
+        services: {
+            shopService: 'com.quancheng.halia.service.ShopService:halia:1.0.0.halia',
+            redisService: 'com.quancheng.terra.service.base.TerraOrderRedisService:terra-service:1.0.0.zxlocal',
+            terraService: 'com.quancheng.terra.service.base.TerraOrderService:terra-service:1.0.0.zxlocal',
+            terraOrderService: 'com.quancheng.terra.service.OrderManagerService:terra-service:1.0.0.zxlocal',
+            terraQuotationService: 'com.quancheng.terra.service.base.TerraQuotationService:terra-service:1.0.0.zxlocal',
+            terraBillService: 'com.quancheng.terra.service.base.TerraOrderBillService:terra-service:1.0.0.zxlocal',
+            terraQuotationPlanService: 'com.quancheng.terra.service.biz.TerraQuotationPlanService:terra-service:1.0.0.zxlocal'
+        }
+    }
+}, {
     "pomjs_saluki_services_terraBillService": "com.quancheng.terra.service.base.TerraOrderBillService:terra-service:1.0.0.aliyun",
     "pomjs_saluki_services_terraQuotationPlanService": "com.quancheng.terra.service.biz.TerraQuotationPlanService:terra-service:1.0.0.aliyun"
 });
