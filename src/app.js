@@ -89,14 +89,14 @@ module.exports = function (opts = {}) {
     app.use(bodyParser());
 
     // add the CSRF middleware
-    app.use(new CSRF({
+    app.use(new CSRF(Object.assign({
         invalidSessionSecretMessage: 'Invalid session secret',
         invalidSessionSecretStatusCode: 403,
         invalidTokenMessage: 'Invalid CSRF token',
         invalidTokenStatusCode: 403,
         excludedMethods: ['GET', 'HEAD', 'OPTIONS'],
         disableQuery: false
-    }));
+    },opts.csrf)));
 
 
     app.use(async function (ctx, next) {
