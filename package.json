@@ -1,6 +1,6 @@
 {
   "name": "pomjs",
-  "version": "0.0.35",
+  "version": "0.0.41",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -54,11 +54,11 @@
     "stylus-loader": "2.3.1",
     "uglify-js": "2.7.3",
     "uid-safe": "2.1.2",
-    "vue": "^2.1.7",
+    "vue": "^2.1.8",
     "vue-loader": "^10.0.0",
     "vue-resource": "^1.0.3",
-    "vue-server-renderer": "^2.1.7",
-    "vue-template-compiler": "^2.1.7",
+    "vue-server-renderer": "^2.1.8",
+    "vue-template-compiler": "^2.1.8",
     "vuex": "^2.0.0",
     "webpack": "2.1.0-beta.25",
     "whatwg-fetch": "1.0.0"

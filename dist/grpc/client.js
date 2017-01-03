@@ -164,6 +164,7 @@ function getClient(api) {
 
     var client = new api._grpc(host, combined_creds, grpcOptions);
     pool[host] = client;
+    client._host = host;
     return client;
 }
 
@@ -182,15 +183,16 @@ function promising(api, name) {
         var client = getClient(api);
         client[name](req, function (err, resp) {
             if (err) {
+                var reqstr = JSON.stringify(req);
+                console.error(client._host, api.name, name, reqstr, err);
                 //如果有错误重试三次
-                if (index < 3) {
-                    console.log(index);
-                    index++;
-                    invoke(req, callback, resolve, reject, index);
-                    return;
-                }
+                // if (index < 3) {
+                //     index++;
+                //     invoke(req, callback, resolve, reject, index);
+                //     return;
+                // }
                 if (!err.message) {
-                    err.message = 'grpc invoke error:' + api.name + "." + name + JSON.stringify(req);
+                    err.message = 'grpc invoke error:' + api.name + "." + name + reqstr;
                 }
                 reject(err);
             } else {

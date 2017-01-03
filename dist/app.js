@@ -10,6 +10,14 @@ var middleware = function () {
     };
 }();
 
+/**
+ * 合并环境变量和配置变量，以环境变量为准
+ * 将 pomjs_ 开头的环境变量作为config参数给应用
+ * 如 pomjs_saluki.group=123
+ * @param opts
+ */
+
+
 var _koaCsrf = require('koa-csrf');
 
 var _koaCsrf2 = _interopRequireDefault(_koaCsrf);
@@ -68,6 +76,28 @@ var app = new Koa();
 var serve = require('koa-static');
 
 var root = {};
+
+function mergeEnv(opts) {
+    var env = process.env;
+    //用环境变量替换当前配置
+    for (var i in env) {
+        if (i.startsWith('pomjs_')) {
+            var config = i.substring(6);
+            if (config.indexOf('_') == -1) {
+                opts[config] = env[i];
+            } else {
+                var temp = 'opts';
+                var vs = config.split('_');
+                // 替换 xxx_xxx_xxx --> {'xxx':{'xxx':'xxx'}}
+                for (var index = 0; index < vs.length; index++) {
+                    temp += '.' + vs[index];
+                    var tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
+                    eval(temp + '=' + tempValue);
+                }
+            }
+        }
+    }
+}
 
 module.exports = function () {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};

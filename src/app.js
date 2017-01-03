@@ -31,6 +31,34 @@ async function middleware(opts) {
     await require('./grpc/index').init(opts);
 }
 
+/**
+ * 合并环境变量和配置变量，以环境变量为准
+ * 将 pomjs_ 开头的环境变量作为config参数给应用
+ * 如 pomjs_saluki.group=123
+ * @param opts
+ */
+function mergeEnv(opts) {
+    const env = process.env;
+    //用环境变量替换当前配置
+    for (let i in env) {
+        if (i.startsWith('pomjs_')) {
+            const config = i.substring(6);
+            if (config.indexOf('_') == -1) {
+                opts[config] = env[i];
+            } else {
+                let temp = 'opts';
+                let vs = config.split('_');
+                // 替换 xxx_xxx_xxx --> {'xxx':{'xxx':'xxx'}}
+                for (let index = 0; index < vs.length; index++) {
+                    temp += '.' + vs[index];
+                    const tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
+                    eval(temp + '=' + tempValue);
+                }
+            }
+        }
+    }
+}
+
 module.exports = function (opts = {}) {
 
     if (!opts.root) {
