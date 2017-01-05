@@ -29,7 +29,7 @@ exports.default = function () {
             body = body.replace('{{ description }}', ctx.context.description || "");
 
             var scriptName = pageContext.pageName + ".bundle.js";
-            var script = "/bundle/" + scriptName;
+            var script = pageLoader.getClientFilePath(scriptName);
 
             var contextData = "var __vue_context_data=" + JSON.stringify(ctx.context) + ";";
             var sr = " <script>" + contextData + "</script>\n <script src='" + script + "'></script>";
@@ -42,11 +42,12 @@ exports.default = function () {
             var html = yield renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
 
             body = body.replace('{{ html }}', html);
-
+            var cssFileName = pageContext.pageName + ".style.css";
             if (process.env.NODE_ENV === 'production') {
-                body = body.replace('{{ stylesheet }}', "<link href='/bundle/" + pageContext.pageName + ".style.css' rel='stylesheet'></link>");
+                var csspath = pageLoader.getClientFilePath(cssFileName);
+                body = body.replace('{{ stylesheet }}', "<link href='" + csspath + "' rel='stylesheet'></link>");
             } else {
-                var styles = pageLoader.readClientFile(pageContext.pageName + ".style.css").toString();
+                var styles = pageLoader.readClientFile(cssFileName).toString();
                 body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>" + styles + "</style>");
             }
 

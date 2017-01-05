@@ -42,14 +42,14 @@ export default function (opts = {}) {
 
         const pageContext = ctx.context.pageContext;
 
-        let body = fs.readFileSync(Path.join(layouts, ctx.context.layout||"default.html")).toString();
+        let body = fs.readFileSync(Path.join(layouts, ctx.context.layout || "default.html")).toString();
         body = body.replace('{{ title }}', ctx.context.title || "hello pomjs!");
         body = body.replace('{{ keywords }}', ctx.context.keywords || "");
         body = body.replace('{{ description }}', ctx.context.description || "");
 
 
         const scriptName = pageContext.pageName + ".bundle.js";
-        const script = "/bundle/" + scriptName;
+        const script = pageLoader.getClientFilePath(scriptName);
 
         const contextData = "var __vue_context_data=" + JSON.stringify(ctx.context) + ";";
         const sr = " <script>" + contextData + "</script>\n <script src='" + script + "'></script>";
@@ -62,12 +62,13 @@ export default function (opts = {}) {
         const html = await renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
 
         body = body.replace('{{ html }}', html);
-
-        if (process.env.NODE_ENV === 'production'){
-          body = body.replace('{{ stylesheet }}', "<link href='/bundle/"+pageContext.pageName+".style.css' rel='stylesheet'></link>")
-        }else{
-          const styles = pageLoader.readClientFile(pageContext.pageName+".style.css").toString()
-          body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>"+styles+"</style>")
+        const cssFileName = pageContext.pageName+".style.css";
+        if (process.env.NODE_ENV === 'production') {
+            let csspath = pageLoader.getClientFilePath(cssFileName);
+            body = body.replace('{{ stylesheet }}', "<link href='" +csspath + "' rel='stylesheet'></link>")
+        } else {
+            const styles = pageLoader.readClientFile(cssFileName).toString();
+            body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>" + styles + "</style>")
         }
 
         ctx.body = body;

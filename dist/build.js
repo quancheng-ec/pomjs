@@ -18,7 +18,9 @@ module.exports = function () {
 
         pageLoader.init(opts);
         pageLoader.initCompile();
-        yield pageLoader.compileRun();
+        yield pageLoader.compileRun(function (assets) {
+            //console.log(assets.compilation.assets['po.style.css'])
+        });
     });
 
     return function (_x) {

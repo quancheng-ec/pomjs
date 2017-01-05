@@ -12,6 +12,9 @@ module.exports = async function (opts = {}) {
 
     pageLoader.init(opts);
     pageLoader.initCompile();
-    await pageLoader.compileRun();
+    await pageLoader.compileRun(function (assets) {
+        //console.log(assets.compilation.assets['po.style.css'])
+    });
+
 
 };

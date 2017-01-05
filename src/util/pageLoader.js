@@ -38,10 +38,6 @@ const webpackCompileRun = function (tag, compile, cb) {
                 console.error(err);
                 return reject(err);
             }
-            console.log(tag, stats.toString({
-                chunks: false, // Makes the build much quieter
-                colors: true
-            }));
             resolve(stats);
             if (cb) {
                 cb(stats);
@@ -91,6 +87,8 @@ function clear() {
 let root = '';
 let vue_build_path;
 let build;
+
+let clientBuildAssets = {};
 
 module.exports = {
 
@@ -147,12 +145,25 @@ module.exports = {
             fs.remove(clientConfig.output.path);
         }
     },
-    compileRun: async function () {
+    compileRun: async function (cb) {
         serverStats = await  webpackCompileRun('server build:', serverCompiler);
-        clientStats = await  webpackCompileRun('client build:', clientCompiler, function () {
+        clientStats = await  webpackCompileRun('client build:', clientCompiler, function (stats) {
             clear();
+            if (cb) {
+                cb(stats);
+            }
         });
-
+        for (let i in clientStats.compilation.assets) {
+            const is = i.split('.');
+            let name = i;
+            if (is.length > 3) {
+                name = is[0] + "." + is[2] + '.' + is[3];
+            }
+            clientBuildAssets[name] = clientStats.compilation.assets[i].existsAt;
+            if (isProduction) {
+                clientBuildAssets[name] = clientBuildAssets[name].substring(staticDir.length);
+            }
+        }
         if (isProduction) {
             if (fs.exists(vue_build_path)) {
                 fs.remove(vue_build_path);
@@ -162,12 +173,7 @@ module.exports = {
                 s[i] = serverStats.compilation.assets[i].existsAt;
                 s[i] = s[i].substring(root.length);
             }
-            const c = {};
-            for (let i in clientStats.compilation.assets) {
-                c[i] = clientStats.compilation.assets[i].existsAt;
-                c[i] = c[i].substring(root.length);
-            }
-            const j = {server: s, client: c};
+            const j = {server: s, client: clientBuildAssets};
             const js = JSON.stringify(j);
             fs.write(vue_build_path, js);
         }
@@ -183,10 +189,12 @@ module.exports = {
     },
     readClientFile: function (pageName) {
         const rootPath = Path.resolve(staticDir, '../');
-        const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientStats.compilation.assets[pageName].existsAt;
+        const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientBuildAssets[pageName];
         return clientFs.readFileSync(p);
     },
     getClientFilePath: function (pageName) {
-        return clientStats.compilation.assets[pageName].existsAt;
+        const rootPath = Path.resolve(staticDir, '../');
+        const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : "/bundle/" + pageName;
+        return p;
     }
 }
