@@ -40,6 +40,10 @@ var webpackCompileRun = function webpackCompileRun(tag, compile, cb) {
                 console.error(err);
                 return reject(err);
             }
+            // console.log(tag, stats.toString({
+            //     chunks: false, // Makes the build much quieter
+            //     colors: true
+            // }));
             resolve(stats);
             if (cb) {
                 cb(stats);

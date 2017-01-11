@@ -156,10 +156,10 @@ module.exports = function () {
         };
     }());
 
-    app.use((0, _error2.default)());
-    app.use((0, _saluki2.default)());
-    app.use((0, _http2.default)());
-    app.use((0, _bundle2.default)());
+    app.use((0, _error2.default)(opts));
+    app.use((0, _saluki2.default)(opts));
+    app.use((0, _http2.default)(opts));
+    app.use((0, _bundle2.default)(opts));
     //app.use(user());
     app.use((0, _route2.default)(opts));
     app.use((0, _render2.default)(opts));

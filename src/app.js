@@ -109,10 +109,10 @@ module.exports = function (opts = {}) {
         ctx.set('X-Response-Time', `${ms}ms`);
     });
 
-    app.use(error());
-    app.use(saluki());
-    app.use(httpWrap());
-    app.use(bundle());
+    app.use(error(opts));
+    app.use(saluki(opts));
+    app.use(httpWrap(opts));
+    app.use(bundle(opts));
     //app.use(user());
     app.use(route(opts));
     app.use(render(opts));
