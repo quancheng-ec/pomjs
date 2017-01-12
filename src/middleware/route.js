@@ -107,6 +107,7 @@ export default function (opts = {}) {
         try {
             controlResult.data = await control(ctx, services);
         } catch (e) {
+            console.error(e);
             controlResult.isSuccess = false;
             controlResult.errorCode = e.code;
             controlResult.errorMessage = e.message;

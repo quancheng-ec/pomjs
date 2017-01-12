@@ -103,6 +103,7 @@ exports.default = function () {
             try {
                 controlResult.data = yield control(ctx, services);
             } catch (e) {
+                console.error(e);
                 controlResult.isSuccess = false;
                 controlResult.errorCode = e.code;
                 controlResult.errorMessage = e.message;
