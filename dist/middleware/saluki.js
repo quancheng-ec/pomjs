@@ -8,7 +8,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
  *
  * Created by joe on 16/12/26.
  */
-
+var services = require('../grpc/index').services();
 var consul = require('../grpc/consul');
 module.exports = function () {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -17,6 +17,7 @@ module.exports = function () {
     return function () {
         var _ref = _asyncToGenerator(function* (ctx, next) {
             var url = ctx.url;
+            ctx.services = services;
             if (url.endsWith('/saluki')) {
                 ctx.body = JSON.stringify(consul.getALL());
                 return;
