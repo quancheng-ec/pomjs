@@ -2,15 +2,15 @@
  * Created by joe on 2016/10/14.
  */
 
-import Vue from 'vue'
-import VueResource from 'vue-resource'
-import fetch from 'whatwg-fetch';
+var  Vue = require('vue');
+var  VueResource = require('vue-resource');
+var fetch =require('whatwg-fetch');
 
 //const Url = require('browser-url');
 
 Vue.use(VueResource);
 
-const fetchPlugin = {
+var fetchPlugin = {
     install: function (Vue, options) {
         Vue.fetch = fetch;
         Vue.prototype.fetch = fetch;
@@ -19,11 +19,11 @@ const fetchPlugin = {
 
 Vue.use(fetchPlugin);
 
-const context = __vue_context_data;
+var context = __vue_context_data;
 
 Vue.http.headers.common["X-CSRF-Token"] = context.csrf
 
-const view = require('./' + context.pageContext.pageAction + '.vue');
+var view = require('./' + context.pageContext.pageAction + '.vue');
 
 view.mixins = [{
   data: function () {
