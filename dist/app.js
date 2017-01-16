@@ -79,6 +79,7 @@ var root = {};
 
 function mergeEnv(opts) {
   var env = process.env;
+  Object.assign(process.env, opts);
   //用环境变量替换当前配置
   for (var i in env) {
     if (i.startsWith('pomjs_')) {

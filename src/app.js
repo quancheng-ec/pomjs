@@ -39,6 +39,7 @@ async function middleware(opts) {
  */
 function mergeEnv(opts) {
   const env = process.env;
+  Object.assign(process.env, opts)
   //用环境变量替换当前配置
   for (let i in env) {
     if (i.startsWith('pomjs_')) {

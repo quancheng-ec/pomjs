@@ -31,61 +31,63 @@ const clientEntry = {};
  * @param cb
  * @returns {Promise}
  */
-const webpackCompileRun = function (tag, compile, cb) {
-    return new Promise(function (resolve, reject) {
-        compile.run((err, stats) => {
-            if (err) {
-                console.error(err);
-                return reject(err);
-            }
-            // console.log(tag, stats.toString({
-            //     chunks: false, // Makes the build much quieter
-            //     colors: true
-            // }));
-            resolve(stats);
-            if (cb) {
-                cb(stats);
-            }
-        });
+const webpackCompileRun = function(tag, compile, cb) {
+  return new Promise(function(resolve, reject) {
+    compile.run((err, stats) => {
+      if (err) {
+        console.error(err);
+        return reject(err);
+      }
+      // console.log(tag, stats.toString({
+      //     chunks: false, // Makes the build much quieter
+      //     colors: true
+      // }));
+      resolve(stats);
+      if (cb) {
+        cb(stats);
+      }
     });
+  });
 };
 
-const find = function (f) {
-    const api = Path.join(f, 'index.js');
-    //只有开发环境才会打开热更新逻辑，热更新会导致webstorm debug 失败，所以可以接受 DEBUG参数
-    if (!isProduction && apis[api] && !process.env.DEBUG) {
-        delete require.cache[api];
-    }
+const find = function(f) {
+  const api = Path.join(f, 'index.js');
+  //只有开发环境才会打开热更新逻辑，热更新会导致webstorm debug 失败，所以可以接受 DEBUG参数
+  if (!isProduction && apis[api] && !process.env.DEBUG) {
+    delete require.cache[api];
+  }
 
-    apis[api] = new (require(api)).default();
+  apis[api] = new (require(api)).default();
 
-    const vue = Path.join(f, '.s');
-    temps.push(vue);
-    const dir = f.substring(0, f.length - 1);
-    const pageName = dir.substring(dir.lastIndexOf('/') + 1);
-    if (!fs.exists(vue)) {
-        fs.copy(Path.join(__dirname, '../../vue.js'), vue);
-    }
-    serverEntry[pageName] = vue;
+  const vue = Path.join(f, '.s');
+  temps.push(vue);
+  const dir = f.substring(0, f.length - 1);
+  const pageName = dir.substring(dir.lastIndexOf('/') + 1);
+  if (!fs.exists(vue)) {
+    fs.copy(Path.join(__dirname, '../../vue.js'), vue);
+  }
+  serverEntry[pageName] = vue;
 
-    const c = Path.join(f, '.c');
-    temps.push(c);
-    if (!fs.exists(c)) {
-        fs.copy(Path.join(__dirname, '../../client.js'), c);
-    }
-    clientEntry[pageName] = c;
+  const c = Path.join(f, '.c');
+  temps.push(c);
+  if (!fs.exists(c)) {
+    const clientEntry = process.env.clientEntry || Path.join(__dirname, '../../client.js')
+    console.log(process.env.clientEntry)
+    fs.copy(clientEntry, c);
+  }
+  clientEntry[pageName] = c;
 }
 
 /**
  * 清除临时文件
  */
 function clear() {
-    temps.forEach(function (f) {
-        if (fs.exists(f)) {
-            fs.remove(f);
-        }
-    });
-    temps = [];
+  temps.forEach(function(f) {
+    if (fs.exists(f)) {
+      fs.remove(f);
+    }
+  });
+  temps = [];
 }
 
 let root = '';
@@ -96,109 +98,109 @@ let clientBuildAssets = {};
 
 module.exports = {
 
-    init: function (opts) {
-        root = opts.root;
+  init: function(opts) {
+    root = opts.root;
 
-        opts.page = {
-            src: Path.join(opts.src, 'pages'),
-            build: Path.join(opts.build, 'pages')
-        };
+    opts.page = {
+      src: Path.join(opts.src, 'pages'),
+      build: Path.join(opts.build, 'pages')
+    };
 
-        if (opts.isProduction) {
-            isProduction = true;
-            vue_build_path = Path.join(root, 'vue_build.json');
-            if (fs.exists(vue_build_path)) {
-                build = require(vue_build_path);
-            }
-        }
-        pageDir = isProduction ? opts.page.build : opts.page.src; //|| Path.join(opts.root, 'pages');
-        staticDir = opts.static || Path.join(root, 'static');
-        module.exports.initPage();
-    },
-    getPageDir: function () {
-        return pageDir;
-    },
-    //查找page目录
-    initPage: function () {
-        glob.sync(Path.join(pageDir, "*/")).forEach(find);
-        glob.sync(Path.join(__dirname, "../pages/*/")).forEach(find);
-    },
-    getAPI: function (name, action) {
-        if (!apis[name] || !apis[name][action] || !isProduction) {
-            module.exports.initPage();
-        }
-        const api = apis[name];
-        if (api && api[action]) {
-            return api[action].bind(api);
-        }
-        return null;
-    },
-    initCompile: function () {
-        serverConfig.entry = serverEntry;
-        serverConfig.output.path = Path.join(staticDir, '../bundle');
-
-        clientConfig.entry = clientEntry;
-        clientConfig.output.path = Path.join(staticDir, 'bundle');
-
-        serverCompiler = webpack(serverConfig);
-        clientCompiler = webpack(clientConfig);
-
-        if (!isProduction) {
-            serverCompiler.outputFileSystem = serverFs;
-            clientCompiler.outputFileSystem = clientFs;
-            fs.remove(clientConfig.output.path);
-        }
-    },
-    compileRun: async function (cb) {
-        serverStats = await  webpackCompileRun('server build:', serverCompiler);
-        clientStats = await  webpackCompileRun('client build:', clientCompiler, function (stats) {
-            clear();
-            if (cb) {
-                cb(stats);
-            }
-        });
-        for (let i in clientStats.compilation.assets) {
-            const is = i.split('.');
-            let name = i;
-            if (is.length > 3) {
-                name = is[0] + "." + is[2] + '.' + is[3];
-            }
-            clientBuildAssets[name] = clientStats.compilation.assets[i].existsAt;
-            if (isProduction) {
-                clientBuildAssets[name] = clientBuildAssets[name].substring(staticDir.length);
-            }
-        }
-        if (isProduction) {
-            if (fs.exists(vue_build_path)) {
-                fs.remove(vue_build_path);
-            }
-            const s = {};
-            for (let i in serverStats.compilation.assets) {
-                s[i] = serverStats.compilation.assets[i].existsAt;
-                s[i] = s[i].substring(root.length);
-            }
-            const j = {server: s, client: clientBuildAssets};
-            const js = JSON.stringify(j);
-            fs.write(vue_build_path, js);
-        }
-
-    },
-    isProduction: function () {
-        return isProduction;
-    },
-    readServerFileSync: function (pageName) {
-        const rootPath = Path.resolve(staticDir, '../');
-        const p = isProduction ? Path.resolve(rootPath, build.server[pageName]) : serverStats.compilation.assets[pageName].existsAt;
-        return (isProduction ? FS : serverFs).readFileSync(p, 'utf8');
-    },
-    readClientFile: function (pageName) {
-        const rootPath = Path.resolve(staticDir, '../');
-        const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientBuildAssets[pageName];
-        return clientFs.readFileSync(p);
-    },
-    getClientFilePath: function (pageName) {
-        const rootPath = Path.resolve(staticDir, '../');
-        const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : "/bundle/" + pageName;
-        return p;
+    if (opts.isProduction) {
+      isProduction = true;
+      vue_build_path = Path.join(root, 'vue_build.json');
+      if (fs.exists(vue_build_path)) {
+        build = require(vue_build_path);
+      }
     }
+    pageDir = isProduction ? opts.page.build : opts.page.src; //|| Path.join(opts.root, 'pages');
+    staticDir = opts.static || Path.join(root, 'static');
+    module.exports.initPage();
+  },
+  getPageDir: function() {
+    return pageDir;
+  },
+  //查找page目录
+  initPage: function() {
+    glob.sync(Path.join(pageDir, "*/")).forEach(find);
+    glob.sync(Path.join(__dirname, "../pages/*/")).forEach(find);
+  },
+  getAPI: function(name, action) {
+    if (!apis[name] || !apis[name][action] || !isProduction) {
+      module.exports.initPage();
+    }
+    const api = apis[name];
+    if (api && api[action]) {
+      return api[action].bind(api);
+    }
+    return null;
+  },
+  initCompile: function(opts) {
+    serverConfig.entry = serverEntry;
+    serverConfig.output.path = Path.join(staticDir, '../bundle');
+
+    clientConfig.entry = clientEntry;
+    clientConfig.output.path = Path.join(staticDir, 'bundle');
+
+    serverCompiler = webpack(serverConfig);
+    clientCompiler = webpack(clientConfig);
+
+    if (!isProduction) {
+      serverCompiler.outputFileSystem = serverFs;
+      clientCompiler.outputFileSystem = clientFs;
+      fs.remove(clientConfig.output.path);
+    }
+  },
+  compileRun: async function(cb) {
+    serverStats = await  webpackCompileRun('server build:', serverCompiler);
+    clientStats = await  webpackCompileRun('client build:', clientCompiler, function(stats) {
+      clear();
+      if (cb) {
+        cb(stats);
+      }
+    });
+    for (let i in clientStats.compilation.assets) {
+      const is = i.split('.');
+      let name = i;
+      if (is.length > 3) {
+        name = is[0] + "." + is[2] + '.' + is[3];
+      }
+      clientBuildAssets[name] = clientStats.compilation.assets[i].existsAt;
+      if (isProduction) {
+        clientBuildAssets[name] = clientBuildAssets[name].substring(staticDir.length);
+      }
+    }
+    if (isProduction) {
+      if (fs.exists(vue_build_path)) {
+        fs.remove(vue_build_path);
+      }
+      const s = {};
+      for (let i in serverStats.compilation.assets) {
+        s[i] = serverStats.compilation.assets[i].existsAt;
+        s[i] = s[i].substring(root.length);
+      }
+      const j = { server: s, client: clientBuildAssets };
+      const js = JSON.stringify(j);
+      fs.write(vue_build_path, js);
+    }
+
+  },
+  isProduction: function() {
+    return isProduction;
+  },
+  readServerFileSync: function(pageName) {
+    const rootPath = Path.resolve(staticDir, '../');
+    const p = isProduction ? Path.resolve(rootPath, build.server[pageName]) : serverStats.compilation.assets[pageName].existsAt;
+    return (isProduction ? FS : serverFs).readFileSync(p, 'utf8');
+  },
+  readClientFile: function(pageName) {
+    const rootPath = Path.resolve(staticDir, '../');
+    const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientBuildAssets[pageName];
+    return clientFs.readFileSync(p);
+  },
+  getClientFilePath: function(pageName) {
+    const rootPath = Path.resolve(staticDir, '../');
+    const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : "/bundle/" + pageName;
+    return p;
+  }
 }
