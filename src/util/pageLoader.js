@@ -72,7 +72,6 @@ const find = function(f) {
   temps.push(c);
   if (!fs.exists(c)) {
     const clientEntry = process.env.clientEntry || Path.join(__dirname, '../../client.js')
-    console.log(process.env.clientEntry)
     fs.copy(clientEntry, c);
   }
   clientEntry[pageName] = c;
