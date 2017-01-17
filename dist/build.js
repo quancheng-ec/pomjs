@@ -23,7 +23,7 @@ module.exports = function () {
         });
     });
 
-    return function (_x) {
+    return function () {
         return _ref.apply(this, arguments);
     };
 }();

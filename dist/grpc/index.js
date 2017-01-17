@@ -25,7 +25,7 @@ module.exports = {
             Object.assign(_apis, (yield client.init(opts.saluki)));
         });
 
-        function init(_x) {
+        function init() {
             return _ref.apply(this, arguments);
         }
 
