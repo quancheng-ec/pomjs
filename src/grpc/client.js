@@ -14,27 +14,30 @@ var grpcOptions = {
   'grpc.default_authority': 'grpc'
 };
 
-var ssl_creds = grpc.credentials.createSsl(FS.readFileSync(Path.join(__dirname, '../../server.pem')));
-var creds = grpc.credentials.createInsecure();
 
-var metadataUpdater = function (service_url, callback) {
+let metadataUpdater = function (service_url, callback) {
   var metadata = new grpc.Metadata();
   metadata.set('plugin_key', 'plugin_value');
   callback(null, metadata);
 };
 
-
-var mcreds = grpc.credentials.createFromMetadataGenerator(metadataUpdater);
-var combined_creds = grpc.credentials.combineChannelCredentials(
-  ssl_creds, mcreds);
+let ssl_creds, creds, mcreds, combined_creds;
 
 let protos = {};
 
+function loadPem() {
+  const pem = Path.join(__dirname, '../../server.pem');
+  console.log("load " + pem);
+  ssl_creds = grpc.credentials.createSsl(FS.readFileSync(pem));
+  creds = grpc.credentials.createInsecure();
+  mcreds = grpc.credentials.createFromMetadataGenerator(metadataUpdater);
+  combined_creds = grpc.credentials.combineChannelCredentials(ssl_creds, mcreds);
+}
 
 async function initClient(saluki) {
 
   console.log('init saluki client!');
-
+  loadPem();
   const root = saluki.root;//'/Users/joe/work/service-all/api/src/main/proto/';
   glob.sync(Path.join(root, "**/*_service.proto")).forEach(function (f) {
     const proto = grpc.load({root: root, file: f.substring(root.length)});
@@ -132,6 +135,7 @@ function getClient(api, index) {
   }
   //如果有重试行为，清除 client连接缓存
   if (index) {
+    loadPem();
     api._clientPool = {};
   }
   const pool = api._clientPool;
@@ -164,7 +168,7 @@ function promising(api, name) {
         const reqstr = JSON.stringify(req);
         console.error(client._host, api.name, name, reqstr, err, index || 0);
         //如果有网络错误重试五次
-        if (err.toString().indexOf('code: 14') != -1 && index < 5) {
+        if (err.code == 14 && index < 3) {
           index++;
           invoke(req, callback, resolve, reject, index);
           return;
