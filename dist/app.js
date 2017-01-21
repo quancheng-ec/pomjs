@@ -22,10 +22,6 @@ var _koaCsrf = require('koa-csrf');
 
 var _koaCsrf2 = _interopRequireDefault(_koaCsrf);
 
-var _koaSession = require('koa-session2');
-
-var _koaSession2 = _interopRequireDefault(_koaSession);
-
 var _http = require('./middleware/http');
 
 var _http2 = _interopRequireDefault(_http);
@@ -69,6 +65,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var Koa = require('koa');
 var convert = require('koa-convert');
 var bodyParser = require('koa-bodyparser');
+
+var session = require("koa-session");
 
 var Path = require('path');
 
@@ -124,7 +122,15 @@ module.exports = function () {
   // set the session keys
   app.keys = ['qc'];
   // add session support
-  app.use((0, _koaSession2.default)({
+  var CONFIG = {
+    key: 'pomjs', /** (string) cookie key (default is koa:sess) */
+    maxAge: 86400000, /** (number) maxAge in ms (default is 1 days) */
+    overwrite: true, /** (boolean) can overwrite or not (default true) */
+    httpOnly: true, /** (boolean) httpOnly or not (default true) */
+    signed: true };
+  app.use(convert(session(CONFIG, app)));
+
+  app.use(session({
     key: "SESSIONID" //default "koa:sess"
   }));
 

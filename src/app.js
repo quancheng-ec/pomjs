@@ -7,10 +7,11 @@ const Koa = require('koa');
 const convert = require('koa-convert');
 const bodyParser = require('koa-bodyparser');
 
+const session = require("koa-session");
+
 const Path = require('path');
 
 import CSRF from 'koa-csrf'
-import session from "koa-session2";
 
 
 import httpWrap from './middleware/http';
@@ -82,6 +83,17 @@ module.exports = function (opts = {}) {
   // set the session keys
   app.keys = ['qc'];
   // add session support
+  const CONFIG = {
+    key: 'pomjs', /** (string) cookie key (default is koa:sess) */
+    maxAge: 86400000, /** (number) maxAge in ms (default is 1 days) */
+    overwrite: true, /** (boolean) can overwrite or not (default true) */
+    httpOnly: true, /** (boolean) httpOnly or not (default true) */
+    signed: true, /** (boolean) signed or not (default true) */
+  };
+  app.use(convert(session(
+    CONFIG, app
+  )));
+
   app.use(session({
     key: "SESSIONID"   //default "koa:sess"
   }));
@@ -118,8 +130,8 @@ module.exports = function (opts = {}) {
   //外接中间件
   if (opts.middlewares) {
     opts.middlewares.forEach(function (js) {
-        console.log(js);
-        app.use(convert(require(js)(opts)));
+      console.log(js);
+      app.use(convert(require(js)(opts)));
     });
   }
 
