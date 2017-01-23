@@ -130,10 +130,6 @@ module.exports = function () {
     signed: true };
   app.use(convert(session(CONFIG, app)));
 
-  app.use(session({
-    key: "SESSIONID" //default "koa:sess"
-  }));
-
   // add multipart/form-data parsing
   app.use((0, _multer2.default)(opts.uploadConfig || {}));
 

@@ -94,10 +94,6 @@ module.exports = function (opts = {}) {
     CONFIG, app
   )));
 
-  app.use(session({
-    key: "SESSIONID"   //default "koa:sess"
-  }));
-
   // add multipart/form-data parsing
   app.use(multer(opts.uploadConfig || {}));
 
