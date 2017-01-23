@@ -92,7 +92,7 @@ module.exports = {
             module.exports.initWidthGroup(group);
         });
 
-        function init() {
+        function init(_x3) {
             return _ref2.apply(this, arguments);
         }
 
@@ -119,7 +119,7 @@ module.exports = {
             setTimeout(func, 0);
         });
 
-        function initWidthGroup(_x4) {
+        function initWidthGroup(_x5) {
             return _ref3.apply(this, arguments);
         }
 
