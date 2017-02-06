@@ -7,6 +7,7 @@ const fs = require('fs-sync');
 
 
 module.exports = async function (opts = {}) {
+    Object.assign(process.env, opts);
     opts.isProduction = true;
     fs.copy(opts.src, opts.build, {force: true});
 

@@ -25,11 +25,19 @@ Vue.http.headers.common["X-CSRF-Token"] = context.csrf
 
 var view = require('./' + context.pageContext.pageAction + '.vue');
 
-view.mixins = [{
-  data: function () {
-    return context;
-  }
-}];
+if(view.mixins){
+  view.mixins.push({
+    data: function() {
+      return context;
+    }
+  })
+}else{
+  view.mixins = [{
+    data: function() {
+      return context;
+    }
+  }];
+}
 
 new Vue(view).$mount('#wrapper');
 

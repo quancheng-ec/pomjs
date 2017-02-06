@@ -13,6 +13,7 @@ module.exports = function () {
     var _ref = _asyncToGenerator(function* () {
         var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+        Object.assign(process.env, opts);
         opts.isProduction = true;
         fs.copy(opts.src, opts.build, { force: true });
 
@@ -23,7 +24,7 @@ module.exports = function () {
         });
     });
 
-    return function (_x) {
+    return function () {
         return _ref.apply(this, arguments);
     };
 }();
