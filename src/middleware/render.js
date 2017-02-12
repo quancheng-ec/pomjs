@@ -49,7 +49,11 @@ export default function (opts = {}) {
 
 
         const scriptName = pageContext.pageName + ".bundle.js";
-        const script = pageLoader.getClientFilePath(scriptName);
+        let script = pageLoader.getClientFilePath(scriptName);
+        //如果配置了cdn域名
+        if(ctx.opts.cdndomain){
+            script = ctx.opts.cdndomain+script;
+        }
 
         const contextData = "var __vue_context_data=" + JSON.stringify(ctx.context) + ";";
         const sr = " <script>" + contextData + "</script>\n <script src='" + script + "'></script>";
