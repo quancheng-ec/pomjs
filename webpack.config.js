@@ -56,6 +56,11 @@ module.exports = {
       }
     ]
   },
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.runtime.common.js'
+    }
+  },
   devServer: {
     historyApiFallback: true,
     noInfo: true
