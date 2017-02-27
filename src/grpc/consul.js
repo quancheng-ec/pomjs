@@ -87,7 +87,11 @@ module.exports = {
         console.log('init consul client widthgroup ' + group);
         const sgroup = 'saluki_' + group;
         const func = async function () {
-            _services[group] = await _init(sgroup,group);
+            try{
+              _services[group] = await _init(sgroup,group);
+            }catch (e){
+                console.error('sync consul error!',e);
+            }
             setTimeout(func, 10000);
         };
         setTimeout(func, 0);

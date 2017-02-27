@@ -108,7 +108,11 @@ module.exports = {
             var sgroup = 'saluki_' + group;
             var func = function () {
                 var _ref4 = _asyncToGenerator(function* () {
-                    _services[group] = yield _init(sgroup, group);
+                    try {
+                        _services[group] = yield _init(sgroup, group);
+                    } catch (e) {
+                        console.error('sync consul error!', e);
+                    }
                     setTimeout(func, 10000);
                 });
 
