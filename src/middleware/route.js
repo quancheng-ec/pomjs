@@ -120,6 +120,9 @@ export default function (opts = {}) {
         // }
 
         if (type === 'event') {
+            if(controlResult.data){
+              ctx.body = controlResult.data;
+            }
             return;
         }
 

@@ -116,6 +116,9 @@ exports.default = function () {
             // }
 
             if (type === 'event') {
+                if (controlResult.data) {
+                    ctx.body = controlResult.data;
+                }
                 return;
             }
 
