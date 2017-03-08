@@ -10,8 +10,13 @@ const opts = {
     build: path.join(__dirname, '../dist')
     //build: './build', //编译后的目录
     , root: path.join(__dirname, '../'),
-    domain: 'localhost'
-
+    domain: 'localhost',
+    csrf: {
+        excludedMethods: ['GET', 'POST', 'HEAD', 'OPTIONS'],
+    },
+    cors: {
+        origin: "*"
+    }
 };
 
 

@@ -30,7 +30,9 @@ export default class Index {
             cc:1
         };
 
-        return "hello";
+        return {
+            hello: "hello"
+        };
     }
 
 }

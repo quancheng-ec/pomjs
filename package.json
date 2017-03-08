@@ -44,6 +44,7 @@
     "koa": "2.0.0",
     "koa-bodyparser": "3.2.0",
     "koa-convert": "1.2.0",
+    "koa-cors": "^0.0.16",
     "koa-csrf": "3.0.3",
     "koa-multer": "1.0.0",
     "koa-session": "^3.4.0",

@@ -6,7 +6,7 @@
 const Koa = require('koa');
 const convert = require('koa-convert');
 const bodyParser = require('koa-bodyparser');
-
+const cors = require("koa-cors");
 const session = require("koa-session");
 
 const Path = require('path');
@@ -94,12 +94,19 @@ module.exports = function (opts = {}) {
     CONFIG, app
   )));
 
+  //如果配置了cors（解决跨域问题）, 则加入中间件
+  if(opts.cors){
+    app.use(cors(opts.cors));
+  }
+  
   // add multipart/form-data parsing
   app.use(multer(opts.uploadConfig || {}));
 
   // add body parsing
   app.use(bodyParser());
 
+  
+  
   // add the CSRF middleware
   app.use(new CSRF(Object.assign({
     invalidSessionSecretMessage: 'Invalid session secret',
@@ -118,7 +125,7 @@ module.exports = function (opts = {}) {
     ctx.set('X-Response-Time', `${ms}ms`);
   });
 
-  app.use(error(opts));
+  app.use(error(opts)); 
   app.use(saluki(opts));
   app.use(httpWrap(opts));
   app.use(bundle(opts));
