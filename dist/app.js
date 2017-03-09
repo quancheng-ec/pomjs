@@ -65,7 +65,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var Koa = require('koa');
 var convert = require('koa-convert');
 var bodyParser = require('koa-bodyparser');
-
+var cors = require("koa-cors");
 var session = require("koa-session");
 
 var Path = require('path');
@@ -129,6 +129,11 @@ module.exports = function () {
     httpOnly: true, /** (boolean) httpOnly or not (default true) */
     signed: true };
   app.use(convert(session(CONFIG, app)));
+
+  //如果配置了cors（解决跨域问题）, 则加入中间件
+  if (opts.cors) {
+    app.use(cors(opts.cors));
+  }
 
   // add multipart/form-data parsing
   app.use((0, _multer2.default)(opts.uploadConfig || {}));

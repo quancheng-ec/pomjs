@@ -1,6 +1,6 @@
 {
   "name": "pomjs",
-  "version": "0.0.69",
+  "version": "0.0.70",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "file-loader": "0.8.4",
     "fs-sync": "1.0.3",
     "glob": "7.1.1",
-    "grpc": "1.0.1",
+    "grpc": "1.1.2",
     "hash-assets-webpack-plugin": "^0.2.0",
     "koa": "2.0.0",
     "koa-bodyparser": "3.2.0",
