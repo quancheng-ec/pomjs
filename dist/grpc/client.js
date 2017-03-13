@@ -164,7 +164,7 @@ function getClient(api, index) {
   }
   //如果有重试行为，清除 client连接缓存
   if (index) {
-    loadPem();
+    //loadPem();
     api._clientPool = {};
   }
   var pool = api._clientPool;
@@ -197,7 +197,7 @@ function promising(api, name) {
         var reqstr = JSON.stringify(req);
         console.error(client._host, api.name, name, reqstr, err, index || 0);
         //如果有网络错误重试五次
-        if (err.code == 14 && index < 3) {
+        if ((err.code == 14 || err.code == 13) && index < 3) {
           index++;
           invoke(req, callback, resolve, reject, index);
           return;
