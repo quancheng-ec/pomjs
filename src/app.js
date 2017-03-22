@@ -137,7 +137,7 @@ module.exports = function (opts = {}) {
       app.use(convert(require(js)(opts)));
     });
   }
-
+  app.use(user(opts));
   app.use(route(opts));
   app.use(render(opts));
   let port = opts.port || 3000;
