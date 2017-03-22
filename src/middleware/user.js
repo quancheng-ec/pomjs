@@ -28,13 +28,13 @@ module.exports = function (opts = {}) {
         // }
 
         if(ctx.session.userId){
-            ctx.head.userId = ctx.session.userId;
+            ctx.response.append('userid', ctx.session.userId);
         }
         if(ctx.session.accountId){
-           ctx.head.accountId = ctx.session.accountId;
+           ctx.response.append('accountid', ctx.session.accountId);
         }
         if(ctx.session.companyId){
-          ctx.head.companyId = ctx.session.companyId;
+          ctx.response.append('companyid', ctx.session.companyId);
         }
 
 

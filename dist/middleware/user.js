@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
@@ -34,13 +34,13 @@ module.exports = function () {
             // }
 
             if (ctx.session.userId) {
-                ctx.head.userId = ctx.session.userId;
+                ctx.response.append('userid', ctx.session.userId);
             }
             if (ctx.session.accountId) {
-                ctx.head.accountId = ctx.session.accountId;
+                ctx.response.append('accountid', ctx.session.accountId);
             }
             if (ctx.session.companyId) {
-                ctx.head.companyId = ctx.session.companyId;
+                ctx.response.append('companyid', ctx.session.companyId);
             }
 
             yield next();
