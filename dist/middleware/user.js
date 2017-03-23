@@ -26,7 +26,6 @@ module.exports = function () {
     return function () {
         var _ref = _asyncToGenerator(function* (ctx, next) {
             init(ctx);
-
             if (!ctx.response.header.token && pathRegexps.length > 0) {
                 for (var i = 0; i < pathRegexps.length; i++) {
                     var re = pathRegexps[i];
@@ -59,16 +58,20 @@ module.exports = function () {
  * @param ctx
  */
 function init(ctx) {
-    if (ctx.session.token) {
-        ctx.response.append('token', ctx.session.token);
+    var token = ctx.cookies.get('token');
+    if (token) {
+        ctx.response.append('token', token);
     }
-    if (ctx.session.userId) {
-        ctx.response.append('userid', ctx.session.userId);
+    var userId = ctx.cookies.get('userId');
+    if (userId) {
+        ctx.response.append('userid', userId);
     }
-    if (ctx.session.accountId) {
-        ctx.response.append('accountid', ctx.session.accountId);
+    var accountId = ctx.cookies.get('accountId');
+    if (accountId) {
+        ctx.response.append('accountid', accountId);
     }
-    if (ctx.session.companyId) {
-        ctx.response.append('companyid', ctx.session.companyId);
+    var companyId = ctx.cookies.get('companyId');
+    if (companyId) {
+        ctx.response.append('companyid', companyId);
     }
 }

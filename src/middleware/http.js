@@ -13,6 +13,8 @@ module.exports = function (opts = {}) {
 
     return async function http(ctx, next) {
 
+        if (ctx.path === '/favicon.ico') return;
+
         ctx.opts = opts;
 
         const context = {
@@ -25,9 +27,6 @@ module.exports = function (opts = {}) {
         }
         ctx._httpContext = context;
         ctx.fetch = fetch;
-
-
-
 
 
         await next();

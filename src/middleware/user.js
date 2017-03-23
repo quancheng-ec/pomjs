@@ -19,7 +19,6 @@ module.exports = function (opts = {}) {
     }
     return async function user(ctx, next) {
         init(ctx);
-
         if (!ctx.response.header.token && pathRegexps.length > 0) {
             for (let i = 0; i < pathRegexps.length; i++) {
                 let re = pathRegexps[i];
@@ -47,16 +46,20 @@ module.exports = function (opts = {}) {
  * @param ctx
  */
 function init(ctx) {
-    if (ctx.session.token) {
-        ctx.response.append('token', ctx.session.token);
+    let token = ctx.cookies.get('token');
+    if (token) {
+        ctx.response.append('token', token);
     }
-    if (ctx.session.userId) {
-        ctx.response.append('userid', ctx.session.userId);
+    let userId = ctx.cookies.get('userId');
+    if (userId) {
+        ctx.response.append('userid', userId);
     }
-    if (ctx.session.accountId) {
-        ctx.response.append('accountid', ctx.session.accountId);
+    let accountId = ctx.cookies.get('accountId');
+    if (accountId) {
+        ctx.response.append('accountid', accountId);
     }
-    if (ctx.session.companyId) {
-        ctx.response.append('companyid', ctx.session.companyId);
+    let companyId = ctx.cookies.get('companyId');
+    if (companyId) {
+        ctx.response.append('companyid', companyId);
     }
 }

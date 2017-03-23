@@ -18,6 +18,8 @@ module.exports = function () {
     return function () {
         var _ref = _asyncToGenerator(function* (ctx, next) {
 
+            if (ctx.path === '/favicon.ico') return;
+
             ctx.opts = opts;
 
             var context = {
