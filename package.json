@@ -1,6 +1,6 @@
 {
   "name": "pomjs",
-  "version": "0.0.73",
+  "version": "0.0.75",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -52,6 +52,7 @@
     "lodash": "4.16.4",
     "memory-fs": "0.3.0",
     "node-fetch": "1.6.3",
+    "path-to-regexp": "^1.7.0",
     "postcss-loader": "1.1.1",
     "stylus": "0.54.5",
     "stylus-loader": "2.3.1",
