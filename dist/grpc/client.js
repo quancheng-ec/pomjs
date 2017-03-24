@@ -197,7 +197,7 @@ function promising(api, name) {
         var reqstr = JSON.stringify(req);
         console.error(client._host, api.name, name, reqstr, err, index || 0);
         //如果有网络错误重试五次
-        if ((err.code == 14 || err.code == 13) && index < 3) {
+        if (err.code && index < 3) {
           index++;
           invoke(req, callback, resolve, reject, index);
           return;

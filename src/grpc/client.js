@@ -40,7 +40,7 @@ async function initClient(saluki) {
   loadPem();
   const root = saluki.root;//'/Users/joe/work/service-all/api/src/main/proto/';
   glob.sync(Path.join(root, "**/*_service.proto")).forEach(function (f) {
-    const proto = grpc.load({root: root, file: f.substring(root.length)});
+    const proto = grpc.load({ root: root, file: f.substring(root.length) });
     protos = _.defaultsDeep(protos, proto);
   });
 
@@ -168,7 +168,7 @@ function promising(api, name) {
         const reqstr = JSON.stringify(req);
         console.error(client._host, api.name, name, reqstr, err, index || 0);
         //如果有网络错误重试五次
-        if ((err.code == 14 || err.code == 13 ) && index < 3) {
+        if (err.code && index < 3) {
           index++;
           invoke(req, callback, resolve, reject, index);
           return;
