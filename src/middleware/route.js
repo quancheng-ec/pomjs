@@ -94,7 +94,7 @@ export default function (opts = {}) {
                 pagePath: pagePath,
                 pageName: pageName,
                 pageAction: action
-            }, csrf: ctx.csrf
+            }, csrf: ctx.csrf,_token:ctx.response.header.token
         });
 
         let controlResult = {
