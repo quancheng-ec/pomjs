@@ -18,7 +18,7 @@ module.exports = function setupDevServer (app, cb) {
 
   // dev middleware
   const clientCompiler = webpack(clientConfig)
-  const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
+  const devMiddleware = require('koa-webpack-dev-middleware')(clientCompiler, {
     publicPath: clientConfig.output.publicPath,
     noInfo: true
   })

@@ -7,7 +7,7 @@
 
 
 
-module.exports = function (opts = {}) {
+module.exports = function (opts = {},app) {
     let renderer;
     require('../../build/setup-dev-server')(app, (bundle, template) => {
         renderer = createRenderer(bundle, template)
