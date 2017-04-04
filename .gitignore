@@ -9,6 +9,7 @@ npm-debug.log*
 
 # Example build
 example/dist/
+example/static/dist/
 example/vue_build.json
 
 # Runtime data

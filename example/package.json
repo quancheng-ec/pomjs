@@ -1,0 +1,13 @@
+{
+  "name": "vue-hackernews-2.0",
+  "description": "A Vue.js project",
+  "author": "Evan You <yyx990803@gmail.com>",
+  "private": true,
+  "scripts": {
+    "dev": "node src/index",
+    "start": "export NODE_ENV=production; node src/index",
+    "build": "rimraf dist && npm run build:client && npm run build:server",
+    "build:client": "cross-env NODE_ENV=production webpack --config build/webpack.client.config.js --progress --hide-modules",
+    "build:server": "cross-env NODE_ENV=production webpack --config build/webpack.server.config.js --progress --hide-modules"
+  }
+}

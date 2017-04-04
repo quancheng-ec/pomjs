@@ -19,6 +19,7 @@ module.exports = function (opts = {}) {
 
         // 忽略 favicon 请求
         if (ctx.url === '/favicon.ico') {
+            ctx.status = 200;
             return;
         }
         //注册到上下午

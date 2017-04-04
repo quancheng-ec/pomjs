@@ -27,7 +27,7 @@ module.exports = function (_app) {
       path.join(__dirname, 'csrf.js'),
       path.join(__dirname, 'error.js'),
       path.join(__dirname, 'custom.js'),
-      path.join(__dirname, 'render.js')
+      path.join(__dirname, 'webpack/index.js')
 
     ],
     /**

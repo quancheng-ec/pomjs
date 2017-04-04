@@ -14,6 +14,7 @@ const opts = {
     csrf: {
         excludedMethods: ['GET', 'POST', 'HEAD', 'OPTIONS'],
     },
+    static:path.join(__dirname, '../static'),
     cors: {
         origin: "*"
     }

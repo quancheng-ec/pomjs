@@ -4,30 +4,26 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 const isProd = process.env.NODE_ENV === 'production'
 
+
 module.exports = {
   devtool: isProd
     ? false
     : '#cheap-module-eval-source-map',
   entry: {
-    app: './src/entry-client.js',
+    app: '/Users/joe/work/pomjs/example/pages/index/entry.js',
     vendor: [
       'es6-promise/auto',
-      'firebase/app',
-      'firebase/database',
-      'vue',
-      'vue-router',
-      'vuex',
-      'vuex-router-sync'
+      'vue'
     ]
   },
   output: {
-    path: path.resolve(__dirname, '../dist'),
+    path: '/Users/joe/work/pomjs/example/static/dist',
     publicPath: '/dist/',
     filename: '[name].[chunkhash].js'
   },
   resolve: {
     alias: {
-      'public': path.resolve(__dirname, '../public')
+     // 'public': path.resolve(__dirname, '../public')
     }
   },
   module: {

@@ -6,17 +6,18 @@ const VueSSRPlugin = require('vue-ssr-webpack-plugin')
 module.exports = merge(base, {
   target: 'node',
   devtool: '#source-map',
-  entry: './src/entry-server.js',
+  entry: '/Users/joe/work/pomjs/example/pages/index/entry-server',
   output: {
+    path: '/Users/joe/work/pomjs/example/dist',
     filename: 'server-bundle.js',
     libraryTarget: 'commonjs2'
   },
   resolve: {
     alias: {
-      'create-api': './create-api-server.js'
+      //'create-api': './create-api-server.js'
     }
   },
-  externals: Object.keys(require('../package.json').dependencies),
+  externals: Object.keys(require('../../../../package.json').dependencies),
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),

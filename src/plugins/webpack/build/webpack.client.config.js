@@ -8,7 +8,7 @@ const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 const config = merge(base, {
   resolve: {
     alias: {
-      'create-api': './create-api-client.js'
+     // 'create-api': './create-api-client.js'
     }
   },
   plugins: [
@@ -23,7 +23,7 @@ const config = merge(base, {
     }),
     // generate output HTML
     new HTMLPlugin({
-      template: 'src/index.template.html'
+      template: '/Users/joe/work/pomjs/example/pages/index.template.html'
     })
   ]
 })
