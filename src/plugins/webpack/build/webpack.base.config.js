@@ -10,7 +10,7 @@ module.exports = {
     ? false
     : '#cheap-module-eval-source-map',
   entry: {
-    app: '/Users/joe/work/pomjs/example/pages/index/entry.js',
+   // app: '/Users/joe/work/pomjs/example/pages/index/entry.js',
     vendor: [
       'es6-promise/auto',
       'vue'

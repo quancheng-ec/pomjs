@@ -2,6 +2,9 @@ const expressMiddleware = require('webpack-dev-middleware');
 const path = require('path');
 const webpack = require('webpack');
 const MFS = require('memory-fs');
+const HTMLPlugin = require('html-webpack-plugin')
+const VueSSRPlugin = require('vue-ssr-webpack-plugin')
+
 const clientConfig = require('./build/webpack.client.config');
 const serverConfig = require('./build/webpack.server.config');
 const log4js = require('koa-log4');
@@ -17,6 +20,11 @@ module.exports = (app, cb) => {
   let template
 
   // modify client config to work with hot middleware
+  clientConfig.entry.app = '/Users/joe/work/pomjs/example/pages/index/entry.js';
+  clientConfig.plugins.push(new HTMLPlugin({
+    title: 'pomjs',
+    template: '/Users/joe/work/pomjs/example/pages/index.template.html'
+  }));
   if (!isProd) {
     clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
     clientConfig.output.filename = '[name].js'
@@ -58,6 +66,13 @@ module.exports = (app, cb) => {
     }
   }
 
+  serverConfig.entry = '/Users/joe/work/pomjs/example/pages/index/entry-server';
+  serverConfig.output.path = '/Users/joe/work/pomjs/example/dist';
+  serverConfig.plugins.push(
+    new VueSSRPlugin({
+      filename: 'vue-ssr-bundle.json'
+    })
+  );
 
   const serverCompiler = webpack(serverConfig)
   if (isProd) {
@@ -68,7 +83,7 @@ module.exports = (app, cb) => {
       stats.warnings.forEach(err => console.warn(err))
     });
   } else {
-    const mfs = new MFS()
+    const mfs = new MFS();
     serverCompiler.outputFileSystem = mfs;
     serverCompiler.watch({}, (err, stats) => {
       if (err) throw err

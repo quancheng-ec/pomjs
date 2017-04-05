@@ -2,7 +2,6 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
 const vueConfig = require('./vue-loader.config')
-const HTMLPlugin = require('html-webpack-plugin')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 const config = merge(base, {
@@ -20,11 +19,12 @@ const config = merge(base, {
     // extract vendor chunks for better caching
     new webpack.optimize.CommonsChunkPlugin({
       name: ['vendor', 'manifest']
-    }),
-    // generate output HTML
-    new HTMLPlugin({
-      template: '/Users/joe/work/pomjs/example/pages/index.template.html'
     })
+    //,
+    // generate output HTML
+    // new HTMLPlugin({
+    //   template: '/Users/joe/work/pomjs/example/pages/index.template.html'
+    // })
   ]
 })
 
