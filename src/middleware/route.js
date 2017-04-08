@@ -94,7 +94,10 @@ export default function (opts = {}) {
                 pagePath: pagePath,
                 pageName: pageName,
                 pageAction: action
-            }, csrf: ctx.csrf,_token:ctx.response.header.token
+            },
+            csrf: ctx.csrf,
+            _token: ctx.response.header.token,
+            _client: opts.clientData
         });
 
         let controlResult = {
@@ -120,8 +123,8 @@ export default function (opts = {}) {
         // }
 
         if (type === 'event') {
-            if(controlResult.data){
-              ctx.body = controlResult.data;
+            if (controlResult.data) {
+                ctx.body = controlResult.data;
             }
             return;
         }

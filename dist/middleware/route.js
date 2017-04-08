@@ -90,7 +90,10 @@ exports.default = function () {
                     pagePath: pagePath,
                     pageName: pageName,
                     pageAction: action
-                }, csrf: ctx.csrf, _token: ctx.response.header.token
+                },
+                csrf: ctx.csrf,
+                _token: ctx.response.header.token,
+                _client: opts.clientData
             });
 
             var controlResult = {
