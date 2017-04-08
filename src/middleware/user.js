@@ -46,19 +46,19 @@ module.exports = function (opts = {}) {
  * @param ctx
  */
 function init(ctx) {
-    let token = ctx.cookies.get('token');
+    let token = ctx.cookies.get('token')||ctx.request.header.token;
     if (token) {
         ctx.response.append('token', token);
     }
-    let userId = ctx.cookies.get('userId');
+    let userId = ctx.cookies.get('userId')||ctx.request.header.userid;
     if (userId) {
         ctx.response.append('userid', userId);
     }
-    let accountId = ctx.cookies.get('accountId');
+    let accountId = ctx.cookies.get('accountId')||ctx.request.header.accountid;
     if (accountId) {
         ctx.response.append('accountid', accountId);
     }
-    let companyId = ctx.cookies.get('companyId');
+    let companyId = ctx.cookies.get('companyId')||ctx.request.header.companyid;
     if (companyId) {
         ctx.response.append('companyid', companyId);
     }

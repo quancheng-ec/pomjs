@@ -58,19 +58,19 @@ module.exports = function () {
  * @param ctx
  */
 function init(ctx) {
-    var token = ctx.cookies.get('token');
+    var token = ctx.cookies.get('token') || ctx.request.header.token;
     if (token) {
         ctx.response.append('token', token);
     }
-    var userId = ctx.cookies.get('userId');
+    var userId = ctx.cookies.get('userId') || ctx.request.header.userid;
     if (userId) {
         ctx.response.append('userid', userId);
     }
-    var accountId = ctx.cookies.get('accountId');
+    var accountId = ctx.cookies.get('accountId') || ctx.request.header.accountid;
     if (accountId) {
         ctx.response.append('accountid', accountId);
     }
-    var companyId = ctx.cookies.get('companyId');
+    var companyId = ctx.cookies.get('companyId') || ctx.request.header.companyid;
     if (companyId) {
         ctx.response.append('companyid', companyId);
     }
