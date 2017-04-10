@@ -64,7 +64,8 @@ const find = function(f) {
   const dir = f.substring(0, f.length - 1);
   const pageName = dir.substring(dir.lastIndexOf('/') + 1);
   if (!fs.exists(vue)) {
-    fs.copy(Path.join(__dirname, '../../vue.js'), vue);
+    const serverEntry = process.env.serverEntry || Path.join(__dirname, '../../vue.js')
+    fs.copy(serverEntry, vue);
   }
   serverEntry[pageName] = vue;
 
