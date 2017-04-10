@@ -65,7 +65,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.runtime.common.js'
+      'vue$': 'vue/dist/vue.runtime.common.js',
+      'vue-resource$': 'vue-resource/dist/vue-resource.common.js'
     }
   },
   devServer: {
