@@ -22,6 +22,10 @@ var _koaCsrf = require('koa-csrf');
 
 var _koaCsrf2 = _interopRequireDefault(_koaCsrf);
 
+var _lruCache = require('lru-cache');
+
+var _lruCache2 = _interopRequireDefault(_lruCache);
+
 var _http = require('./middleware/http');
 
 var _http2 = _interopRequireDefault(_http);
@@ -53,6 +57,10 @@ var _user2 = _interopRequireDefault(_user);
 var _saluki = require('./middleware/saluki');
 
 var _saluki2 = _interopRequireDefault(_saluki);
+
+var _cache = require('./middleware/cache');
+
+var _cache2 = _interopRequireDefault(_cache);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -138,6 +146,10 @@ module.exports = function () {
         app.use(cors(opts.cors));
     }
 
+    var appCache = (0, _lruCache2.default)(opts.cache || { maxAge: 1000 * 60 * 60, max: 10000 });
+    app.use((0, _cache2.default)({
+        cache: appCache
+    }));
     // add multipart/form-data parsing
     app.use((0, _multer2.default)(opts.uploadConfig || {}));
 

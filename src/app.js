@@ -12,7 +12,7 @@ const session = require("koa-session");
 const Path = require('path');
 
 import CSRF from 'koa-csrf'
-
+import LRU from 'lru-cache'
 
 import httpWrap from './middleware/http';
 import route from './middleware/route';
@@ -22,6 +22,7 @@ import bundle from './middleware/bundle';
 import multer from './middleware/multer';
 import user from './middleware/user';
 import saluki from './middleware/saluki';
+import cache from './middleware/cache';
 
 const app = new Koa();
 const serve = require('koa-static');
@@ -79,7 +80,7 @@ module.exports = function (opts = {}) {
 
     middleware(opts);
 
-    app.use(convert(serve(staticPath, {maxage: 60 * 60 * 24 * 365})));
+    app.use(convert(serve(staticPath, { maxage: 60 * 60 * 24 * 365 })));
     // set the session keys
     app.keys = ['qc'];
     // add session support
@@ -102,12 +103,15 @@ module.exports = function (opts = {}) {
         app.use(cors(opts.cors));
     }
 
+    const appCache = LRU(opts.cache || { maxAge: 1000 * 60 * 60, max: 10000 })
+    app.use(cache({
+        cache: appCache
+    }))
     // add multipart/form-data parsing
     app.use(multer(opts.uploadConfig || {}));
 
     // add body parsing
     app.use(bodyParser());
-
 
     // add the CSRF middleware
     app.use(new CSRF(Object.assign({
