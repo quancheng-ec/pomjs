@@ -69,6 +69,7 @@ function init(ctx) {
     ctx.user = {
         companyid:companyId,
         accountid:accountId,
-        userid:userId
+        userid:userId,
+        language:ctx.cookies.get('language') ||'zh'
     };
 }

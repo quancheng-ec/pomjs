@@ -93,7 +93,8 @@ exports.default = function () {
                 },
                 csrf: ctx.csrf,
                 _token: ctx.response.header.token,
-                _client: opts.clientData
+                _client: opts.clientData,
+                _user: ctx.user
             });
 
             var controlResult = {

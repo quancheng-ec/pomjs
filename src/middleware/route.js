@@ -97,7 +97,8 @@ export default function (opts = {}) {
             },
             csrf: ctx.csrf,
             _token: ctx.response.header.token,
-            _client: opts.clientData
+            _client: opts.clientData,
+            _user:ctx.user
         });
 
         let controlResult = {
