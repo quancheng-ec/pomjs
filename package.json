@@ -1,6 +1,6 @@
 {
   "name": "pomjs",
-  "version": "0.0.85",
+  "version": "0.0.86",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {

@@ -49,17 +49,26 @@ function init(ctx) {
     let token = ctx.cookies.get('token')||ctx.request.header.token;
     if (token) {
         ctx.response.append('token', token);
+        ctx.request.header.token = token;
     }
     let userId = ctx.cookies.get('userId')||ctx.request.header.userid;
     if (userId) {
         ctx.response.append('userid', userId);
+        ctx.request.header.userid=userId;
     }
     let accountId = ctx.cookies.get('accountId')||ctx.request.header.accountid;
     if (accountId) {
         ctx.response.append('accountid', accountId);
+        ctx.request.header.accountid=accountId;
     }
     let companyId = ctx.cookies.get('companyId')||ctx.request.header.companyid;
     if (companyId) {
         ctx.response.append('companyid', companyId);
+        ctx.request.header.companyid = companyId;
     }
+    ctx.user = {
+        companyid:companyId,
+        accountid:accountId,
+        userid:userId
+    };
 }

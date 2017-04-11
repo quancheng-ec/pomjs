@@ -132,6 +132,8 @@ module.exports = function (opts = {}) {
     app.use(httpWrap(opts));
     app.use(bundle(opts));
 
+    app.use(user(opts));
+
     //外接中间件
     if (opts.middlewares) {
         opts.middlewares.forEach(function (js) {
@@ -139,7 +141,7 @@ module.exports = function (opts = {}) {
             app.use(convert(require(js)(opts)));
         });
     }
-    app.use(user(opts));
+   
     app.use(route(opts));
     app.use(render(opts));
     let port = opts.port || 3000;

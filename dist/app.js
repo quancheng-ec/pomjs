@@ -172,6 +172,8 @@ module.exports = function () {
     app.use((0, _http2.default)(opts));
     app.use((0, _bundle2.default)(opts));
 
+    app.use((0, _user2.default)(opts));
+
     //外接中间件
     if (opts.middlewares) {
         opts.middlewares.forEach(function (js) {
@@ -179,7 +181,7 @@ module.exports = function () {
             app.use(convert(require(js)(opts)));
         });
     }
-    app.use((0, _user2.default)(opts));
+
     app.use((0, _route2.default)(opts));
     app.use((0, _render2.default)(opts));
     var port = opts.port || 3000;
