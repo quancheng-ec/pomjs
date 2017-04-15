@@ -36,7 +36,7 @@ module.exports = function () {
                     }
                 }
                 // 没有命中白名单，进行登陆页面跳转
-                var target = encodeURIComponent(ctx.href);
+                var target = encodeURIComponent(ctx.href).replace('http', opts.protocol || 'http');
                 var url = ctx.querystring ? auth.loginUrl + '&' : auth.loginUrl + '?';
                 url += 'target=' + target;
                 ctx.redirect(url);

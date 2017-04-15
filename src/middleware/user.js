@@ -24,19 +24,19 @@ module.exports = function (opts = {}) {
                 let re = pathRegexps[i];
                 const rs = re.exec(ctx.originalUrl);
                 if (rs) {
-                    await  next();
+                    await next();
                     return;
                 }
             }
             // 没有命中白名单，进行登陆页面跳转
-            const target = encodeURIComponent(ctx.href);
+            const target = encodeURIComponent(ctx.href).replace('http', opts.protocol || 'http');
             let url = ctx.querystring ? auth.loginUrl + '&' : auth.loginUrl + '?';
             url += 'target=' + target;
             ctx.redirect(url);
             return;
         }
 
-        await  next();
+        await next();
 
 
     }
@@ -46,30 +46,30 @@ module.exports = function (opts = {}) {
  * @param ctx
  */
 function init(ctx) {
-    let token = ctx.cookies.get('token')||ctx.request.header.token;
+    let token = ctx.cookies.get('token') || ctx.request.header.token;
     if (token) {
         ctx.response.append('token', token);
         ctx.request.header.token = token;
     }
-    let userId = ctx.cookies.get('userId')||ctx.request.header.userid;
+    let userId = ctx.cookies.get('userId') || ctx.request.header.userid;
     if (userId) {
         ctx.response.append('userid', userId);
-        ctx.request.header.userid=userId;
+        ctx.request.header.userid = userId;
     }
-    let accountId = ctx.cookies.get('accountId')||ctx.request.header.accountid;
+    let accountId = ctx.cookies.get('accountId') || ctx.request.header.accountid;
     if (accountId) {
         ctx.response.append('accountid', accountId);
-        ctx.request.header.accountid=accountId;
+        ctx.request.header.accountid = accountId;
     }
-    let companyId = ctx.cookies.get('companyId')||ctx.request.header.companyid;
+    let companyId = ctx.cookies.get('companyId') || ctx.request.header.companyid;
     if (companyId) {
         ctx.response.append('companyid', companyId);
         ctx.request.header.companyid = companyId;
     }
     ctx.user = {
-        companyid:companyId,
-        accountid:accountId,
-        userid:userId,
-        language:ctx.cookies.get('language') ||'zh'
+        companyid: companyId,
+        accountid: accountId,
+        userid: userId,
+        language: ctx.cookies.get('language') || 'zh'
     };
 }
