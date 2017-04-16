@@ -30,8 +30,9 @@ module.exports = function (opts = {}) {
             }
             // 没有命中白名单，进行登陆页面跳转
             const target = encodeURIComponent(ctx.href).replace('http', opts.protocol || 'http');
-            let url = ctx.querystring ? auth.loginUrl + '&' : auth.loginUrl + '?';
-            url += 'target=' + target;
+            //let url = ctx.querystring ? auth.loginUrl + '&' : auth.loginUrl + '?';
+            //url += 'target=' + target;
+            let url = auth.loginUrl + '?target=' + target
             ctx.redirect(url);
             return;
         }
