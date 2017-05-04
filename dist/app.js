@@ -154,7 +154,10 @@ module.exports = function () {
     app.use((0, _multer2.default)(opts.uploadConfig || {}));
 
     // add body parsing
-    app.use(bodyParser());
+    app.use(bodyParser({
+        jsonLimit: '10mb',
+        textLimit: '10mb'
+    }));
 
     // add the CSRF middleware
     app.use(new _koaCsrf2.default(Object.assign({

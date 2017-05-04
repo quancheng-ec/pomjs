@@ -111,7 +111,10 @@ module.exports = function (opts = {}) {
     app.use(multer(opts.uploadConfig || {}));
 
     // add body parsing
-    app.use(bodyParser());
+    app.use(bodyParser({
+        jsonLimit: '10mb',
+        textLimit: '10mb'
+    }));
 
     // add the CSRF middleware
     app.use(new CSRF(Object.assign({
@@ -145,7 +148,7 @@ module.exports = function (opts = {}) {
             app.use(convert(require(js)(opts)));
         });
     }
-   
+
     app.use(route(opts));
     app.use(render(opts));
     let port = opts.port || 3000;
