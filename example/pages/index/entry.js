@@ -5,8 +5,6 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 
-//const Url = require('browser-url');
-
 Vue.use(VueResource);
 
 

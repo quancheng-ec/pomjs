@@ -1,6 +1,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const glob = require("glob");
 
 const log4js = require('koa-log4');
 const logger = log4js.getLogger('pomjs_render');
@@ -18,9 +19,19 @@ const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = function (option = {}, app) {
 
+    let page = {
+        src: path.join(option.src, 'pages'),
+        build: path.join(option.build, 'pages'),
+        static: option.static || path.join(option.root, 'static')
+    };
+
+
+   let vueFileMaps =  handlerPages(option, page)
+
+
     if (isProd) {
         const bundle = require('../../../example/dist/vue-ssr-bundle.json');
-        const template = fs.readFileSync(path.resolve(__dirname,'../../../example/static/dist/index.html'), 'utf-8');
+        const template = fs.readFileSync(path.resolve(__dirname, '../../../example/static/dist/index.html'), 'utf-8');
         renderer = createRenderer(bundle, template);
     } else {
         devServer(app, webPackCb);
@@ -74,4 +85,23 @@ function createRenderer(bundle, template) {
             maxAge: 1000 * 60 * 15
         })
     })
+}
+
+/**
+ *  return 
+ * { 
+ *   'index/view.vue': '/Users/joe/work/pomjs/example/src/pages/index/view.vue',
+     'user/view.vue': '/Users/joe/work/pomjs/example/src/pages/user/view.vue'
+   }
+ * @param {*} option 
+ * @param {*} page 
+ */
+function handlerPages(option, page) {
+    let cache = {};
+    glob.sync(path.join(page.src, "**/*.vue")).forEach(f=>{
+        let names = f.split('/');
+        let key = names[names.length-2]+"/"+names[names.length-1];
+        cache[key] = f;
+    });
+    return cache;
 }
