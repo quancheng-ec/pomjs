@@ -18,7 +18,7 @@ module.exports = function () {
         fs.copy(opts.src, opts.build, { force: true });
 
         pageLoader.init(opts);
-        pageLoader.initCompile();
+        pageLoader.initCompile(opts);
         yield pageLoader.compileRun(function (assets) {
             //console.log(assets.compilation.assets['po.style.css'])
         });

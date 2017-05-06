@@ -30,7 +30,7 @@ export default function (opts = {}) {
 
     const layouts = opts.layouts || Path.join(opts.root, "layouts");
     if (!opts.isProduction) {
-        pageLoader.initCompile();
+        pageLoader.initCompile(opts);
     }
 
     return async function render(ctx, next) {
@@ -50,13 +50,15 @@ export default function (opts = {}) {
 
         const scriptName = pageContext.pageName + ".bundle.js";
         let script = pageLoader.getClientFilePath(scriptName);
+        let vendor = pageLoader.getClientFilePath('vendor.bundle.js');
         //如果配置了cdn域名
-        if(opts.cdndomain){
-            script = opts.cdndomain+script;
+        if (opts.cdndomain) {
+            script = opts.cdndomain + script;
+            vendor = opts.cdndomain + vendor;
         }
 
         const contextData = "var __vue_context_data=" + JSON.stringify(ctx.context) + ";";
-        const sr = " <script>" + contextData + "</script>\n <script src='" + script + "'></script>";
+        const sr = " <script>" + contextData + "</script>\n <script src='" + vendor + "'></script>\n <script src='" + script + "'></script>";
         body = body.replace('{{ page.js }}', sr);
 
         if (process.env.NODE_ENV !== 'production') {
@@ -66,10 +68,10 @@ export default function (opts = {}) {
         const html = await renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
 
         body = body.replace('{{ html }}', html);
-        const cssFileName = pageContext.pageName+".style.css";
+        const cssFileName = pageContext.pageName + ".style.css";
         if (process.env.NODE_ENV === 'production') {
             let csspath = pageLoader.getClientFilePath(cssFileName);
-            body = body.replace('{{ stylesheet }}', "<link href='" +csspath + "' rel='stylesheet'></link>")
+            body = body.replace('{{ stylesheet }}', "<link href='" + csspath + "' rel='stylesheet'></link>")
         } else {
             const styles = pageLoader.readClientFile(cssFileName).toString();
             body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>" + styles + "</style>")

@@ -10,7 +10,7 @@ exports.default = function () {
 
     var layouts = opts.layouts || Path.join(opts.root, "layouts");
     if (!opts.isProduction) {
-        pageLoader.initCompile();
+        pageLoader.initCompile(opts);
     }
 
     return function () {
@@ -30,13 +30,15 @@ exports.default = function () {
 
             var scriptName = pageContext.pageName + ".bundle.js";
             var script = pageLoader.getClientFilePath(scriptName);
+            var vendor = pageLoader.getClientFilePath('vendor.bundle.js');
             //如果配置了cdn域名
             if (opts.cdndomain) {
                 script = opts.cdndomain + script;
+                vendor = opts.cdndomain + vendor;
             }
 
             var contextData = "var __vue_context_data=" + JSON.stringify(ctx.context) + ";";
-            var sr = " <script>" + contextData + "</script>\n <script src='" + script + "'></script>";
+            var sr = " <script>" + contextData + "</script>\n <script src='" + vendor + "'></script>\n <script src='" + script + "'></script>";
             body = body.replace('{{ page.js }}', sr);
 
             if (process.env.NODE_ENV !== 'production') {

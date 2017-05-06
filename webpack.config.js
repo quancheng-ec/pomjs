@@ -7,12 +7,14 @@ var fs = require('fs');
 let jsName = "[name].bundle.js";
 let cssName = "[name].style.css";
 if (process.env.BUILD === 'true') {
-  jsName = "[name].[hash].bundle.js";
-  cssName = "[name].[hash].style.css";
+  jsName = "[name].[chunkhash].bundle.js";
+  cssName = "[name].[chunkhash].style.css";
 }
 
 module.exports = {
-  entry: { main: './pages/main.js' },
+  entry: {
+    vendor: ['vue', 'vue-resource'],
+  },
   output: {
     path: path.resolve('.', './static/bundle/'),
     publicPath: '/bundle/',
@@ -65,7 +67,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.runtime.common.js',
+      'vue$': 'vue/dist/vue.js',
       'vue-resource$': 'vue-resource/dist/vue-resource.common.js'
     }
   },
@@ -75,6 +77,10 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin(cssName),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor",
+      minChunks: Infinity
+    }),
     new webpack.LoaderOptionsPlugin({
       debug: true,
       context: __dirname,
@@ -82,9 +88,9 @@ module.exports = {
         vue: {
           postcss: [autoprefixer('last 3 versions', '> 1%')]
         },
-        babel:{
-          presets:["latest"],
-          babelrc:false
+        babel: {
+          presets: ["latest"],
+          babelrc: false
         }
       }
     })
@@ -93,7 +99,7 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
+  module.exports.devtool = '#cheap-module-source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({

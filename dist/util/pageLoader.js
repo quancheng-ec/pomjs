@@ -141,7 +141,8 @@ module.exports = {
     serverConfig.entry = serverEntry;
     serverConfig.output.path = Path.join(staticDir, '../bundle');
 
-    clientConfig.entry = clientEntry;
+    clientConfig.entry = Object.assign(clientConfig.entry, clientEntry);
+    clientConfig.entry.vendor = clientConfig.entry.vendor.concat(opts.vendor);
     clientConfig.output.path = Path.join(staticDir, 'bundle');
 
     serverCompiler = webpack(serverConfig);
@@ -166,7 +167,8 @@ module.exports = {
         var is = i.split('.');
         var name = i;
         if (is.length > 3) {
-          name = is[0] + "." + is[2] + '.' + is[3];
+          is.splice(1, 1);
+          name = is.join('.');
         }
         clientBuildAssets[name] = clientStats.compilation.assets[i].existsAt;
         if (_isProduction) {
