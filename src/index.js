@@ -38,11 +38,11 @@ module.exports = function (options) {
 
     // response
 
-    app.use(ctx => {
-        ctx.body = 'Hello World';
-        console.log(ctx.session);
-        ctx._session.a = 456;
-    });
+    // app.use(ctx => {
+    //     ctx.body = 'Hello World22';
+    //     console.log(ctx.session);
+    //    // ctx._session.a = 456;
+    // });
 
 
     app.listen(options.port || 3000);
