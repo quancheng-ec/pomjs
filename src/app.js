@@ -8,7 +8,6 @@ const convert = require('koa-convert');
 const bodyParser = require('koa-bodyparser');
 const cors = require("koa-cors");
 const session = require("koa-session");
-const util = require('util');
 
 const Path = require('path');
 
