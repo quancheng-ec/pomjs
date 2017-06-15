@@ -8,6 +8,7 @@ const convert = require('koa-convert');
 const bodyParser = require('koa-bodyparser');
 const cors = require("koa-cors");
 const session = require("koa-session");
+const util = require('util');
 
 const Path = require('path');
 
@@ -23,6 +24,7 @@ import multer from './middleware/multer';
 import user from './middleware/user';
 import saluki from './middleware/saluki';
 import cache from './middleware/cache';
+import log from './middleware/logger';
 
 const app = new Koa();
 const serve = require('koa-static');
@@ -80,6 +82,8 @@ module.exports = function (opts = {}) {
 
     middleware(opts);
 
+    app.use(log(opts));
+
     app.use(convert(serve(staticPath, { maxage: 60 * 60 * 24 * 365 })));
     // set the session keys
     app.keys = ['qc'];
@@ -126,14 +130,6 @@ module.exports = function (opts = {}) {
         disableQuery: false
     }, opts.csrf)));
 
-
-    app.use(async function (ctx, next) {
-        const start = new Date();
-        await next();
-        const ms = new Date() - start;
-        ctx.set('X-Response-Time', `${ms}ms`);
-    });
-
     app.use(error(opts));
     app.use(saluki(opts));
     app.use(httpWrap(opts));
@@ -144,8 +140,12 @@ module.exports = function (opts = {}) {
     //外接中间件
     if (opts.middlewares) {
         opts.middlewares.forEach(function (js) {
-            console.log(js);
-            app.use(convert(require(js)(opts)));
+            let t = async function (ctx, next) {
+                ctx.logger.info(util.format("--> middleware %s", js));
+                await convert(require(js)(opts))(ctx, next);
+                ctx.logger.info(util.format("<-- middleware %s", js));
+            };
+            app.use(t);
         });
     }
 

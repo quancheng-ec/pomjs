@@ -109,7 +109,9 @@ export default function (opts = {}) {
         };
 
         try {
+            ctx.logger.info('--> controller');
             controlResult.data = await control(ctx, services);
+            ctx.logger.info('<-- controller');
         } catch (e) {
             console.error(e);
             controlResult.isSuccess = false;
