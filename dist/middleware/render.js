@@ -21,6 +21,9 @@ exports.default = function () {
                 return;
             }
 
+            var timer = new ctx.logger.Timer();
+            ctx.logger.info("--> render");
+
             var pageContext = ctx.context.pageContext;
 
             var body = _fs2.default.readFileSync(Path.join(layouts, ctx.context.layout || "default.html")).toString();
@@ -60,6 +63,8 @@ exports.default = function () {
             ctx.body = body;
 
             ctx.type = 'text/html; charset=utf-8';
+
+            ctx.logger.info('<-- render (' + timer.split() + 'ms)');
         });
 
         function render(_x2, _x3) {

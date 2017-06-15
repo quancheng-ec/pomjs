@@ -62,6 +62,10 @@ var _cache = require('./middleware/cache');
 
 var _cache2 = _interopRequireDefault(_cache);
 
+var _logger = require('./middleware/logger');
+
+var _logger2 = _interopRequireDefault(_logger);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -126,6 +130,8 @@ module.exports = function () {
 
     middleware(opts);
 
+    app.use((0, _logger2.default)(opts));
+
     app.use(convert(serve(staticPath, { maxage: 60 * 60 * 24 * 365 })));
     // set the session keys
     app.keys = ['qc'];
@@ -169,19 +175,6 @@ module.exports = function () {
         disableQuery: false
     }, opts.csrf)));
 
-    app.use(function () {
-        var _ref2 = _asyncToGenerator(function* (ctx, next) {
-            var start = new Date();
-            yield next();
-            var ms = new Date() - start;
-            ctx.set('X-Response-Time', ms + 'ms');
-        });
-
-        return function (_x3, _x4) {
-            return _ref2.apply(this, arguments);
-        };
-    }());
-
     app.use((0, _error2.default)(opts));
     app.use((0, _saluki2.default)(opts));
     app.use((0, _http2.default)(opts));
@@ -192,8 +185,20 @@ module.exports = function () {
     //外接中间件
     if (opts.middlewares) {
         opts.middlewares.forEach(function (js) {
-            console.log(js);
-            app.use(convert(require(js)(opts)));
+            var t = function () {
+                var _ref2 = _asyncToGenerator(function* (ctx, next) {
+                    var m = js.split('/').pop();
+                    var timer = new ctx.logger.Timer();
+                    ctx.logger.info('--> middleware: ' + m);
+                    yield convert(require(js)(opts))(ctx, next);
+                    ctx.logger.info('<-- middleware: ' + m + ' (' + timer.split() + 'ms)');
+                });
+
+                return function t(_x3, _x4) {
+                    return _ref2.apply(this, arguments);
+                };
+            }();
+            app.use(t);
         });
     }
 

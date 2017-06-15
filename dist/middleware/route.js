@@ -105,7 +105,50 @@ exports.default = function () {
             };
 
             try {
-                controlResult.data = yield control(ctx, services);
+                var proxyedServices = {};
+
+                var _loop = function _loop(key) {
+                    if (!services.hasOwnProperty(key)) return 'continue';
+
+                    proxyedServices[key] = new Proxy(services[key], {
+                        get: function get(target, propKey, receiver) {
+                            var origMethod = target[propKey];
+                            if (typeof origMethod === 'function') {
+                                return function () {
+                                    var _ref2 = _asyncToGenerator(function* () {
+                                        var timer = new ctx.logger.Timer();
+                                        ctx.logger.info('--> service: ' + key + '.' + propKey);
+
+                                        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                                            args[_key] = arguments[_key];
+                                        }
+
+                                        var result = yield origMethod.apply(this, args);
+                                        ctx.logger.info('<-- service: ' + key + '.' + propKey + ' (' + timer.split() + 'ms)');
+                                        return result;
+                                    });
+
+                                    return function () {
+                                        return _ref2.apply(this, arguments);
+                                    };
+                                }();
+                            } else {
+                                return origMethod;
+                            }
+                        }
+                    });
+                };
+
+                for (var key in services) {
+                    var _ret = _loop(key);
+
+                    if (_ret === 'continue') continue;
+                }
+
+                var timer = new ctx.logger.Timer();
+                ctx.logger.info('--> controller: ' + pageName + ':' + action);
+                controlResult.data = yield control(ctx, proxyedServices);
+                ctx.logger.info('<-- controller: ' + pageName + ':' + action + ' (' + timer.split() + 'ms)');
             } catch (e) {
                 console.error(e);
                 controlResult.isSuccess = false;
