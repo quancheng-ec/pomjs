@@ -109,7 +109,32 @@ export default function (opts = {}) {
         };
 
         try {
-            controlResult.data = await control(ctx, services);
+            let proxyedServices = {};
+            for (let key in services) {
+                if (!services.hasOwnProperty(key)) continue;
+
+                proxyedServices[key] = new Proxy(services[key], {
+                    get: function (target, propKey, receiver) {
+                        const origMethod = target[propKey];
+                        if (typeof(origMethod) === 'function') {
+                            return async function (...args) {
+                                let timer = new ctx.logger.Timer();
+                                ctx.logger.info('--> service: ' + key + '.' + propKey);
+                                let result = await origMethod.apply(this, args);
+                                ctx.logger.info(`<-- service: ${key}.${propKey} (${timer.split()}ms)`);
+                                return result;
+                            };
+                        } else {
+                            return origMethod;
+                        }
+                    }
+                });
+            }
+
+            let timer = new ctx.logger.Timer();
+            ctx.logger.info(`--> controller: ${pageName}:${action}`);
+            controlResult.data = await control(ctx, proxyedServices);
+            ctx.logger.info(`<-- controller: ${pageName}:${action} (${timer.split()}ms)`);
         } catch (e) {
             console.error(e);
             controlResult.isSuccess = false;
