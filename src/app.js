@@ -110,7 +110,7 @@ module.exports = function (opts = {}) {
     const appCache = LRU(opts.cache || { maxAge: 1000 * 60 * 60, max: 10000 })
     app.use(cache({
         cache: appCache
-    }))
+    }));
     // add multipart/form-data parsing
     app.use(multer(opts.uploadConfig || {}));
 
@@ -141,9 +141,11 @@ module.exports = function (opts = {}) {
     if (opts.middlewares) {
         opts.middlewares.forEach(function (js) {
             let t = async function (ctx, next) {
-                ctx.logger.info(util.format("--> middleware %s", js));
+                let m = js.split('/').pop();
+                let timer = new ctx.logger.Timer();
+                ctx.logger.info(`--> middleware: ${m}`);
                 await convert(require(js)(opts))(ctx, next);
-                ctx.logger.info(util.format("<-- middleware %s", js));
+                ctx.logger.info(`<-- middleware: ${m} (${timer.split()}ms)`);
             };
             app.use(t);
         });

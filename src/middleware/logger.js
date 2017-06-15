@@ -53,24 +53,49 @@ function getLogger(opts, requestId) {
     return log4js.getLogger('request');
 }
 
-function getEmptyLogger() {
-    let emptyLogger = {};
-
-    ['Trace','Debug','Info','Warn','Error','Fatal', 'Mark'].forEach(function (method) {
-        emptyLogger[method.toLowerCase()] = function () {};
+function getNullLogger() {
+    return new Proxy({}, {
+        get  : function () {
+            return function () {
+            };
+        },
+        apply: function (target, object, args) {
+        }
     });
+}
 
-    return emptyLogger;
+function Timer() {
+    this.start = this.last = new Date();
+
+    this.timePoints = [this.start];
+
+    this.reset = function reset () {
+        this.start = this.last = new Date();
+        this.timePoints = [this.start];
+    };
+
+    this.split = function split () {
+        const now = new Date();
+
+        const offset = now - this.last;
+        this.last    = now;
+        this.timePoints.push(now);
+
+        return offset;
+    };
 }
 
 export default function (opts = {}) {
     return async function log(ctx, next) {
-        ctx.requestId = uuidV4();
-        let logger = getLogger(opts, ctx.requestId);
-        ctx.logger = logger || getEmptyLogger();
+        ctx.requestId    = uuidV4();
+        let logger       = getLogger(opts, ctx.requestId);
+        ctx.logger       = logger || getNullLogger();
+        ctx.logger.Timer = Timer;
+        ctx.logger.timer = new Timer();
 
-        ctx.logger.error(util.format("%s --> %s", ctx.method, ctx.url));
+        let timer = new Timer();
+        ctx.logger.info(`--> ${ctx.method} ${ctx.url}`);
         await next();
-        ctx.logger.error(util.format("%s <-- %s", ctx.method, ctx.url));
+        ctx.logger.info(`<-- ${ctx.method} ${ctx.url} (${timer.split()}ms)`);
     }
 }
