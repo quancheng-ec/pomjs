@@ -4,7 +4,7 @@ var webpack = require('webpack')
 module.exports = {
     target: 'node', // !different
 
-    entry: {main: './pages/main.js'},
+    entry: { main: './pages/main.js' },
     output: {
         path: path.resolve(__dirname, './dist/'),
         publicPath: '/bundle/',
@@ -30,6 +30,9 @@ module.exports = {
                 }
             }
         ]
+    },
+    resolve: {
+        symlinks: false
     },
     devServer: {
         historyApiFallback: true,

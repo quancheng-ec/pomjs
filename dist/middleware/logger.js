@@ -90,9 +90,16 @@ function getLogger(opts, requestId) {
     return log4js.getLogger('request');
 }
 
+// always return a dummy logger
 function getNullLogger() {
     return new Proxy({}, {
-        get: function get() {
+        get: function get(target, propKey) {
+
+            // not proxy for Timer
+            if (propKey === 'Timer') {
+                return Timer;
+            }
+
             return function () {};
         },
         apply: function apply(target, object, args) {}

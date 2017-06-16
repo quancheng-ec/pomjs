@@ -69,7 +69,8 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.js',
       'vue-resource$': 'vue-resource/dist/vue-resource.common.js'
-    }
+    },
+    symlinks: false
   },
   devServer: {
     historyApiFallback: true,
