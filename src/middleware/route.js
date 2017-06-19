@@ -118,10 +118,12 @@ export default function (opts = {}) {
                         const origMethod = target[propKey];
                         if (typeof(origMethod) === 'function') {
                             return async function (...args) {
-                                let timer = new ctx.logger.Timer();
-                                ctx.logger.info('--> service: ' + key + '.' + propKey);
+                                let timer = new ctx.logger.Timer({
+                                    group: 'service',
+                                    path: `${key}.${propKey}`
+                                });
                                 let result = await origMethod.apply(this, args);
-                                ctx.logger.info(`<-- service: ${key}.${propKey} (${timer.split()}ms)`);
+                                timer.split();
                                 return result;
                             };
                         } else {
@@ -131,10 +133,13 @@ export default function (opts = {}) {
                 });
             }
 
-            let timer = new ctx.logger.Timer();
-            ctx.logger.info(`--> controller: ${pageName}:${action}`);
+            let timer = new ctx.logger.Timer({
+                group: 'controller',
+                path: `${pageName}:${action}`
+            });
+
             controlResult.data = await control(ctx, proxyedServices);
-            ctx.logger.info(`<-- controller: ${pageName}:${action} (${timer.split()}ms)`);
+            timer.split();
         } catch (e) {
             console.error(e);
             controlResult.isSuccess = false;

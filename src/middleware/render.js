@@ -40,8 +40,9 @@ export default function (opts = {}) {
             return;
         }
 
-        let timer = new ctx.logger.Timer();
-        ctx.logger.info("--> render");
+        let timer = new ctx.logger.Timer({
+            group: 'render'
+        });
 
         const pageContext = ctx.context.pageContext;
 
@@ -84,6 +85,6 @@ export default function (opts = {}) {
 
         ctx.type = 'text/html; charset=utf-8';
 
-        ctx.logger.info(`<-- render (${timer.split()}ms)`);
+        timer.split();
     }
 }
