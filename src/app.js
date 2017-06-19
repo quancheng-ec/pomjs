@@ -141,10 +141,12 @@ module.exports = function (opts = {}) {
         opts.middlewares.forEach(function (js) {
             let t = async function (ctx, next) {
                 let m = js.split('/').pop();
-                let timer = new ctx.logger.Timer();
-                ctx.logger.info(`--> middleware: ${m}`);
+                let timer = new ctx.logger.Timer({
+                    group: 'middleware',
+                    path: m
+                });
                 await convert(require(js)(opts))(ctx, next);
-                ctx.logger.info(`<-- middleware: ${m} (${timer.split()}ms)`);
+                timer.split();
             };
             app.use(t);
         });

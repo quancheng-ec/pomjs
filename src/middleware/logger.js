@@ -8,11 +8,36 @@
  * 4. 在config中声明了log4js的object后，才会初始化logger，可以使用
  *
  * Created by zhuliang.li on 20170614.
+ *
+ * zhuliang.li, modified on 20170619
+ * 1. 修改了Timer的实现，暂时去除timer stack的功能
+ * 2. 调整了打点(卡时间)的功能，通常使用如下：
+ *    group和path用于统计，已经对于所有请求、外部中间件、控制器、render加好了打点，Kibana上可以看
+ *    (已经保存了一个查询node-request-stat)
+ *    ```
+ *    let timer = new ctx.logger.Timer({
+ *      group: 'request',
+ *      path: `${ctx.method} ${ctx.url}`
+ *    });
+ *
+ *    await user_funcitons();
+ *
+ *    timer.split();
+ *    ```
+ *
+ * TODO:
+ *  1. logstashUDP会污染全局的config，需要自己做一个Appender比较好
+ *  2. NullLogger太dirty了，要再改进一下
+ *  3. 加强traceId的作用
  */
+
+'use strict';
 
 const log4js = require("log4js"),
       util = require("util"),
       uuidV4 = require("uuid/v4");
+
+import _ from 'lodash';
 
 function getLogger(opts, requestId) {
     if (!opts.log4js) {
@@ -61,7 +86,7 @@ function getNullLogger() {
 
             // not proxy for Timer
             if (propKey === 'Timer') {
-                return Timer;
+                return _.bind(InnerTimer, {}, undefined);
             }
 
             return function () {
@@ -72,14 +97,19 @@ function getNullLogger() {
     });
 }
 
-function Timer() {
-    this.start = this.last = new Date();
+function InnerTimer(logger, context) {
 
-    this.timePoints = [this.start];
+    this.logger = logger || getNullLogger();
+    this.start  = this.last = new Date();
+
+    //this.timePoints = [this.start];
+    this.context = context || {};
+
+    this.logger.info('timer starting...', _.assign(this.context, {timerType: 'start'}));
 
     this.reset = function reset () {
         this.start = this.last = new Date();
-        this.timePoints = [this.start];
+        //this.timePoints = [this.start];
     };
 
     this.split = function split () {
@@ -87,23 +117,28 @@ function Timer() {
 
         const offset = now - this.last;
         this.last    = now;
-        this.timePoints.push(now);
+        //this.timePoints.push(now);
+
+        this.logger.info(`timer splited (${offset}ms)`, _.assign(this.context, {duration: offset, timerType: 'end'}));
 
         return offset;
     };
 }
 
 export default function (opts = {}) {
-    return async function log(ctx, next) {
+    return async function log (ctx, next) {
         ctx.requestId    = uuidV4();
         let logger       = getLogger(opts, ctx.requestId);
         ctx.logger       = logger || getNullLogger();
-        ctx.logger.Timer = Timer;
-        ctx.logger.timer = new Timer();
+        ctx.logger.Timer = _.bind(InnerTimer, {}, ctx.logger);
 
-        let timer = new Timer();
-        ctx.logger.info(`--> ${ctx.method} ${ctx.url}`);
+        let timer = new ctx.logger.Timer({
+            group: 'request',
+            path: `${ctx.method} ${ctx.url}`
+        });
+
         await next();
-        ctx.logger.info(`<-- ${ctx.method} ${ctx.url} (${timer.split()}ms)`);
+
+        timer.split();
     }
 }
