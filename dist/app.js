@@ -188,10 +188,12 @@ module.exports = function () {
             var t = function () {
                 var _ref2 = _asyncToGenerator(function* (ctx, next) {
                     var m = js.split('/').pop();
-                    var timer = new ctx.logger.Timer();
-                    ctx.logger.info('--> middleware: ' + m);
+                    var timer = new ctx.logger.Timer({
+                        group: 'middleware',
+                        path: m
+                    });
                     yield convert(require(js)(opts))(ctx, next);
-                    ctx.logger.info('<-- middleware: ' + m + ' (' + timer.split() + 'ms)');
+                    timer.split();
                 });
 
                 return function t(_x3, _x4) {

@@ -21,8 +21,9 @@ exports.default = function () {
                 return;
             }
 
-            var timer = new ctx.logger.Timer();
-            ctx.logger.info("--> render");
+            var timer = new ctx.logger.Timer({
+                group: 'render'
+            });
 
             var pageContext = ctx.context.pageContext;
 
@@ -64,7 +65,7 @@ exports.default = function () {
 
             ctx.type = 'text/html; charset=utf-8';
 
-            ctx.logger.info('<-- render (' + timer.split() + 'ms)');
+            timer.split();
         });
 
         function render(_x2, _x3) {

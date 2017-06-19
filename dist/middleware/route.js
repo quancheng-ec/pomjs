@@ -116,15 +116,17 @@ exports.default = function () {
                             if (typeof origMethod === 'function') {
                                 return function () {
                                     var _ref2 = _asyncToGenerator(function* () {
-                                        var timer = new ctx.logger.Timer();
-                                        ctx.logger.info('--> service: ' + key + '.' + propKey);
+                                        var timer = new ctx.logger.Timer({
+                                            group: 'service',
+                                            path: key + '.' + propKey
+                                        });
 
                                         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
                                             args[_key] = arguments[_key];
                                         }
 
                                         var result = yield origMethod.apply(this, args);
-                                        ctx.logger.info('<-- service: ' + key + '.' + propKey + ' (' + timer.split() + 'ms)');
+                                        timer.split();
                                         return result;
                                     });
 
@@ -145,10 +147,13 @@ exports.default = function () {
                     if (_ret === 'continue') continue;
                 }
 
-                var timer = new ctx.logger.Timer();
-                ctx.logger.info('--> controller: ' + pageName + ':' + action);
+                var timer = new ctx.logger.Timer({
+                    group: 'controller',
+                    path: pageName + ':' + action
+                });
+
                 controlResult.data = yield control(ctx, proxyedServices);
-                ctx.logger.info('<-- controller: ' + pageName + ':' + action + ' (' + timer.split() + 'ms)');
+                timer.split();
             } catch (e) {
                 console.error(e);
                 controlResult.isSuccess = false;
