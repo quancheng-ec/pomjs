@@ -59,7 +59,7 @@ module.exports = function () {
  * @param ctx
  */
 function init(ctx) {
-    var token = ctx.cookies.get('pToken') || ctx.request.header.token;
+    var token = ctx.cookies.get('pToken') || ctx.request.header.token;
     if (token) {
         ctx.response.append('token', token);
         ctx.request.header.token = token;
