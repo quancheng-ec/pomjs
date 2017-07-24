@@ -12,15 +12,13 @@ const pageLoader = require('../util/pageLoader');
 const DEFAULT_NAME = 'index.js';
 const DEFAULT_FILE = 'index/index.js';
 
-const services = require('../grpc/index').services();
-
 
 export default function (opts = {}) {
 
     pageLoader.init(opts);
     const pageDir = opts.isProduction ? opts.page.build : opts.page.src;
 
-    return async function route(ctx, next) {
+    return async function route (ctx, next) {
         let reqPath = ctx.path, ext = "";
 
         if (reqPath.indexOf('.') !== -1) {
@@ -98,7 +96,7 @@ export default function (opts = {}) {
             csrf: ctx.csrf,
             _token: ctx.response.header.token,
             _client: opts.clientData,
-            _user:ctx.user
+            _user: ctx.user
         });
 
         let controlResult = {
@@ -110,13 +108,13 @@ export default function (opts = {}) {
 
         try {
             let proxyedServices = {};
-            for (let key in services) {
-                if (!services.hasOwnProperty(key)) continue;
+            for (let key in ctx.services) {
+                if (!ctx.services.hasOwnProperty(key)) continue;
 
-                proxyedServices[key] = new Proxy(services[key], {
+                proxyedServices[key] = new Proxy(ctx.services[key], {
                     get: function (target, propKey, receiver) {
                         const origMethod = target[propKey];
-                        if (typeof(origMethod) === 'function') {
+                        if (typeof (origMethod) === 'function') {
                             return async function (...args) {
                                 let timer = new ctx.logger.Timer({
                                     group: 'service',

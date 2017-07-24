@@ -1,6 +1,6 @@
 {
-  "name": "pomjs",
-  "version": "0.1.1",
+  "name": "@quancheng-ec/pomjs",
+  "version": "0.2.0",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -21,6 +21,7 @@
   "license": "AGPL-3.0",
   "author": "yingjunjiao",
   "dependencies": {
+    "@quancheng/saluki2-node": "1.0.1",
     "autoprefixer": "6.5.3",
     "babel-cli": "6.16.0",
     "babel-core": "6.17.0",
@@ -32,14 +33,11 @@
     "babel-preset-latest": "^6.16.0",
     "babel-runtime": "6.11.6",
     "bluebird": "3.4.6",
-    "consul": "0.27.0",
     "cross-env": "1.0.6",
     "css-loader": "0.23.1",
     "extract-text-webpack-plugin": "^2.0.0-beta.5",
     "file-loader": "0.8.4",
     "fs-sync": "1.0.3",
-    "glob": "7.1.1",
-    "grpc": "1.1.2",
     "hash-assets-webpack-plugin": "^0.2.0",
     "koa": "2.2.0",
     "koa-bodyparser": "3.2.0",
@@ -50,11 +48,13 @@
     "koa-session": "^5.0.0",
     "koa-static": "2.0.0",
     "lodash": "4.16.4",
+    "log4js": "1.1.1",
     "lru-cache": "^4.0.2",
     "memory-fs": "0.3.0",
     "node-fetch": "1.6.3",
     "path-to-regexp": "^1.7.0",
     "postcss-loader": "1.1.1",
+    "saluki2-node": "^1.0.0",
     "style-loader": "^0.16.1",
     "stylus": "0.54.5",
     "stylus-loader": "2.3.1",
@@ -67,8 +67,7 @@
     "vue-template-compiler": "2.2.6",
     "vuex": "^2.0.0",
     "webpack": "^2.2.0-rc.7",
-    "whatwg-fetch": "1.0.0",
-    "log4js": "1.1.1"
+    "whatwg-fetch": "1.0.0"
   },
   "devDependencies": {}
 }

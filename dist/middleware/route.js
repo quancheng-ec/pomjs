@@ -108,9 +108,9 @@ exports.default = function () {
                 var proxyedServices = {};
 
                 var _loop = function _loop(key) {
-                    if (!services.hasOwnProperty(key)) return 'continue';
+                    if (!ctx.services.hasOwnProperty(key)) return 'continue';
 
-                    proxyedServices[key] = new Proxy(services[key], {
+                    proxyedServices[key] = new Proxy(ctx.services[key], {
                         get: function get(target, propKey, receiver) {
                             var origMethod = target[propKey];
                             if (typeof origMethod === 'function') {
@@ -141,7 +141,7 @@ exports.default = function () {
                     });
                 };
 
-                for (var key in services) {
+                for (var key in ctx.services) {
                     var _ret = _loop(key);
 
                     if (_ret === 'continue') continue;
@@ -210,5 +210,3 @@ var pageLoader = require('../util/pageLoader');
 
 var DEFAULT_NAME = 'index.js';
 var DEFAULT_FILE = 'index/index.js';
-
-var services = require('../grpc/index').services();

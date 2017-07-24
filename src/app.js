@@ -21,18 +21,15 @@ import error from './middleware/error';
 import bundle from './middleware/bundle';
 import multer from './middleware/multer';
 import user from './middleware/user';
-import saluki from './middleware/saluki';
+import saluki from './middleware/saluki2';
 import cache from './middleware/cache';
 import log from './middleware/logger';
+import Saluki2Client from 'saluki2-node'
 
 const app = new Koa();
 const serve = require('koa-static');
 
 var root = {};
-
-async function middleware(opts) {
-    await require('./grpc/index').init(opts);
-}
 
 /**
  * 合并环境变量和配置变量，以环境变量为准
@@ -40,7 +37,7 @@ async function middleware(opts) {
  * 如 pomjs_saluki.group=123
  * @param opts
  */
-function mergeEnv(opts) {
+function mergeEnv (opts) {
     const env = process.env;
     Object.assign(process.env, opts)
     //用环境变量替换当前配置
@@ -79,7 +76,9 @@ module.exports = function (opts = {}) {
     root = opts.root;
     const staticPath = opts.static || Path.join(root, 'static');
 
-    middleware(opts);
+    if (opts.saluki2) {
+        app.use(saluki(opts));
+    }
 
     app.use(log(opts));
 
@@ -130,7 +129,6 @@ module.exports = function (opts = {}) {
     }, opts.csrf)));
 
     app.use(error(opts));
-    app.use(saluki(opts));
     app.use(httpWrap(opts));
     app.use(bundle(opts));
 
@@ -159,6 +157,7 @@ module.exports = function (opts = {}) {
         port = parseInt(port);
     }
     app.listen(port);
+
     console.log('listening on ', port);
 
 };

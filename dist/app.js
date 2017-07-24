@@ -1,23 +1,5 @@
 'use strict';
 
-var middleware = function () {
-    var _ref = _asyncToGenerator(function* (opts) {
-        yield require('./grpc/index').init(opts);
-    });
-
-    return function middleware(_x) {
-        return _ref.apply(this, arguments);
-    };
-}();
-
-/**
- * 合并环境变量和配置变量，以环境变量为准
- * 将 pomjs_ 开头的环境变量作为config参数给应用
- * 如 pomjs_saluki.group=123
- * @param opts
- */
-
-
 var _koaCsrf = require('koa-csrf');
 
 var _koaCsrf2 = _interopRequireDefault(_koaCsrf);
@@ -54,7 +36,7 @@ var _user = require('./middleware/user');
 
 var _user2 = _interopRequireDefault(_user);
 
-var _saluki = require('./middleware/saluki');
+var _saluki = require('./middleware/saluki2');
 
 var _saluki2 = _interopRequireDefault(_saluki);
 
@@ -65,6 +47,10 @@ var _cache2 = _interopRequireDefault(_cache);
 var _logger = require('./middleware/logger');
 
 var _logger2 = _interopRequireDefault(_logger);
+
+var _saluki2Node = require('saluki2-node');
+
+var _saluki2Node2 = _interopRequireDefault(_saluki2Node);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -87,6 +73,12 @@ var serve = require('koa-static');
 
 var root = {};
 
+/**
+ * 合并环境变量和配置变量，以环境变量为准
+ * 将 pomjs_ 开头的环境变量作为config参数给应用
+ * 如 pomjs_saluki.group=123
+ * @param opts
+ */
 function mergeEnv(opts) {
     var env = process.env;
     Object.assign(process.env, opts);
@@ -128,7 +120,9 @@ module.exports = function () {
     root = opts.root;
     var staticPath = opts.static || Path.join(root, 'static');
 
-    middleware(opts);
+    if (opts.saluki2) {
+        app.use((0, _saluki2.default)(opts));
+    }
 
     app.use((0, _logger2.default)(opts));
 
@@ -141,7 +135,8 @@ module.exports = function () {
         maxAge: 86400000, /** (number) maxAge in ms (default is 1 days) */
         overwrite: true, /** (boolean) can overwrite or not (default true) */
         httpOnly: true, /** (boolean) httpOnly or not (default true) */
-        signed: true };
+        signed: true /** (boolean) signed or not (default true) */
+    };
     if (opts.auth && opts.auth.domain) {
         sessionConfig.domain = opts.auth.domain;
     }
@@ -176,7 +171,6 @@ module.exports = function () {
     }, opts.csrf)));
 
     app.use((0, _error2.default)(opts));
-    app.use((0, _saluki2.default)(opts));
     app.use((0, _http2.default)(opts));
     app.use((0, _bundle2.default)(opts));
 
@@ -186,7 +180,7 @@ module.exports = function () {
     if (opts.middlewares) {
         opts.middlewares.forEach(function (js) {
             var t = function () {
-                var _ref2 = _asyncToGenerator(function* (ctx, next) {
+                var _ref = _asyncToGenerator(function* (ctx, next) {
                     var m = js.split('/').pop();
                     var timer = new ctx.logger.Timer({
                         group: 'middleware',
@@ -196,8 +190,8 @@ module.exports = function () {
                     timer.split();
                 });
 
-                return function t(_x3, _x4) {
-                    return _ref2.apply(this, arguments);
+                return function t(_x2, _x3) {
+                    return _ref.apply(this, arguments);
                 };
             }();
             app.use(t);
@@ -211,5 +205,6 @@ module.exports = function () {
         port = parseInt(port);
     }
     app.listen(port);
+
     console.log('listening on ', port);
 };
