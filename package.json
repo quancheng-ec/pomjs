@@ -1,5 +1,5 @@
 {
-  "name": "@quancheng-ec/pomjs",
+  "name": "@quancheng/pomjs",
   "version": "0.2.0",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
