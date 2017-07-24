@@ -24,7 +24,6 @@ import user from './middleware/user';
 import saluki from './middleware/saluki2';
 import cache from './middleware/cache';
 import log from './middleware/logger';
-import Saluki2Client from 'saluki2-node'
 
 const app = new Koa();
 const serve = require('koa-static');

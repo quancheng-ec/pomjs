@@ -1,6 +1,6 @@
 {
   "name": "@quancheng/pomjs",
-  "version": "0.2.0",
+  "version": "0.2.4",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "license": "AGPL-3.0",
   "author": "yingjunjiao",
   "dependencies": {
-    "@quancheng/saluki2-node": "1.0.1",
+    "@quancheng/saluki2-node": "^1.0.3",
     "autoprefixer": "6.5.3",
     "babel-cli": "6.16.0",
     "babel-core": "6.17.0",
@@ -54,7 +54,6 @@
     "node-fetch": "1.6.3",
     "path-to-regexp": "^1.7.0",
     "postcss-loader": "1.1.1",
-    "saluki2-node": "^1.0.0",
     "style-loader": "^0.16.1",
     "stylus": "0.54.5",
     "stylus-loader": "2.3.1",
