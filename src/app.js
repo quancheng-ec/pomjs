@@ -24,13 +24,14 @@ import user from './middleware/user';
 import saluki from './middleware/saluki';
 import cache from './middleware/cache';
 import log from './middleware/logger';
+import redisClient from './middleware/redisClient'
 
 const app = new Koa();
 const serve = require('koa-static');
 
 var root = {};
 
-async function middleware(opts) {
+async function middleware (opts) {
     await require('./grpc/index').init(opts);
 }
 
@@ -40,7 +41,7 @@ async function middleware(opts) {
  * 如 pomjs_saluki.group=123
  * @param opts
  */
-function mergeEnv(opts) {
+function mergeEnv (opts) {
     const env = process.env;
     Object.assign(process.env, opts)
     //用环境变量替换当前配置
@@ -80,6 +81,9 @@ module.exports = function (opts = {}) {
     const staticPath = opts.static || Path.join(root, 'static');
 
     middleware(opts);
+    if (opts.redis) {
+        app.use(redisClient(opts))
+    }
 
     app.use(log(opts));
 
