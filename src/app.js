@@ -24,11 +24,16 @@ import user from './middleware/user';
 import saluki from './middleware/saluki2';
 import cache from './middleware/cache';
 import log from './middleware/logger';
+import redisClient from './middleware/redisClient'
 
 const app = new Koa();
 const serve = require('koa-static');
 
 var root = {};
+
+async function middleware (opts) {
+    await require('./grpc/index').init(opts);
+}
 
 /**
  * 合并环境变量和配置变量，以环境变量为准
@@ -77,6 +82,10 @@ module.exports = function (opts = {}) {
 
     if (opts.saluki2) {
         app.use(saluki(opts));
+    }
+
+    if (opts.redis) {
+        app.use(redisClient(opts))
     }
 
     app.use(log(opts));
