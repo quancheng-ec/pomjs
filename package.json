@@ -50,11 +50,14 @@
     "koa-session": "^5.0.0",
     "koa-static": "2.0.0",
     "lodash": "4.16.4",
+    "log4js": "1.1.1",
     "lru-cache": "^4.0.2",
     "memory-fs": "0.3.0",
     "node-fetch": "1.6.3",
     "path-to-regexp": "^1.7.0",
     "postcss-loader": "1.1.1",
+    "redis": "^2.7.1",
+    "socket.io": "^2.0.3",
     "style-loader": "^0.16.1",
     "stylus": "0.54.5",
     "stylus-loader": "2.3.1",
@@ -67,8 +70,7 @@
     "vue-template-compiler": "2.2.6",
     "vuex": "^2.0.0",
     "webpack": "^2.2.0-rc.7",
-    "whatwg-fetch": "1.0.0",
-    "log4js": "1.1.1"
+    "whatwg-fetch": "1.0.0"
   },
   "devDependencies": {}
 }

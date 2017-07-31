@@ -26,9 +26,17 @@ var _lruCache = require('lru-cache');
 
 var _lruCache2 = _interopRequireDefault(_lruCache);
 
-var _http = require('./middleware/http');
+var _socket = require('socket.io');
+
+var _socket2 = _interopRequireDefault(_socket);
+
+var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
+
+var _http3 = require('./middleware/http');
+
+var _http4 = _interopRequireDefault(_http3);
 
 var _route = require('./middleware/route');
 
@@ -65,6 +73,10 @@ var _cache2 = _interopRequireDefault(_cache);
 var _logger = require('./middleware/logger');
 
 var _logger2 = _interopRequireDefault(_logger);
+
+var _redisClient = require('./middleware/redisClient');
+
+var _redisClient2 = _interopRequireDefault(_redisClient);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -129,6 +141,9 @@ module.exports = function () {
     var staticPath = opts.static || Path.join(root, 'static');
 
     middleware(opts);
+    if (opts.redis) {
+        app.use((0, _redisClient2.default)(opts));
+    }
 
     app.use((0, _logger2.default)(opts));
 
@@ -141,7 +156,8 @@ module.exports = function () {
         maxAge: 86400000, /** (number) maxAge in ms (default is 1 days) */
         overwrite: true, /** (boolean) can overwrite or not (default true) */
         httpOnly: true, /** (boolean) httpOnly or not (default true) */
-        signed: true };
+        signed: true /** (boolean) signed or not (default true) */
+    };
     if (opts.auth && opts.auth.domain) {
         sessionConfig.domain = opts.auth.domain;
     }
@@ -177,7 +193,7 @@ module.exports = function () {
 
     app.use((0, _error2.default)(opts));
     app.use((0, _saluki2.default)(opts));
-    app.use((0, _http2.default)(opts));
+    app.use((0, _http4.default)(opts));
     app.use((0, _bundle2.default)(opts));
 
     app.use((0, _user2.default)(opts));
@@ -210,6 +226,19 @@ module.exports = function () {
     if (typeof port === 'string') {
         port = parseInt(port);
     }
-    app.listen(port);
+
+    var pomApp = _http2.default.createServer(app.callback());
+    var ioServer = (0, _socket2.default)(pomApp);
+
+    ioServer.on('connection', function (socket) {
+        console.log('a user connected');
+        socket.on('disconnect', function () {
+            console.log('user disconnected');
+        });
+    });
+
+    pomApp.listen(port);
     console.log('listening on ', port);
+
+    return { app: pomApp, ioServer: ioServer };
 };
