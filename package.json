@@ -1,6 +1,6 @@
 {
   "name": "@quancheng/pomjs",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "license": "AGPL-3.0",
   "author": "yingjunjiao",
   "dependencies": {
-    "@quancheng/saluki2-node": "^1.0.4",
+    "@quancheng/saluki2-node": "^1.1.0",
     "autoprefixer": "6.5.3",
     "babel-cli": "6.16.0",
     "babel-core": "6.17.0",

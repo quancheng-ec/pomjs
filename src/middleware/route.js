@@ -120,7 +120,12 @@ export default function (opts = {}) {
                                     group: 'service',
                                     path: `${key}.${propKey}`
                                 });
-                                let result = await origMethod.apply(this, args);
+                                try {
+
+                                    let result = await origMethod.apply(this, args);
+                                } catch (e) {
+                                    console.error('error method:' + propKey, e)
+                                }
                                 timer.split();
                                 return result;
                             };
