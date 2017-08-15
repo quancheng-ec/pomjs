@@ -233,17 +233,23 @@ module.exports = function () {
     }
 
     var pomApp = _http2.default.createServer(app.callback());
-    var ioServer = (0, _socket2.default)(pomApp);
-
-    ioServer.on('connection', function (socket) {
-        console.log('a user connected');
-        socket.on('disconnect', function () {
-            console.log('user disconnected');
-        });
-    });
 
     pomApp.listen(port);
     console.log('listening on ', port);
 
-    return { app: pomApp, ioServer: ioServer };
+    var result = {
+        app: pomApp
+    };
+
+    if (opts.socketServer) {
+        result.ioServer = (0, _socket2.default)(pomApp);
+        result.ioServer.on('connection', function (socket) {
+            console.log('a user connected');
+            socket.on('disconnect', function () {
+                console.log('user disconnected');
+            });
+        });
+    }
+
+    return result;
 };

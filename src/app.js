@@ -169,18 +169,24 @@ module.exports = function (opts = {}) {
     }
 
     const pomApp = nodeHttp.createServer(app.callback())
-    const ioServer = SocketIO(pomApp)
-
-    ioServer.on('connection', function (socket) {
-        console.log('a user connected');
-        socket.on('disconnect', function () {
-            console.log('user disconnected');
-        });
-    });
 
     pomApp.listen(port);
     console.log('listening on ', port);
 
-    return { app: pomApp, ioServer: ioServer }
+    const result = {
+        app: pomApp
+    }
+
+    if (opts.socketServer) {
+        result.ioServer = SocketIO(pomApp)
+        result.ioServer.on('connection', function (socket) {
+            console.log('a user connected');
+            socket.on('disconnect', function () {
+                console.log('user disconnected');
+            });
+        });
+    }
+
+    return result
 
 };
