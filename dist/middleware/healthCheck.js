@@ -22,7 +22,7 @@ var SALUKI_HEALTHY_STATUS = 'SERVING';
 
 var makeRespond = function makeRespond(ctx) {
   return function (code, message) {
-    ctx.code = code;
+    ctx.status = code;
     ctx.body = {
       isHealth: code < 400,
       message: message

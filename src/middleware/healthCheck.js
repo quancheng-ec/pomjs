@@ -13,7 +13,7 @@ const DEFAULT_HEALTHCHECK_URL = '/api/healthCheck'
 const SALUKI_HEALTHY_STATUS = 'SERVING'
 
 const makeRespond = ctx => (code, message) => {
-  ctx.code = code
+  ctx.status = code
   ctx.body = {
     isHealth: code < 400,
     message
