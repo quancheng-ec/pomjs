@@ -66,6 +66,10 @@ var _logger = require('./middleware/logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
+var _healthCheck = require('./middleware/healthCheck');
+
+var _healthCheck2 = _interopRequireDefault(_healthCheck);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -141,7 +145,8 @@ module.exports = function () {
         maxAge: 86400000, /** (number) maxAge in ms (default is 1 days) */
         overwrite: true, /** (boolean) can overwrite or not (default true) */
         httpOnly: true, /** (boolean) httpOnly or not (default true) */
-        signed: true };
+        signed: true /** (boolean) signed or not (default true) */
+    };
     if (opts.auth && opts.auth.domain) {
         sessionConfig.domain = opts.auth.domain;
     }
@@ -179,6 +184,7 @@ module.exports = function () {
     app.use((0, _saluki2.default)(opts));
     app.use((0, _http2.default)(opts));
     app.use((0, _bundle2.default)(opts));
+    app.use((0, _healthCheck2.default)(opts));
 
     app.use((0, _user2.default)(opts));
 

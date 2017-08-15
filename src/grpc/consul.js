@@ -16,7 +16,7 @@ const URL = require('url');
 
 var Bluebird = require('bluebird');
 
-function fromCallback(fn) {
+function fromCallback (fn) {
     return new Bluebird(function (resolve, reject) {
         try {
             return fn(function (err, data, res) {
@@ -35,7 +35,7 @@ function fromCallback(fn) {
 var _consul;
 let _services = {};
 
-async function _init(consulNode,group) {
+async function _init (consulNode, group) {
 
     let checks = await _consul.health.service({
         service: consulNode,
@@ -45,14 +45,14 @@ async function _init(consulNode,group) {
     checks[0].forEach(function (c) {
         const s = c.Service;
         const ids = s.ID.split('-');
-        const name = ids [1];
+        const name = ids[1];
         let service = {
             name: name,
             host: ids[0],
             address: s.Address,
             port: s.Port,
             version: ids[2],
-            group:group
+            group: group
         };
         let ss = [];
         if (services[service.name]) {
@@ -68,7 +68,7 @@ async function _init(consulNode,group) {
 
 module.exports = {
 
-    init: async function init(opts = {}) {
+    init: async function init (opts = {}) {
         const saluki = opts.saluki || {};
 
         _consul = require('consul')({
@@ -87,10 +87,10 @@ module.exports = {
         console.log('init consul client widthgroup ' + group);
         const sgroup = 'saluki_' + group;
         const func = async function () {
-            try{
-              _services[group] = await _init(sgroup,group);
-            }catch (e){
-                console.error('sync consul error!',e);
+            try {
+                _services[group] = await _init(sgroup, group);
+            } catch (e) {
+                console.error('sync consul error!', e);
             }
             setTimeout(func, 10000);
         };
@@ -107,6 +107,7 @@ module.exports = {
             return _services[api.group][api.name];
         }
         return _services;
-    }
+    },
+    consulClient: () => _consul
 };
 
