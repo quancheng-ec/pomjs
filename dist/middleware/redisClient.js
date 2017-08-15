@@ -5,11 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (opts) {
-  var client = _redis2.default.createClient(opts.redis);
+  var client = opts.redis ? _redis2.default.createClient(opts.redis) : null;
 
   return function () {
     var _ref = _asyncToGenerator(function* (ctx, next) {
-      ctx.redisClient = client;
+      if (client) ctx.redisClient = client;
       yield next();
     });
 

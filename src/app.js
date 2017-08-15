@@ -27,11 +27,8 @@ import user from './middleware/user';
 import saluki from './middleware/saluki';
 import cache from './middleware/cache';
 import log from './middleware/logger';
-<<<<<<< HEAD
 import redisClient from './middleware/redisClient'
-=======
 import healthCheck from './middleware/healthCheck'
->>>>>>> ad619abf357b5e29e9aabde1a077d55758d8bf35
 
 const app = new Koa();
 const serve = require('koa-static');

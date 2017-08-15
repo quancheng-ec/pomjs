@@ -74,15 +74,13 @@ var _logger = require('./middleware/logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
-<<<<<<< HEAD
 var _redisClient = require('./middleware/redisClient');
 
 var _redisClient2 = _interopRequireDefault(_redisClient);
-=======
+
 var _healthCheck = require('./middleware/healthCheck');
 
 var _healthCheck2 = _interopRequireDefault(_healthCheck);
->>>>>>> ad619abf357b5e29e9aabde1a077d55758d8bf35
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
