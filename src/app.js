@@ -14,6 +14,9 @@ const Path = require('path');
 import CSRF from 'koa-csrf'
 import LRU from 'lru-cache'
 
+import SocketIO from 'socket.io'
+import nodeHttp from 'http'
+
 import httpWrap from './middleware/http';
 import route from './middleware/route';
 import render from './middleware/render';
@@ -164,8 +167,29 @@ module.exports = function (opts = {}) {
     if (typeof port === 'string') {
         port = parseInt(port);
     }
-    app.listen(port);
 
+    const pomApp = nodeHttp.createServer(app.callback())
+
+    const result = {
+        app: pomApp
+    }
+
+    if (opts.socketServer) {
+
+        const ioServer = SocketIO(pomApp)
+
+        ioServer.on('connection', function (socket) {
+            console.log('a user connected');
+            socket.on('disconnect', function () {
+                console.log('user disconnected');
+            });
+        });
+        result.ioServer = ioServer
+    }
+
+    pomApp.listen(port);
     console.log('listening on ', port);
+
+    return result
 
 };

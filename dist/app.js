@@ -1,5 +1,23 @@
 'use strict';
 
+var middleware = function () {
+    var _ref = _asyncToGenerator(function* (opts) {
+        yield require('./grpc/index').init(opts);
+    });
+
+    return function middleware(_x) {
+        return _ref.apply(this, arguments);
+    };
+}();
+
+/**
+ * 合并环境变量和配置变量，以环境变量为准
+ * 将 pomjs_ 开头的环境变量作为config参数给应用
+ * 如 pomjs_saluki.group=123
+ * @param opts
+ */
+
+
 var _koaCsrf = require('koa-csrf');
 
 var _koaCsrf2 = _interopRequireDefault(_koaCsrf);
@@ -8,9 +26,17 @@ var _lruCache = require('lru-cache');
 
 var _lruCache2 = _interopRequireDefault(_lruCache);
 
-var _http = require('./middleware/http');
+var _socket = require('socket.io');
+
+var _socket2 = _interopRequireDefault(_socket);
+
+var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
+
+var _http3 = require('./middleware/http');
+
+var _http4 = _interopRequireDefault(_http3);
 
 var _route = require('./middleware/route');
 
@@ -48,6 +74,10 @@ var _logger = require('./middleware/logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
+var _redisClient = require('./middleware/redisClient');
+
+var _redisClient2 = _interopRequireDefault(_redisClient);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -69,12 +99,6 @@ var serve = require('koa-static');
 
 var root = {};
 
-/**
- * 合并环境变量和配置变量，以环境变量为准
- * 将 pomjs_ 开头的环境变量作为config参数给应用
- * 如 pomjs_saluki.group=123
- * @param opts
- */
 function mergeEnv(opts) {
     var env = process.env;
     Object.assign(process.env, opts);
@@ -118,6 +142,10 @@ module.exports = function () {
 
     if (opts.saluki2) {
         app.use((0, _saluki2.default)(opts));
+    }
+
+    if (opts.redis) {
+        app.use((0, _redisClient2.default)(opts));
     }
 
     app.use((0, _logger2.default)(opts));
@@ -167,7 +195,7 @@ module.exports = function () {
     }, opts.csrf)));
 
     app.use((0, _error2.default)(opts));
-    app.use((0, _http2.default)(opts));
+    app.use((0, _http4.default)(opts));
     app.use((0, _bundle2.default)(opts));
 
     app.use((0, _user2.default)(opts));
@@ -176,7 +204,7 @@ module.exports = function () {
     if (opts.middlewares) {
         opts.middlewares.forEach(function (js) {
             var t = function () {
-                var _ref = _asyncToGenerator(function* (ctx, next) {
+                var _ref2 = _asyncToGenerator(function* (ctx, next) {
                     var m = js.split('/').pop();
                     var timer = new ctx.logger.Timer({
                         group: 'middleware',
@@ -186,8 +214,8 @@ module.exports = function () {
                     timer.split();
                 });
 
-                return function t(_x2, _x3) {
-                    return _ref.apply(this, arguments);
+                return function t(_x3, _x4) {
+                    return _ref2.apply(this, arguments);
                 };
             }();
             app.use(t);
@@ -200,7 +228,28 @@ module.exports = function () {
     if (typeof port === 'string') {
         port = parseInt(port);
     }
-    app.listen(port);
 
+    var pomApp = _http2.default.createServer(app.callback());
+
+    var result = {
+        app: pomApp
+    };
+
+    if (opts.socketServer) {
+
+        var ioServer = (0, _socket2.default)(pomApp);
+
+        ioServer.on('connection', function (socket) {
+            console.log('a user connected');
+            socket.on('disconnect', function () {
+                console.log('user disconnected');
+            });
+        });
+        result.ioServer = ioServer;
+    }
+
+    pomApp.listen(port);
     console.log('listening on ', port);
+
+    return result;
 };
