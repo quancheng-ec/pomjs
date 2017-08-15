@@ -20,7 +20,7 @@ module.exports = {
                 console.log('no saluki config,ignore this step!');
                 return;
             }
-            var services = opts.saluki || {};
+            opts.saluki.services = opts.saluki.services || {};
             yield consul.init(opts);
             Object.assign(_apis, (yield client.init(opts.saluki)));
         });

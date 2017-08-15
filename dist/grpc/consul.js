@@ -140,5 +140,8 @@ module.exports = {
             return _services[api.group][api.name];
         }
         return _services;
+    },
+    consulClient: function consulClient() {
+        return _consul;
     }
 };

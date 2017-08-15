@@ -13,7 +13,7 @@ module.exports = {
             console.log('no saluki config,ignore this step!')
             return;
         }
-        const services = opts.saluki || {};
+        opts.saluki.services = opts.saluki.services || {};
         await consul.init(opts);
         Object.assign(_apis, await client.init(opts.saluki));
     },
