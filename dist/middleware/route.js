@@ -120,12 +120,13 @@ exports.default = function () {
                                             group: 'service',
                                             path: key + '.' + propKey
                                         });
+                                        var result = void 0;
                                         try {
                                             for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
                                                 args[_key] = arguments[_key];
                                             }
 
-                                            var _result = yield origMethod.apply(this, args);
+                                            result = yield origMethod.apply(this, args);
                                         } catch (e) {
                                             console.error('error method:' + propKey, e);
                                         }
