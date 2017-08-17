@@ -84,7 +84,7 @@ module.exports = function (opts = {}) {
     const staticPath = opts.static || Path.join(root, 'static');
 
     if (opts.saluki2) {
-        app.use(saluki(opts));
+        app.use(saluki(app,opts));
     }
 
     if (opts.redis) {
