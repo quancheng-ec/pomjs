@@ -25,7 +25,7 @@ let ssl_creds, creds, mcreds, combined_creds;
 
 let protos = {};
 
-function loadPem() {
+function loadPem () {
   const pem = Path.join(__dirname, '../../server.pem');
   console.log("load " + pem);
   ssl_creds = grpc.credentials.createSsl(FS.readFileSync(pem));
@@ -34,7 +34,7 @@ function loadPem() {
   combined_creds = grpc.credentials.combineChannelCredentials(ssl_creds, mcreds);
 }
 
-async function initClient(saluki) {
+async function initClient (saluki) {
 
   console.log('init saluki client!');
   loadPem();
@@ -94,7 +94,7 @@ async function initClient(saluki) {
  * 初始化Consul配置
  * @param apis
  */
-async function initConsuls(groups) {
+async function initConsuls (groups) {
   for (let i in groups) {
     await consul.initWidthGroup(i);
   }
@@ -105,7 +105,7 @@ async function initConsuls(groups) {
  * @param api
  * @returns {*}
  */
-function getClient(api, index) {
+function getClient (api, index) {
 
   // if (api.target) {
   //   if (api.client) {
@@ -143,14 +143,13 @@ function getClient(api, index) {
   if (pool[host]) {
     return pool[host];
   }
-
   const client = new api._grpc(host, combined_creds, grpcOptions);
   pool[host] = client;
   client._host = host;
   return client;
 }
 
-function wrapService(api) {
+function wrapService (api) {
   const methods = api._grpc.service.children;
   const service = {};
   methods.forEach(function (ins) {
@@ -159,7 +158,7 @@ function wrapService(api) {
   return service;
 }
 
-function promising(api, name) {
+function promising (api, name) {
 
   const invoke = function (req, callback, resolve, reject, index) {
     let client = getClient(api, index);
@@ -194,14 +193,14 @@ function promising(api, name) {
   };
 }
 
-function randomLoadbalancer(providerHosts) {
+function randomLoadbalancer (providerHosts) {
   const index = getRandomIntInclusive(0, providerHosts.length - 1);
   const host = providerHosts[index];
   //var client = new instances(si, grpc.credentials.createInsecure());
   return host;
 }
 
-function getRandomIntInclusive(min, max) {
+function getRandomIntInclusive (min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -209,5 +208,6 @@ function getRandomIntInclusive(min, max) {
 
 
 module.exports = {
-  init: initClient
+  init: initClient,
+  grpcOptions: grpcOptions
 };

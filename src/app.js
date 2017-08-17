@@ -25,6 +25,7 @@ import saluki from './middleware/saluki';
 import cache from './middleware/cache';
 import log from './middleware/logger';
 import healthCheck from './middleware/healthCheck'
+import grpcClient from './grpc'
 
 const app = new Koa();
 const serve = require('koa-static');
@@ -32,7 +33,8 @@ const serve = require('koa-static');
 var root = {};
 
 async function middleware (opts) {
-    await require('./grpc/index').init(opts);
+    grpcClient.grpcOptions = Object.assign(grpcClient.grpcOptions, opts.saluki.grpcOptions)
+    await grpcClient.init(opts);
 }
 
 /**

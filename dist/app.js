@@ -2,7 +2,8 @@
 
 var middleware = function () {
     var _ref = _asyncToGenerator(function* (opts) {
-        yield require('./grpc/index').init(opts);
+        _grpc2.default.grpcOptions = Object.assign(_grpc2.default.grpcOptions, opts.saluki.grpcOptions);
+        yield _grpc2.default.init(opts);
     });
 
     return function middleware(_x) {
@@ -69,6 +70,10 @@ var _logger2 = _interopRequireDefault(_logger);
 var _healthCheck = require('./middleware/healthCheck');
 
 var _healthCheck2 = _interopRequireDefault(_healthCheck);
+
+var _grpc = require('./grpc');
+
+var _grpc2 = _interopRequireDefault(_grpc);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

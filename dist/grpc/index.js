@@ -33,5 +33,6 @@ module.exports = {
     }(),
     services: function services() {
         return _apis;
-    }
+    },
+    grpcOptions: client.grpcOptions
 };

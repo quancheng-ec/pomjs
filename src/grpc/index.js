@@ -19,5 +19,6 @@ module.exports = {
     },
     services: function () {
         return _apis;
-    }
+    },
+    grpcOptions: client.grpcOptions
 }

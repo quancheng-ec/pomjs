@@ -172,7 +172,6 @@ function getClient(api, index) {
   if (pool[host]) {
     return pool[host];
   }
-
   var client = new api._grpc(host, combined_creds, grpcOptions);
   pool[host] = client;
   client._host = host;
@@ -237,5 +236,6 @@ function getRandomIntInclusive(min, max) {
 }
 
 module.exports = {
-  init: initClient
+  init: initClient,
+  grpcOptions: grpcOptions
 };
