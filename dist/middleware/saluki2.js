@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function (app, opts) {
   var client = new _saluki2Node2.default(opts);
   client.init();
-  app.context.services = client.services;
+  app.services = client.services;
   return function () {
     var _ref = _asyncToGenerator(function* (ctx, next) {
       ctx.services = client.services;

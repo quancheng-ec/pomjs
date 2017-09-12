@@ -84,7 +84,7 @@ module.exports = function (opts = {}) {
     const staticPath = opts.static || Path.join(root, 'static');
 
     if (opts.saluki2) {
-        app.use(saluki(app,opts));
+        app.use(saluki(app, opts));
     }
 
     if (opts.redis) {
@@ -171,7 +171,7 @@ module.exports = function (opts = {}) {
     const pomApp = nodeHttp.createServer(app.callback())
 
     const result = {
-        app: pomApp
+        app: app
     }
 
     if (opts.socketServer) {

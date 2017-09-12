@@ -232,7 +232,7 @@ module.exports = function () {
     var pomApp = _http2.default.createServer(app.callback());
 
     var result = {
-        app: pomApp
+        app: app
     };
 
     if (opts.socketServer) {
