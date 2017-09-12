@@ -17,9 +17,9 @@ module.exports = function (opts = {}) {
             pathRegexps.push(pathToRegexp(path, []));
         });
     }
-    return async function user (ctx, next) {
+    return async function user(ctx, next) {
         init(ctx);
-        if (!ctx.response.header.token && pathRegexps.length > 0) {
+        if (ctx.state._sessionExpired || (!ctx.response.header.token && pathRegexps.length > 0)) {
             for (let i = 0; i < pathRegexps.length; i++) {
                 let re = pathRegexps[i];
                 const rs = re.exec(ctx.originalUrl);
@@ -46,7 +46,7 @@ module.exports = function (opts = {}) {
  * 初始化 登陆信息，放到header里面
  * @param ctx
  */
-function init (ctx) {
+function init(ctx) {
     let token = ctx.cookies.get('pToken') || ctx.request.header.token;
     if (token) {
         ctx.response.append('token', token);

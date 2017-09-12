@@ -25,6 +25,7 @@ import saluki from './middleware/saluki';
 import cache from './middleware/cache';
 import log from './middleware/logger';
 import healthCheck from './middleware/healthCheck'
+import spartaSession from './middleware/spartaSession'
 import grpcClient from './grpc'
 
 const app = new Koa();
@@ -32,7 +33,7 @@ const serve = require('koa-static');
 
 var root = {};
 
-async function middleware (opts) {
+async function middleware(opts) {
     grpcClient.grpcOptions = Object.assign(grpcClient.grpcOptions, opts.saluki.grpcOptions)
     await grpcClient.init(opts);
 }
@@ -43,7 +44,7 @@ async function middleware (opts) {
  * 如 pomjs_saluki.group=123
  * @param opts
  */
-function mergeEnv (opts) {
+function mergeEnv(opts) {
     const env = process.env;
     Object.assign(process.env, opts)
     //用环境变量替换当前配置
@@ -101,7 +102,7 @@ module.exports = function (opts = {}) {
         sessionConfig.domain = opts.auth.domain;
     }
     app.use(convert(session(
-        sessionConfig, app
+        Object.assign(sessionConfig, opts.session), app
     )));
 
     //如果配置了cors（解决跨域问题）, 则加入中间件
@@ -137,6 +138,10 @@ module.exports = function (opts = {}) {
     app.use(httpWrap(opts));
     app.use(bundle(opts));
     app.use(healthCheck(opts))
+
+    if (opts.spartaSession) {
+        app.use(spartaSession(opts))
+    }
 
     app.use(user(opts));
 

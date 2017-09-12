@@ -71,6 +71,10 @@ var _healthCheck = require('./middleware/healthCheck');
 
 var _healthCheck2 = _interopRequireDefault(_healthCheck);
 
+var _spartaSession = require('./middleware/spartaSession');
+
+var _spartaSession2 = _interopRequireDefault(_spartaSession);
+
 var _grpc = require('./grpc');
 
 var _grpc2 = _interopRequireDefault(_grpc);
@@ -155,7 +159,7 @@ module.exports = function () {
     if (opts.auth && opts.auth.domain) {
         sessionConfig.domain = opts.auth.domain;
     }
-    app.use(convert(session(sessionConfig, app)));
+    app.use(convert(session(Object.assign(sessionConfig, opts.session), app)));
 
     //如果配置了cors（解决跨域问题）, 则加入中间件
     if (opts.cors) {
@@ -190,6 +194,10 @@ module.exports = function () {
     app.use((0, _http2.default)(opts));
     app.use((0, _bundle2.default)(opts));
     app.use((0, _healthCheck2.default)(opts));
+
+    if (opts.spartaSession) {
+        app.use((0, _spartaSession2.default)(opts));
+    }
 
     app.use((0, _user2.default)(opts));
 
