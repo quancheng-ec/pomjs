@@ -195,7 +195,7 @@ module.exports = function () {
     app.use((0, _bundle2.default)(opts));
     app.use((0, _healthCheck2.default)(opts));
 
-    if (opts.spartaSession) {
+    if (opts.sparta) {
         app.use((0, _spartaSession2.default)(opts));
     }
 

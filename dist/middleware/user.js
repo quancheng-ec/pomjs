@@ -26,7 +26,7 @@ module.exports = function () {
     return function () {
         var _ref = _asyncToGenerator(function* (ctx, next) {
             init(ctx);
-            if (ctx.state._sessionExpired || !ctx.response.header.token && pathRegexps.length > 0) {
+            if (ctx.state._isAuthExpired || !ctx.response.header.token && pathRegexps.length > 0) {
                 for (var i = 0; i < pathRegexps.length; i++) {
                     var re = pathRegexps[i];
                     var rs = re.exec(ctx.originalUrl);

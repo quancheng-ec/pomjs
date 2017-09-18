@@ -19,7 +19,7 @@ module.exports = function (opts = {}) {
     }
     return async function user(ctx, next) {
         init(ctx);
-        if (ctx.state._sessionExpired || (!ctx.response.header.token && pathRegexps.length > 0)) {
+        if (ctx.state._isAuthExpired || (!ctx.response.header.token && pathRegexps.length > 0)) {
             for (let i = 0; i < pathRegexps.length; i++) {
                 let re = pathRegexps[i];
                 const rs = re.exec(ctx.originalUrl);

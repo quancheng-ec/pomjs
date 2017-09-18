@@ -139,7 +139,7 @@ module.exports = function (opts = {}) {
     app.use(bundle(opts));
     app.use(healthCheck(opts))
 
-    if (opts.spartaSession) {
+    if (opts.sparta) {
         app.use(spartaSession(opts))
     }
 
