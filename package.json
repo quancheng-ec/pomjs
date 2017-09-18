@@ -1,6 +1,6 @@
 {
   "name": "pomjs",
-  "version": "0.1.5-sparta",
+  "version": "0.1.6",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
