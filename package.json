@@ -1,6 +1,6 @@
 {
   "name": "pomjs",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -13,11 +13,7 @@
     "type": "git",
     "url": "git@github.com:quancheng-ec/pomjs.git"
   },
-  "keywords": [
-    "module",
-    "vue",
-    "koa"
-  ],
+  "keywords": ["module", "vue", "koa"],
   "license": "AGPL-3.0",
   "author": "yingjunjiao",
   "dependencies": {

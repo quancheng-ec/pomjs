@@ -2,11 +2,10 @@
 
 var initClient = function () {
   var _ref = _asyncToGenerator(function* (saluki) {
-
     console.log('init saluki client!');
     loadPem();
     var root = saluki.root; //'/Users/joe/work/service-all/api/src/main/proto/';
-    glob.sync(Path.join(root, "**/*_service.proto")).forEach(function (f) {
+    glob.sync(Path.join(root, '**/*_service.proto')).forEach(function (f) {
       var proto = grpc.load({ root: root, file: f.substring(root.length) });
       protos = _.defaultsDeep(protos, proto);
     });
@@ -103,7 +102,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var Path = require('path');
 var FS = require('fs');
 var grpc = require('grpc');
-var glob = require("glob");
+var glob = require('glob');
 var _ = require('lodash');
 var consul = require('./consul');
 
@@ -127,7 +126,7 @@ var protos = {};
 
 function loadPem() {
   var pem = Path.join(__dirname, '../../server.pem');
-  console.log("load " + pem);
+  console.log('load ' + pem);
   ssl_creds = grpc.credentials.createSsl(FS.readFileSync(pem));
   creds = grpc.credentials.createInsecure();
   mcreds = grpc.credentials.createFromMetadataGenerator(metadataUpdater);
@@ -135,7 +134,6 @@ function loadPem() {
 }
 
 function getClient(api, index) {
-
   // if (api.target) {
   //   if (api.client) {
   //     return api.client;
@@ -165,6 +163,11 @@ function getClient(api, index) {
   //如果有重试行为，清除 client连接缓存
   if (index) {
     //loadPem();
+    for (var ip in api._clientPool) {
+      if (api._clientPool.hasOwnProperty(ip)) {
+        grpc.closeClient(api._clientPool[ip]);
+      }
+    }
     api._clientPool = {};
   }
   var pool = api._clientPool;
@@ -188,7 +191,6 @@ function wrapService(api) {
 }
 
 function promising(api, name) {
-
   var invoke = function invoke(req, callback, resolve, reject, index) {
     var client = getClient(api, index);
     client[name](req, function (err, resp) {
@@ -202,7 +204,7 @@ function promising(api, name) {
           return;
         }
         if (!err.message) {
-          err.message = 'grpc invoke error:' + api.name + "." + name + reqstr;
+          err.message = 'grpc invoke error:' + api.name + '.' + name + reqstr;
         }
         reject(err);
       } else {
