@@ -1,25 +1,23 @@
-var path = require('path')
-var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var autoprefixer = require('autoprefixer')
-var fs = require('fs');
-//var HashAssetsPlugin = require('hash-assets-webpack-plugin');
-let jsName = "[name].bundle.js";
-let cssName = "[name].style.css";
-if (process.env.BUILD === 'true') {
-  jsName = "[name].[chunkhash].bundle.js";
-  cssName = "[name].[chunkhash].style.css";
-}
+const path = require('path')
+const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const autoprefixer = require('autoprefixer')
+// var HashAssetsPlugin = require('hash-assets-webpack-plugin');
+const isBuild = process.env.BUILD === 'true'
+const isProd = process.env.NODE_ENV === 'production'
+
+const jsName = isBuild ? '[name].[chunkhash].bundle.js' : '[name].bundle.js'
+const cssName = isBuild ? '[name].[chunkhash].style.css' : '[name].style.css'
 
 module.exports = {
   entry: {
-    vendor: ['vue', 'vue-resource'],
+    vendor: ['vue', 'vue-resource', 'whatwg-fetch']
   },
   output: {
     path: path.resolve('.', './static/bundle/'),
     publicPath: '/bundle/',
     filename: jsName
-    //filename: "[name].bundle.js"
+    // filename: "[name].bundle.js"
   },
   module: {
     rules: [
@@ -29,45 +27,42 @@ module.exports = {
         options: {
           loaders: {
             css: ExtractTextPlugin.extract({
-              loader: 'css-loader',
-              fallbackLoader: 'vue-style-loader'
+              use: 'css-loader',
+              fallback: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
             }),
             stylus: ExtractTextPlugin.extract({
-              loader: 'css-loader!stylus-loader',
-              fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
-            }),
-            js: 'babel-loader'
+              use: ['css-loader', 'stylus-loader'],
+              fallback: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
+            })
           }
         }
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['latest'],
-          babelrc: false
-        },
+        use: 'babel-loader',
         exclude: /node_modules/
       },
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: "css-loader"
+          fallback: 'style-loader',
+          use: 'css-loader'
         })
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?[hash]'
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]?[hash]'
+          }
         }
       }
     ]
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.js',
+      vue$: 'vue/dist/vue.js',
       'vue-resource$': 'vue-resource/dist/vue-resource.common.js'
     },
     symlinks: false
@@ -79,7 +74,7 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin(cssName),
     new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor",
+      name: 'vendor',
       minChunks: Infinity
     }),
     new webpack.LoaderOptionsPlugin({
@@ -88,19 +83,15 @@ module.exports = {
       options: {
         vue: {
           postcss: [autoprefixer('last 3 versions', '> 1%')]
-        },
-        babel: {
-          presets: ["latest"],
-          babelrc: false
         }
       }
     })
   ],
-  devtool: '#eval-source-map'
+  devtool: '#cheap-module-source-map'
 }
 
-if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#cheap-module-source-map'
+if (isBuild) {
+  module.exports.devtool = false
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({

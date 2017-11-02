@@ -1,25 +1,28 @@
 import Vue from 'vue'
 
-export default function (context) {
+export default context => {
+  const action = context.pageContext.pageAction
 
-    const action = context.pageContext.pageAction;
+  const View = require('./' + action + '.vue').default
+  console.log(View)
 
-    let View = require('./' + action + '.vue');
+  View.mixins = [
+    {
+      data () {
+        return context
+      }
+    }
+  ]
 
-    View.mixins = [{
-        data: function () {
-          return context;
-        }
-    }];
+  const app = new Vue(
+    Object.assign(View, {
+      // data:function(){
+      //     return context;
+      // },
+      // mounted: function () {
+      // }
+    })
+  )
 
-    const app = new Vue(Object.assign(View, {
-        // data:function(){
-        //     return context;
-        // },
-        // mounted: function () {
-        // }
-    }));
-
-    return Promise.resolve(app);
-};
-
+  return Promise.resolve(app)
+}

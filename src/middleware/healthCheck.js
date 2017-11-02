@@ -1,8 +1,8 @@
 /**
  * 心跳检测中间件
- * author Zephyr 
+ * author Zephyr
  */
-import { consulClient } from '../grpc/consul'
+const { consulClient } = require('../grpc/consul')
 
 const MESSAGES = {
   NO_SALUKI_CONF: 'No saluki configuration',
@@ -20,8 +20,7 @@ const makeRespond = ctx => (code, message) => {
   }
 }
 
-
-export default opts => {
+module.exports = (opts = {}) => {
   let { healthCheckUrl } = opts
   return async (ctx, next) => {
     const respond = makeRespond(ctx)
@@ -34,16 +33,17 @@ export default opts => {
     // check saluki service health check
     healthCheckUrl = healthCheckUrl || DEFAULT_HEALTHCHECK_URL
     if (ctx.path === healthCheckUrl) {
-
       try {
-
-        await Promise.all(opts.saluki.group.map(group => consulClient().health.service({
-          service: `saluki_${group}`,
-          passing: true
-        })))
+        await Promise.all(
+          opts.saluki.group.map(group =>
+            consulClient().health.service({
+              service: `saluki_${group}`,
+              passing: true
+            })
+          )
+        )
 
         respond(200)
-
       } catch (e) {
         respond(500, e.message)
       }

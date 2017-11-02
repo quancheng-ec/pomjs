@@ -1,6 +1,5 @@
 module.exports = (opts = {}) => {
   return async (ctx, next) => {
-
     const loginCookieParam = {
       signed: false,
       httpOnly: false,
@@ -23,17 +22,15 @@ module.exports = (opts = {}) => {
         ctx.state._isAuthExpired = true
         // do logout
         ctx.cookies.set('spartaRollingTimestamp', null, loginCookieParam)
-        ctx.cookies.set('pToken', null, loginCookieParam);
-        ctx.cookies.set('userId', null, loginCookieParam);
-        ctx.cookies.set('companyId', null, loginCookieParam);
-        ctx.cookies.set('accountId', null, loginCookieParam);
-        ctx.cookies.set('language', null, loginCookieParam);
-        ctx.cookies.set('setting_ouId', null, loginCookieParam);
+        ctx.cookies.set('pToken', null, loginCookieParam)
+        ctx.cookies.set('userId', null, loginCookieParam)
+        ctx.cookies.set('companyId', null, loginCookieParam)
+        ctx.cookies.set('accountId', null, loginCookieParam)
+        ctx.cookies.set('language', null, loginCookieParam)
+        ctx.cookies.set('setting_ouId', null, loginCookieParam)
       }
     }
 
     await next()
-
-
   }
 }
