@@ -2,72 +2,64 @@ var path = require('path')
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var autoprefixer = require('autoprefixer')
-var fs = require('fs');
-//var HashAssetsPlugin = require('hash-assets-webpack-plugin');
-let jsName = "[name].bundle.js";
-let cssName = "[name].style.css";
+// var HashAssetsPlugin = require('hash-assets-webpack-plugin');
+let jsName = '[name].bundle.js'
+let cssName = '[name].style.css'
+
+const isProd = process.env.NODE_ENV === 'production'
+
 if (process.env.BUILD === 'true') {
-  jsName = "[name].[chunkhash].bundle.js";
-  cssName = "[name].[chunkhash].style.css";
+  jsName = '[name].[chunkhash].bundle.js'
+  cssName = '[name].[chunkhash].style.css'
 }
 
 module.exports = {
   entry: {
-    vendor: ['vue', 'vue-resource'],
+    vendor: ['vue', 'vue-resource', 'whatwg-fetch']
   },
   output: {
     path: path.resolve('.', './static/bundle/'),
     publicPath: '/bundle/',
     filename: jsName
-    //filename: "[name].bundle.js"
+    // filename: "[name].bundle.js"
   },
   module: {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          loaders: {
-            css: ExtractTextPlugin.extract({
-              loader: 'css-loader',
-              fallbackLoader: 'vue-style-loader'
-            }),
-            stylus: ExtractTextPlugin.extract({
-              loader: 'css-loader!stylus-loader',
-              fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
-            }),
-            js: 'babel-loader'
+        use: {
+          loader: 'vue-loader',
+          options: {
+            extractCSS: true
           }
         }
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['latest'],
-          babelrc: false
-        },
+        use: 'babel-loader',
         exclude: /node_modules/
       },
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: "css-loader"
+          fallback: 'style-loader',
+          use: 'css-loader'
         })
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?[hash]'
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]?[hash]'
+          }
         }
       }
     ]
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.js',
+      vue$: 'vue/dist/vue.js',
       'vue-resource$': 'vue-resource/dist/vue-resource.common.js'
     },
     symlinks: false
@@ -79,7 +71,7 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin(cssName),
     new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor",
+      name: 'vendor',
       minChunks: Infinity
     }),
     new webpack.LoaderOptionsPlugin({
@@ -88,15 +80,11 @@ module.exports = {
       options: {
         vue: {
           postcss: [autoprefixer('last 3 versions', '> 1%')]
-        },
-        babel: {
-          presets: ["latest"],
-          babelrc: false
         }
       }
     })
-  ],
-  devtool: '#eval-source-map'
+  ]
+  // devtool: '#eval-source-map'
 }
 
 if (process.env.NODE_ENV === 'production') {

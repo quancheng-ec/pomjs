@@ -1,173 +1,135 @@
-/**
- * Created by joe on 16/9/22.
- */
+const Path = require('path')
+const EventEmitter = require('events')
+const { createServer } = require('http')
 
+const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
+const cors = require('koa-cors')
+const session = require('koa-session')
+const CSRF = require('koa-csrf').default
+const serve = require('koa-static')
 
-const Koa = require('koa');
-const convert = require('koa-convert');
-const bodyParser = require('koa-bodyparser');
-const cors = require("koa-cors");
-const session = require("koa-session");
+const mergeConfig = require('./util/mergeConfig')
 
-const Path = require('path');
+const httpWrap = require('./middleware/http')
+const route = require('./middleware/route')
+const render = require('./middleware/render')
+const error = require('./middleware/error')
+const bundle = require('./middleware/bundle')
+const multer = require('./middleware/multer')
+const user = require('./middleware/user')
+const saluki = require('./middleware/saluki')
+const log = require('./middleware/logger')
+const healthCheck = require('./middleware/healthCheck')
+const spartaSession = require('./middleware/spartaSession')
+const grpcClient = require('./grpc')
+class App extends EventEmitter {
+  constructor(config) {
+    super()
+    this.app = this.initApp(config)
+    this.config = this.app.config
+    this.server = createServer(this.app.callback())
+  }
 
-import CSRF from 'koa-csrf'
-import LRU from 'lru-cache'
+  async initGrpc(config) {
+    grpcClient.grpcOptions = Object.assign(
+      grpcClient.grpcOptions,
+      config.saluki.grpcOptions
+    )
+    await grpcClient.init(config)
+  }
 
-import httpWrap from './middleware/http';
-import route from './middleware/route';
-import render from './middleware/render';
-import error from './middleware/error';
-import bundle from './middleware/bundle';
-import multer from './middleware/multer';
-import user from './middleware/user';
-import saluki from './middleware/saluki';
-import cache from './middleware/cache';
-import log from './middleware/logger';
-import healthCheck from './middleware/healthCheck'
-import spartaSession from './middleware/spartaSession'
-import grpcClient from './grpc'
+  initApp(config) {
+    config = mergeConfig(config)
 
-const app = new Koa();
-const serve = require('koa-static');
+    const app = new Koa()
 
-var root = {};
+    this.initGrpc(config)
 
-async function middleware(opts) {
-    grpcClient.grpcOptions = Object.assign(grpcClient.grpcOptions, opts.saluki.grpcOptions)
-    await grpcClient.init(opts);
-}
+    app.keys = ['quancheng-ec', 'pomjs']
+    app.config = config
+    app.context.config = config
 
-/**
- * 合并环境变量和配置变量，以环境变量为准
- * 将 pomjs_ 开头的环境变量作为config参数给应用
- * 如 pomjs_saluki.group=123
- * @param opts
- */
-function mergeEnv(opts) {
-    const env = process.env;
-    Object.assign(process.env, opts)
-    //用环境变量替换当前配置
-    for (let i in env) {
-        if (i.startsWith('pomjs_')) {
-            const config = i.substring(6);
-            if (config.indexOf('_') == -1) {
-                opts[config] = env[i];
-            } else {
-                let temp = 'opts';
-                let vs = config.split('_');
-                // 替换 xxx_xxx_xxx --> {'xxx':{'xxx':'xxx'}}
-                for (let index = 0; index < vs.length; index++) {
-                    temp += '.' + vs[index];
-                    if (!eval(temp) || index === vs.length - 1) {
-                        const tempValue = index < vs.length - 1 ? '{}' : "'" + env[i] + "'";
-                        eval(temp + '=' + tempValue);
-                    }
-                }
-            }
-        }
-    }
-}
+    app.use(log(config))
+    app.use(serve(config.static, { maxage: 60 * 60 * 24 * 365 }))
 
-module.exports = function (opts = {}) {
-    if (!opts.root) {
-        const index = __dirname.indexOf('node_modules');
-        if (index != -1) {
-            opts.root = __dirname.substring(0, index);
-        } else {
-            throw new Error('the opts.root can not null');
-        }
-    }
-    mergeEnv(opts);
-    console.log('start pomjs with config:', opts);
-    root = opts.root;
-    const staticPath = opts.static || Path.join(root, 'static');
-
-    middleware(opts);
-
-    app.use(log(opts));
-
-    app.use(convert(serve(staticPath, { maxage: 60 * 60 * 24 * 365 })));
-    // set the session keys
-    app.keys = ['qc'];
-    // add session support
     const sessionConfig = {
-        key: 'pomjs', /** (string) cookie key (default is koa:sess) */
-        maxAge: 86400000, /** (number) maxAge in ms (default is 1 days) */
-        overwrite: true, /** (boolean) can overwrite or not (default true) */
-        httpOnly: true, /** (boolean) httpOnly or not (default true) */
-        signed: true, /** (boolean) signed or not (default true) */
-    };
-    if (opts.auth && opts.auth.domain) {
-        sessionConfig.domain = opts.auth.domain;
-    }
-    app.use(convert(session(
-        Object.assign(sessionConfig, opts.session), app
-    )));
-
-    //如果配置了cors（解决跨域问题）, 则加入中间件
-    if (opts.cors) {
-        app.use(cors(opts.cors));
+      key: 'pomjs:sess',
+      maxAge: 60 * 60 * 24,
+      overwrite: true,
+      httpOnly: true,
+      signed: true
     }
 
-    const appCache = LRU(opts.cache || { maxAge: 1000 * 60 * 60, max: 10000 })
-    app.use(cache({
-        cache: appCache
-    }));
-    // add multipart/form-data parsing
-    app.use(multer(opts.uploadConfig || {}));
+    app.use(session(sessionConfig, app))
 
-    // add body parsing
-    app.use(bodyParser({
+    if (config.cors) {
+      app.use(cors(config.cors))
+    }
+
+    app.use(multer(config.uploadConfig || {}))
+
+    app.use(
+      bodyParser({
         jsonLimit: '10mb',
         textLimit: '10mb'
-    }));
+      })
+    )
 
-    // add the CSRF middleware
-    app.use(new CSRF(Object.assign({
-        invalidSessionSecretMessage: 'Invalid session secret',
-        invalidSessionSecretStatusCode: 403,
-        invalidTokenMessage: 'Invalid CSRF token',
-        invalidTokenStatusCode: 403,
-        excludedMethods: ['GET', 'HEAD', 'OPTIONS'],
-        disableQuery: false
-    }, opts.csrf)));
+    const csrfMid = new CSRF(
+      Object.assign(
+        {
+          invalidSessionSecretMessage: 'Invalid session secret',
+          invalidSessionSecretStatusCode: 403,
+          invalidTokenMessage: 'Invalid CSRF token',
+          invalidTokenStatusCode: 403,
+          excludedMethods: ['GET', 'HEAD', 'OPTIONS'],
+          disableQuery: false
+        },
+        config.csrf
+      )
+    )
 
-    app.use(error(opts));
-    app.use(saluki(opts));
-    app.use(httpWrap(opts));
-    app.use(bundle(opts));
-    app.use(healthCheck(opts))
+    app.use(csrfMid)
 
-    if (opts.sparta) {
-        app.use(spartaSession(opts))
+    app.use(error(config))
+    app.use(saluki(config))
+    app.use(httpWrap(config))
+    app.use(bundle(config))
+    app.use(healthCheck(config))
+
+    if (config.sparta) {
+      app.use(spartaSession(config))
     }
 
-    app.use(user(opts));
+    app.use(route(config))
+    app.use(render(config))
 
-    //外接中间件
-    if (opts.middlewares) {
-        opts.middlewares.forEach(function (js) {
-            let t = async function (ctx, next) {
-                let m = js.split('/').pop();
-                let timer = new ctx.logger.Timer({
-                    group: 'middleware',
-                    path: m
-                });
-                await convert(require(js)(opts))(ctx, next);
-                timer.split();
-            };
-            app.use(t);
-        });
-    }
+    return app
+  }
 
-    app.use(route(opts));
-    app.use(render(opts));
-    let port = opts.port || 3000;
-    if (typeof port === 'string') {
-        port = parseInt(port);
-    }
-    app.listen(port);
-    console.log('listening on ', port);
+  startServer() {
+    const serverPort = this.config.port ? Number(this.config.port) : 8080
+    this.server.listen(serverPort)
+    console.log(`server is running on port: ${serverPort}`)
+  }
+}
 
-};
+process.on('uncaughtException', err => {
+  console.dir(err)
+})
+
+process.on('exit', info => {
+  console.dir(info)
+})
+
+process.on('unhandledRejection', (reason, p) => {
+  console.error(
+    `Possibly Unhandled Rejection at: Promise ${p}. reason: ${reason}`
+  )
+})
+
+module.exports = exports = config => {
+  const app = new App(config)
+  return app
+}

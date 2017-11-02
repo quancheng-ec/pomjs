@@ -1,7 +1,15 @@
 {
-  "plugins": [
-    "transform-async-to-generator",
-    "transform-es2015-modules-commonjs"
+  "presets": [
+    [
+      "env",
+      {
+        //"modules": false,
+        "targets": {
+          //"browsers": ["last 2 versions", "ie >= 9", "chrome >= 52"],
+          "node": "current"
+        }
+      }
+    ]
   ],
-  "presets": ["es2015-generators-async"]
+  "plugins": ["transform-class-properties", "add-module-exports"]
 }
