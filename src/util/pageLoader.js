@@ -29,8 +29,8 @@ const clientEntry = {}
  * @param cb
  * @returns {Promise}
  */
-const webpackCompileRun = function (tag, compile, cb) {
-  return new Promise(function (resolve, reject) {
+const webpackCompileRun = function(tag, compile, cb) {
+  return new Promise(function(resolve, reject) {
     compile.run((err, stats) => {
       if (err) {
         console.error(err)
@@ -48,16 +48,16 @@ const webpackCompileRun = function (tag, compile, cb) {
   })
 }
 
-const find = function (f) {
+const find = function(f) {
   const api = Path.join(f, 'index.js')
   // 只有开发环境才会打开热更新逻辑，热更新会导致webstorm debug 失败，所以可以接受 DEBUG参数
   if (!isProduction && apis[api] && !process.env.DEBUG) {
     delete require.cache[api]
   }
 
-  apis[api] = new (require(api))()
+  apis[api] = new (require(api)).default()
 
-  const vue = Path.join(f, '.s')
+  const vue = Path.join(f, '.s.js')
   temps.push(vue)
   const dir = f.substring(0, f.length - 1)
   const pageName = dir.substring(dir.lastIndexOf('/') + 1)
@@ -68,7 +68,7 @@ const find = function (f) {
   }
   serverEntry[pageName] = vue
 
-  const c = Path.join(f, '.c')
+  const c = Path.join(f, '.c.js')
   temps.push(c)
   if (!fs.exists(c)) {
     const clientEntry =
@@ -81,8 +81,8 @@ const find = function (f) {
 /**
  * 清除临时文件
  */
-function clear () {
-  temps.forEach(function (f) {
+function clear() {
+  temps.forEach(function(f) {
     if (fs.exists(f)) {
       fs.remove(f)
     }
@@ -97,7 +97,7 @@ let build
 let clientBuildAssets = {}
 
 module.exports = {
-  init: function (opts) {
+  init: function(opts) {
     root = opts.root
 
     opts.page = {
@@ -116,15 +116,15 @@ module.exports = {
     staticDir = opts.static || Path.join(root, 'static')
     module.exports.initPage()
   },
-  getPageDir: function () {
+  getPageDir: function() {
     return pageDir
   },
   // 查找page目录
-  initPage: function () {
+  initPage: function() {
     glob.sync(Path.join(pageDir, '*/')).forEach(find)
     glob.sync(Path.join(__dirname, '../pages/*/')).forEach(find)
   },
-  getAPI: function (name, action) {
+  getAPI: function(name, action) {
     if (!apis[name] || !apis[name][action] || !isProduction) {
       module.exports.initPage()
     }
@@ -134,7 +134,7 @@ module.exports = {
     }
     return null
   },
-  initCompile: function (opts) {
+  initCompile: function(opts) {
     serverConfig.entry = serverEntry
     serverConfig.output.path = Path.join(staticDir, '../bundle')
 
@@ -151,12 +151,12 @@ module.exports = {
       fs.remove(clientConfig.output.path)
     }
   },
-  compileRun: async function (cb) {
+  compileRun: async function(cb) {
     serverStats = await webpackCompileRun('server build:', serverCompiler)
     clientStats = await webpackCompileRun(
       'client build:',
       clientCompiler,
-      function (stats) {
+      function(stats) {
         clear()
         if (cb) {
           cb(stats)
@@ -191,24 +191,24 @@ module.exports = {
       fs.write(vueBuildPath, js)
     }
   },
-  isProduction: function () {
+  isProduction: function() {
     return isProduction
   },
-  readServerFileSync: function (pageName) {
+  readServerFileSync: function(pageName) {
     const rootPath = Path.resolve(staticDir, '../')
     const p = isProduction
       ? Path.resolve(rootPath, build.server[pageName])
       : serverStats.compilation.assets[pageName].existsAt
     return isProduction ? p : serverFs.readFileSync(p, 'utf8')
   },
-  readClientFile: function (pageName) {
+  readClientFile: function(pageName) {
     const rootPath = Path.resolve(staticDir, '../')
     const p = isProduction
       ? Path.resolve(rootPath, build.client[pageName])
       : clientBuildAssets[pageName]
-    return clientFs.readFileSync(p)
+    return p ? clientFs.readFileSync(p) : ''
   },
-  getClientFilePath: function (pageName) {
+  getClientFilePath: function(pageName) {
     const rootPath = Path.resolve(staticDir, '../')
     const p = isProduction
       ? Path.resolve(rootPath, build.client[pageName])

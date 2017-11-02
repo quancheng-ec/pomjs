@@ -3,13 +3,18 @@
     [
       "env",
       {
-        //"modules": false,
+        "modules": false,
         "targets": {
-          //"browsers": ["last 2 versions", "ie >= 9", "chrome >= 52"],
+          "browsers": ["last 2 versions", "ie >= 9", "chrome >= 52"],
           "node": "current"
         }
       }
-    ]
+    ],
+    "stage-2"
   ],
-  "plugins": ["transform-class-properties", "add-module-exports"]
+  "plugins": [
+    "transform-runtime",
+    "transform-class-properties",
+    "add-module-exports"
+  ]
 }

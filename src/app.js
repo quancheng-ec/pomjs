@@ -6,7 +6,7 @@ const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const cors = require('koa-cors')
 const session = require('koa-session')
-const CSRF = require('koa-csrf').default
+const CSRF = require('koa-csrf')
 const serve = require('koa-static')
 
 const mergeConfig = require('./util/mergeConfig')
@@ -101,6 +101,8 @@ class App extends EventEmitter {
     if (config.sparta) {
       app.use(spartaSession(config))
     }
+
+    app.use(user(config))
 
     app.use(route(config))
     app.use(render(config))

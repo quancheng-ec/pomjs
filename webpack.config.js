@@ -1,17 +1,13 @@
-var path = require('path')
-var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var autoprefixer = require('autoprefixer')
+const path = require('path')
+const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const autoprefixer = require('autoprefixer')
 // var HashAssetsPlugin = require('hash-assets-webpack-plugin');
-let jsName = '[name].bundle.js'
-let cssName = '[name].style.css'
-
+const isBuild = process.env.BUILD === 'true'
 const isProd = process.env.NODE_ENV === 'production'
 
-if (process.env.BUILD === 'true') {
-  jsName = '[name].[chunkhash].bundle.js'
-  cssName = '[name].[chunkhash].style.css'
-}
+const jsName = isBuild ? '[name].[chunkhash].bundle.js' : '[name].bundle.js'
+const cssName = isBuild ? '[name].[chunkhash].style.css' : '[name].style.css'
 
 module.exports = {
   entry: {
@@ -27,11 +23,9 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        use: {
-          loader: 'vue-loader',
-          options: {
-            extractCSS: true
-          }
+        loader: 'vue-loader',
+        options: {
+          extractCSS: isProd
         }
       },
       {
@@ -41,10 +35,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader'
-        })
+        use: isProd
+          ? ExtractTextPlugin.extract({
+              fallback: 'style-loader',
+              use: 'css-loader'
+            })
+          : ['style-loader', 'css-loader']
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -69,7 +65,6 @@ module.exports = {
     noInfo: true
   },
   plugins: [
-    new ExtractTextPlugin(cssName),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity
@@ -83,14 +78,15 @@ module.exports = {
         }
       }
     })
-  ]
-  // devtool: '#eval-source-map'
+  ],
+  devtool: '#cheap-module-source-map'
 }
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#cheap-module-source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
+    new ExtractTextPlugin(cssName),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
