@@ -25,7 +25,16 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          extractCSS: isProd
+          loaders: {
+            css: ExtractTextPlugin.extract({
+              use: 'css-loader',
+              fallback: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
+            }),
+            stylus: ExtractTextPlugin.extract({
+              use: ['css-loader', 'stylus-loader'],
+              fallback: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
+            })
+          }
         }
       },
       {
@@ -35,12 +44,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: isProd
-          ? ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: 'css-loader'
-            })
-          : ['style-loader', 'css-loader']
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader'
+        })
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -65,6 +72,7 @@ module.exports = {
     noInfo: true
   },
   plugins: [
+    new ExtractTextPlugin(cssName),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity
@@ -82,11 +90,10 @@ module.exports = {
   devtool: '#cheap-module-source-map'
 }
 
-if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#cheap-module-source-map'
+if (isBuild) {
+  module.exports.devtool = false
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
-    new ExtractTextPlugin(cssName),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
