@@ -1,8 +1,8 @@
 {
   "name": "pomjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Module Solution base on Vue ",
-  "main": "dist/app.js",
+  "main": "index.js",
   "scripts": {
     "example-dev":
       "cross-env VUE_ENV=server node --debug example/src/index.js ",
