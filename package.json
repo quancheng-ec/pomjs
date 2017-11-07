@@ -1,27 +1,26 @@
 {
   "name": "@quancheng/pomjs",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
-    "example-dev": "cross-env VUE_ENV=server node --debug example/src/index.js ",
-    "example-build": "cross-env BUILD=true node example/src/index.js && babel example/src -d example/dist",
-    "server": "cross-env VUE_ENV=server NODE_ENV=production node example/dist/index.js",
+    "example-dev":
+      "cross-env VUE_ENV=server node --debug example/src/index.js ",
+    "example-build":
+      "cross-env BUILD=true node example/src/index.js && babel example/src -d example/dist",
+    "server":
+      "cross-env VUE_ENV=server NODE_ENV=production node example/dist/index.js",
     "build": "babel src -d dist"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:quancheng-ec/pomjs.git"
   },
-  "keywords": [
-    "module",
-    "vue",
-    "koa"
-  ],
+  "keywords": ["module", "vue", "koa"],
   "license": "AGPL-3.0",
   "author": "yingjunjiao",
   "dependencies": {
-    "@quancheng/saluki2-node": "1.2.6",
+    "@quancheng/saluki2-node": "1.2.7",
     "autoprefixer": "6.5.3",
     "babel-cli": "6.16.0",
     "babel-core": "6.17.0",
