@@ -6,11 +6,11 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
  * Created by joe on 2016/10/13.
  */
 
-var glob = require("glob");
+var glob = require('glob');
 var FS = require('fs');
 var fs = require('fs-sync');
 var webpack = require('webpack');
-var MemoryFS = require("memory-fs");
+var MemoryFS = require('memory-fs');
 var serverFs = new MemoryFS();
 var clientFs = new MemoryFS(); //require('fs');
 
@@ -40,10 +40,12 @@ var webpackCompileRun = function webpackCompileRun(tag, compile, cb) {
         console.error(err);
         return reject(err);
       }
-      // console.log(tag, stats.toString({
-      //     chunks: false, // Makes the build much quieter
-      //     colors: true
-      // }));
+
+      console.log(tag, stats.toString({
+        chunks: false, // Makes the build much quieter
+        colors: true
+      }));
+
       resolve(stats);
       if (cb) {
         cb(stats);
@@ -99,7 +101,6 @@ var build = void 0;
 var clientBuildAssets = {};
 
 module.exports = {
-
   init: function init(opts) {
     root = opts.root;
 
@@ -124,8 +125,8 @@ module.exports = {
   },
   //查找page目录
   initPage: function initPage() {
-    glob.sync(Path.join(pageDir, "*/")).forEach(find);
-    glob.sync(Path.join(__dirname, "../pages/*/")).forEach(find);
+    glob.sync(Path.join(pageDir, '*/')).forEach(find);
+    glob.sync(Path.join(__dirname, '../pages/*/')).forEach(find);
   },
   getAPI: function getAPI(name, action) {
     if (!apis[name] || !apis[name][action] || !_isProduction) {
@@ -211,7 +212,7 @@ module.exports = {
   },
   getClientFilePath: function getClientFilePath(pageName) {
     var rootPath = Path.resolve(staticDir, '../');
-    var p = _isProduction ? Path.resolve(rootPath, build.client[pageName]) : "/bundle/" + pageName;
+    var p = _isProduction ? Path.resolve(rootPath, build.client[pageName]) : '/bundle/' + pageName;
     return p;
   }
 };

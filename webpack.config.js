@@ -1,19 +1,19 @@
-var path = require('path')
-var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var autoprefixer = require('autoprefixer')
-var fs = require('fs');
+const path = require('path')
+const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const autoprefixer = require('autoprefixer')
+const fs = require('fs')
 //var HashAssetsPlugin = require('hash-assets-webpack-plugin');
-let jsName = "[name].bundle.js";
-let cssName = "[name].style.css";
+let jsName = '[name].bundle.js'
+let cssName = '[name].style.css'
 if (process.env.BUILD === 'true') {
-  jsName = "[name].[chunkhash].bundle.js";
-  cssName = "[name].[chunkhash].style.css";
+  jsName = '[name].[chunkhash].bundle.js'
+  cssName = '[name].[chunkhash].style.css'
 }
 
 module.exports = {
   entry: {
-    vendor: ['vue', 'vue-resource'],
+    vendor: ['vue', 'vue-resource']
   },
   output: {
     path: path.resolve('.', './static/bundle/'),
@@ -29,12 +29,12 @@ module.exports = {
         options: {
           loaders: {
             css: ExtractTextPlugin.extract({
-              loader: 'css-loader',
-              fallbackLoader: 'vue-style-loader'
+              use: 'css-loader',
+              fallback: 'vue-style-loader'
             }),
             stylus: ExtractTextPlugin.extract({
-              loader: 'css-loader!stylus-loader',
-              fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
+              use: 'css-loader!stylus-loader',
+              fallback: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
             }),
             js: 'babel-loader'
           }
@@ -52,8 +52,8 @@ module.exports = {
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: "css-loader"
+          fallback: 'style-loader',
+          use: 'css-loader'
         })
       },
       {
@@ -67,7 +67,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.js',
+      vue$: 'vue/dist/vue.js',
       'vue-resource$': 'vue-resource/dist/vue-resource.common.js'
     },
     symlinks: false
@@ -79,7 +79,7 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin(cssName),
     new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor",
+      name: 'vendor',
       minChunks: Infinity
     }),
     new webpack.LoaderOptionsPlugin({
@@ -90,7 +90,7 @@ module.exports = {
           postcss: [autoprefixer('last 3 versions', '> 1%')]
         },
         babel: {
-          presets: ["latest"],
+          presets: ['latest'],
           babelrc: false
         }
       }

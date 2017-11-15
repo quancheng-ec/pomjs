@@ -8,6 +8,7 @@ const grpc = require('grpc')
 const glob = require('glob')
 const _ = require('lodash')
 const consul = require('./consul')
+const debug = require('debug')('pomjs-grpc')
 
 var grpcOptions = {
   'grpc.ssl_target_name_override': 'grpc',
@@ -161,9 +162,14 @@ function wrapService(api) {
 }
 
 function promising(api, name) {
-  const invoke = function(req, callback, resolve, reject, index) {
+  const invoke = function(req, metadata, callback, resolve, reject, index) {
+    const customeMetadata = new grpc.Metadata()
     let client = getClient(api, index)
-    client[name](req, function(err, resp) {
+    Object.keys(metadata).forEach(k => customeMetadata.set(k, metadata[k]))
+    debug(`request api: ${api}`)
+    debug(`request body data: ${req}`)
+    debug(`request metada: ${metadata}`)
+    client[name](req, metadata, function(err, resp) {
       if (err) {
         const reqstr = JSON.stringify(req)
         console.error(client._host, api.name, name, reqstr, err, index || 0)
@@ -178,7 +184,13 @@ function promising(api, name) {
         }
         reject(err)
       } else {
-        resolve(resp)
+        resolve(
+          _.extend(resp, {
+            _get(path, defaultVal) {
+              return _.get(resp, path, defaultVal)
+            }
+          })
+        )
       }
       if (callback) {
         callback(err, resp)
@@ -186,10 +198,10 @@ function promising(api, name) {
     })
   }
 
-  return function(req, callback) {
+  return function(req, metadata = {}, callback) {
     let index = 0
     return new Promise(function(resolve, reject) {
-      invoke(req, callback, resolve, reject, index)
+      invoke(req, metadata, callback, resolve, reject, index)
     })
   }
 }

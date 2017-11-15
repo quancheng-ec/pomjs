@@ -1,6 +1,6 @@
 {
   "name": "pomjs",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -13,11 +13,7 @@
     "type": "git",
     "url": "git@github.com:quancheng-ec/pomjs.git"
   },
-  "keywords": [
-    "module",
-    "vue",
-    "koa"
-  ],
+  "keywords": ["module", "vue", "koa"],
   "license": "AGPL-3.0",
   "author": "yingjunjiao",
   "dependencies": {
@@ -35,6 +31,7 @@
     "consul": "0.27.0",
     "cross-env": "1.0.6",
     "css-loader": "0.23.1",
+    "debug": "^3.1.0",
     "extract-text-webpack-plugin": "^2.0.0-beta.5",
     "file-loader": "0.8.4",
     "fs-extra": "^4.0.2",
@@ -70,6 +67,7 @@
     "vue-template-compiler": "2.2.6",
     "vuex": "^2.0.0",
     "webpack": "^2.2.0-rc.7",
+    "webpack-parallel-uglify-plugin": "^1.0.0",
     "whatwg-fetch": "1.0.0"
   },
   "devDependencies": {}
