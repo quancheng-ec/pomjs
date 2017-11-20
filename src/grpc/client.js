@@ -123,12 +123,19 @@ function getClient(api, index) {
   const providerHosts = []
   provider.forEach(function(s) {
     //匹配provide和当前的service声明，如果相同则记录下来
-    if ((s.group || 'default') === api.group && (s.version || '1.0.0') === api.version) {
+    if (
+      (s.group || 'default') === api.group &&
+      (s.version || '1.0.0') === api.version
+    ) {
       providerHosts.push(s.host)
     }
   })
   if (providerHosts.length === 0) {
-    console.error('the service provider not found', api, 'please check saluki service config')
+    console.error(
+      'the service provider not found',
+      api,
+      'please check saluki service config'
+    )
     return null
   }
   //如果有重试行为，清除 client连接缓存
@@ -176,7 +183,7 @@ function promising(api, name) {
         //如果有网络错误重试五次
         if (err.code && index < 3) {
           index++
-          invoke(req, callback, resolve, reject, index)
+          invoke(req, metadata, callback, resolve, reject, index)
           return
         }
         if (!err.message) {

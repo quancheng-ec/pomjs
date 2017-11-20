@@ -208,7 +208,7 @@ function promising(api, name) {
         //如果有网络错误重试五次
         if (err.code && index < 3) {
           index++;
-          invoke(req, callback, resolve, reject, index);
+          invoke(req, metadata, callback, resolve, reject, index);
           return;
         }
         if (!err.message) {
