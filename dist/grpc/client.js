@@ -164,12 +164,13 @@ function getClient(api, index) {
   //如果有重试行为，清除 client连接缓存
   if (index) {
     //loadPem();
-    for (var ip in api._clientPool) {
-      if (api._clientPool.hasOwnProperty(ip)) {
-        grpc.closeClient(api._clientPool[ip]);
-      }
-    }
-    api._clientPool = {};
+    // for (const ip in api._clientPool) {
+    //   if (api._clientPool.hasOwnProperty(ip)) {
+    //     grpc.closeClient(api._clientPool[ip])
+    //   }
+    // }
+    // api._clientPool = {}
+    console.log('=== retring: ', index);
   }
   var pool = api._clientPool;
   var host = randomLoadbalancer(providerHosts);
