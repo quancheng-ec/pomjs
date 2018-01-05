@@ -141,12 +141,13 @@ function getClient(api, index) {
   //如果有重试行为，清除 client连接缓存
   if (index) {
     //loadPem();
-    for (const ip in api._clientPool) {
-      if (api._clientPool.hasOwnProperty(ip)) {
-        grpc.closeClient(api._clientPool[ip])
-      }
-    }
-    api._clientPool = {}
+    // for (const ip in api._clientPool) {
+    //   if (api._clientPool.hasOwnProperty(ip)) {
+    //     grpc.closeClient(api._clientPool[ip])
+    //   }
+    // }
+    // api._clientPool = {}
+    console.log('=== retring: ',index)
   }
   const pool = api._clientPool
   const host = randomLoadbalancer(providerHosts)
