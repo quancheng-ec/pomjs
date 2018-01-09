@@ -1,79 +1,79 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 exports.default = function () {
-    var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+  var layouts = opts.layouts || Path.join(opts.root, 'layouts');
+  if (!opts.isProduction) {
+    pageLoader.initCompile(opts);
+  }
 
-    var layouts = opts.layouts || Path.join(opts.root, "layouts");
-    if (!opts.isProduction) {
-        pageLoader.initCompile(opts);
+  return function () {
+    var _ref = _asyncToGenerator(function* (ctx, next) {
+      if (!ctx.context) {
+        yield next();
+        return;
+      }
+
+      var timer = new ctx.logger.Timer({
+        group: 'render'
+      });
+
+      var pageContext = ctx.context.pageContext;
+
+      var body = _fs2.default.readFileSync(Path.join(layouts, ctx.context.layout || 'default.html')).toString();
+      body = body.replace('{{ title }}', ctx.context.title || 'hello pomjs!');
+      body = body.replace('{{ keywords }}', ctx.context.keywords || '');
+      body = body.replace('{{ description }}', ctx.context.description || '');
+
+      var scriptName = pageContext.pageName + '.bundle.js';
+      var script = pageLoader.getClientFilePath(scriptName);
+      var vendor = pageLoader.getClientFilePath('vendor.bundle.js');
+      var manifest = pageLoader.getClientFilePath('manifest.bundle.js');
+      //如果配置了cdn域名
+      if (opts.cdndomain) {
+        script = opts.cdndomain + script;
+        vendor = opts.cdndomain + vendor;
+        manifest = opts.cdndomain + manifest;
+      }
+
+      var contextData = 'var __vue_context_data=' + JSON.stringify(ctx.context) + ';';
+      var sr = ' <script>' + contextData + "</script>\n <script src='" + manifest + "'></script>\n <script src='" + vendor + "'></script>\n <script src='" + script + "'></script>";
+      body = body.replace('{{ page.js }}', sr);
+
+      if (process.env.NODE_ENV !== 'production') {
+        yield pageLoader.compileRun();
+      }
+
+      var html = yield renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
+
+      body = body.replace('{{ html }}', html);
+      var cssFileName = pageContext.pageName + '.style.css';
+      if (process.env.NODE_ENV === 'production') {
+        var csspath = pageLoader.getClientFilePath(cssFileName);
+        body = body.replace('{{ stylesheet }}', "<link href='" + csspath + "' rel='stylesheet'></link>");
+      } else {
+        var styles = pageLoader.readClientFile(cssFileName).toString();
+        body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>" + styles + '</style>');
+      }
+
+      ctx.body = body;
+
+      ctx.type = 'text/html; charset=utf-8';
+
+      timer.split();
+    });
+
+    function render(_x2, _x3) {
+      return _ref.apply(this, arguments);
     }
 
-    return function () {
-        var _ref = _asyncToGenerator(function* (ctx, next) {
-
-            if (!ctx.context) {
-                yield next();
-                return;
-            }
-
-            var timer = new ctx.logger.Timer({
-                group: 'render'
-            });
-
-            var pageContext = ctx.context.pageContext;
-
-            var body = _fs2.default.readFileSync(Path.join(layouts, ctx.context.layout || "default.html")).toString();
-            body = body.replace('{{ title }}', ctx.context.title || "hello pomjs!");
-            body = body.replace('{{ keywords }}', ctx.context.keywords || "");
-            body = body.replace('{{ description }}', ctx.context.description || "");
-
-            var scriptName = pageContext.pageName + ".bundle.js";
-            var script = pageLoader.getClientFilePath(scriptName);
-            var vendor = pageLoader.getClientFilePath('vendor.bundle.js');
-            //如果配置了cdn域名
-            if (opts.cdndomain) {
-                script = opts.cdndomain + script;
-                vendor = opts.cdndomain + vendor;
-            }
-
-            var contextData = "var __vue_context_data=" + JSON.stringify(ctx.context) + ";";
-            var sr = " <script>" + contextData + "</script>\n <script src='" + vendor + "'></script>\n <script src='" + script + "'></script>";
-            body = body.replace('{{ page.js }}', sr);
-
-            if (process.env.NODE_ENV !== 'production') {
-                yield pageLoader.compileRun();
-            }
-
-            var html = yield renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
-
-            body = body.replace('{{ html }}', html);
-            var cssFileName = pageContext.pageName + ".style.css";
-            if (process.env.NODE_ENV === 'production') {
-                var csspath = pageLoader.getClientFilePath(cssFileName);
-                body = body.replace('{{ stylesheet }}', "<link href='" + csspath + "' rel='stylesheet'></link>");
-            } else {
-                var styles = pageLoader.readClientFile(cssFileName).toString();
-                body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>" + styles + "</style>");
-            }
-
-            ctx.body = body;
-
-            ctx.type = 'text/html; charset=utf-8';
-
-            timer.split();
-        });
-
-        function render(_x2, _x3) {
-            return _ref.apply(this, arguments);
-        }
-
-        return render;
-    }();
+    return render;
+  }();
 };
 
 var _fs = require('fs');
@@ -93,15 +93,15 @@ var cache = {};
 var pageLoader = require('../util/pageLoader');
 
 var renderPromise = function renderPromise(pageName, code, context) {
-    return new Promise(function (resolve, reject) {
-        var cr = cache[pageName];
-        if (!cr || !pageLoader.isProduction()) {
-            cr = createBundleRenderer(code);
-            cache[pageName] = cr;
-        }
-        cr.renderToString(context, function (err, html) {
-            if (err) return reject(err);
-            resolve(html);
-        });
+  return new Promise(function (resolve, reject) {
+    var cr = cache[pageName];
+    if (!cr || !pageLoader.isProduction()) {
+      cr = createBundleRenderer(code);
+      cache[pageName] = cr;
+    }
+    cr.renderToString(context, function (err, html) {
+      if (err) return reject(err);
+      resolve(html);
     });
+  });
 };
