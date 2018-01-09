@@ -1,12 +1,15 @@
 {
   "name": "pomjs",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
-    "example-dev": "cross-env VUE_ENV=server node --debug example/src/index.js ",
-    "example-build": "cross-env BUILD=true node example/src/index.js && babel example/src -d example/dist",
-    "server": "cross-env VUE_ENV=server NODE_ENV=production node example/dist/index.js",
+    "example-dev":
+      "cross-env VUE_ENV=server node --debug example/src/index.js ",
+    "example-build":
+      "cross-env BUILD=true node example/src/index.js && babel example/src -d example/dist",
+    "server":
+      "cross-env VUE_ENV=server NODE_ENV=production node example/dist/index.js",
     "build": "babel src -d dist"
   },
   "repository": {

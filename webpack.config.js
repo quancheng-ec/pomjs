@@ -78,9 +78,13 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin(cssName),
+    new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest'
     }),
     new webpack.LoaderOptionsPlugin({
       debug: true,
