@@ -159,6 +159,9 @@ function getClient(api, index) {
   });
   if (providerHosts.length === 0) {
     console.error('the service provider not found', api, 'please check saluki service config');
+    console.error('providers from consul client');
+    console.error(provider);
+    process.exit(12);
     return null;
   }
   //如果有重试行为，清除 client连接缓存

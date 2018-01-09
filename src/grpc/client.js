@@ -136,6 +136,9 @@ function getClient(api, index) {
       api,
       'please check saluki service config'
     )
+    console.error('providers from consul client')
+    console.error(provider)
+    process.exit(12)
     return null
   }
   //如果有重试行为，清除 client连接缓存
@@ -147,7 +150,7 @@ function getClient(api, index) {
     //   }
     // }
     // api._clientPool = {}
-    console.log('=== retring: ',index)
+    console.log('=== retring: ', index)
   }
   const pool = api._clientPool
   const host = randomLoadbalancer(providerHosts)
