@@ -34,40 +34,40 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 exports.default = function () {
-    var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    return function () {
-        var _ref = _asyncToGenerator(function* (ctx, next) {
-            ctx.requestId = uuidV4();
-            var logger = getLogger(opts, ctx.requestId);
-            ctx.logger = logger || getNullLogger();
-            ctx.logger.Timer = _lodash2.default.bind(InnerTimer, {}, ctx.logger);
+  return function () {
+    var _ref = _asyncToGenerator(function* (ctx, next) {
+      ctx.requestId = uuidV4();
+      var logger = getLogger(opts, ctx.requestId);
+      ctx.logger = logger || getNullLogger();
+      ctx.logger.Timer = _lodash2.default.bind(InnerTimer, {}, ctx.logger);
 
-            var timer = new ctx.logger.Timer({
-                group: 'request',
-                path: ctx.method + " " + ctx.url
-            });
+      var timer = new ctx.logger.Timer({
+        group: 'request',
+        path: ctx.method + ' ' + ctx.url
+      });
 
-            yield next();
+      yield next();
 
-            timer.split();
-        });
+      timer.split();
+    });
 
-        function log(_x2, _x3) {
-            return _ref.apply(this, arguments);
-        }
+    function log(_x2, _x3) {
+      return _ref.apply(this, arguments);
+    }
 
-        return log;
-    }();
+    return log;
+  }();
 };
 
-var _lodash = require("lodash");
+var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -75,91 +75,127 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var log4js = require("log4js"),
-    util = require("util"),
-    uuidV4 = require("uuid/v4");
+var log4js = require('log4js'),
+    util = require('util'),
+    uuidV4 = require('uuid/v4');
 
 function getLogger(opts, requestId) {
-    if (!opts.log4js) {
-        return null;
+  if (!opts.log4js) {
+    return null;
+  }
+
+  log4js.addLayout('json', function (config) {
+    return function (logEvent) {
+      var message = '';
+
+      // CAUTION: currently only support [message_string, context_object]
+      // logevent is supposed to be like: [aaa %s bbb, aaa, ... , {context}]
+      var context = {
+        requestId: requestId || uuidV4()
+      };
+
+      if (Array.isArray(logEvent.data) && logEvent.data.length > 0) {
+        // if last one is object, treat it as a context
+        if (_typeof(logEvent.data[logEvent.data.length - 1]) === 'object') {
+          var lastElement = logEvent.data.pop();
+          Object.assign(context, lastElement);
+        }
+
+        message = util.format.apply(util, logEvent.data);
+      } else if (_typeof(logEvent.data) === 'object') {
+        Object.assign(context, logEvent.data);
+      } else {
+        message = JSON.stringify(logEvent.data);
+      }
+
+      // set back to logevent data [formatted_message_string, context_object]
+      logEvent.data = [message, context];
+
+      return message;
+    };
+  });
+
+  log4js.configure(opts.log4js);
+  return log4js.getLogger('request');
+}
+
+// format log4jsConfig passed by
+// return v2.x styled config
+// caused by Migrating from log4js versions older than 2.x
+function formatConfig(config) {
+  var result = {
+    appenders: {},
+    categories: {}
+  };
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = config.appenders[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var appender = _step.value;
+
+      result.appenders[appender.type] = Object.assign({}, appender);(result.categories[appender.category] || (result.categories[appender.category] = {
+        appenders: [],
+        level: 'info'
+      }))['appenders'].push(appender.type);
     }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
 
-    log4js.layouts.addLayout('json', function (config) {
-        return function (logEvent) {
-            var message = '';
-
-            // CAUTION: currently only support [message_string, context_object]
-            // logevent is supposed to be like: [aaa %s bbb, aaa, ... , {context}]
-            var context = {
-                requestId: requestId || uuidV4()
-            };
-
-            if (Array.isArray(logEvent.data) && logEvent.data.length > 0) {
-
-                // if last one is object, treat it as a context
-                if (_typeof(logEvent.data[logEvent.data.length - 1]) === 'object') {
-                    var lastElement = logEvent.data.pop();
-                    Object.assign(context, lastElement);
-                }
-
-                message = util.format.apply(util, logEvent.data);
-            } else if (_typeof(logEvent.data) === 'object') {
-                Object.assign(context, logEvent.data);
-            } else {
-                message = JSON.stringify(logEvent.data);
-            }
-
-            // set back to logevent data [formatted_message_string, context_object]
-            logEvent.data = [message, context];
-
-            return message;
-        };
-    });
-
-    log4js.configure(opts.log4js);
-    return log4js.getLogger('request');
+  return result;
 }
 
 // always return a dummy logger
 function getNullLogger() {
-    return new Proxy({}, {
-        get: function get(target, propKey) {
+  return new Proxy({}, {
+    get: function get(target, propKey) {
+      // not proxy for Timer
+      if (propKey === 'Timer') {
+        return _lodash2.default.bind(InnerTimer, {}, undefined);
+      }
 
-            // not proxy for Timer
-            if (propKey === 'Timer') {
-                return _lodash2.default.bind(InnerTimer, {}, undefined);
-            }
-
-            return function () {};
-        },
-        apply: function apply(target, object, args) {}
-    });
+      return function () {};
+    },
+    apply: function apply(target, object, args) {}
+  });
 }
 
 function InnerTimer(logger, context) {
+  this.logger = logger || getNullLogger();
+  this.start = this.last = new Date();
 
-    this.logger = logger || getNullLogger();
+  //this.timePoints = [this.start];
+  this.context = context || {};
+
+  this.logger.info('timer starting...', _lodash2.default.assign(this.context, { timerType: 'start' }));
+
+  this.reset = function reset() {
     this.start = this.last = new Date();
-
     //this.timePoints = [this.start];
-    this.context = context || {};
+  };
 
-    this.logger.info('timer starting...', _lodash2.default.assign(this.context, { timerType: 'start' }));
+  this.split = function split() {
+    var now = new Date();
 
-    this.reset = function reset() {
-        this.start = this.last = new Date();
-        //this.timePoints = [this.start];
-    };
+    var offset = now - this.last;
+    this.last = now;
+    //this.timePoints.push(now);
 
-    this.split = function split() {
-        var now = new Date();
+    this.logger.info('timer splited (' + offset + 'ms)', _lodash2.default.assign(this.context, { duration: offset, timerType: 'end' }));
 
-        var offset = now - this.last;
-        this.last = now;
-        //this.timePoints.push(now);
-
-        this.logger.info("timer splited (" + offset + "ms)", _lodash2.default.assign(this.context, { duration: offset, timerType: 'end' }));
-
-        return offset;
-    };
+    return offset;
+  };
 }
