@@ -86,8 +86,15 @@ function getLogger(opts, requestId) {
 // caused by Migrating from log4js versions older than 2.x
 function formatConfig(config) {
   const result = {
-    appenders: {},
-    categories: {}
+    appenders: {
+      out: { type: 'console' }
+    },
+    categories: {
+      default: {
+        appenders: ['out'],
+        level: 'info'
+      }
+    }
   }
   for (const appender of config.appenders) {
     result.appenders[appender.type] = Object.assign({}, appender)

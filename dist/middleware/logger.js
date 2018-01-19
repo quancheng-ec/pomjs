@@ -124,8 +124,15 @@ function getLogger(opts, requestId) {
 // caused by Migrating from log4js versions older than 2.x
 function formatConfig(config) {
   var result = {
-    appenders: {},
-    categories: {}
+    appenders: {
+      out: { type: 'console' }
+    },
+    categories: {
+      default: {
+        appenders: ['out'],
+        level: 'info'
+      }
+    }
   };
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
