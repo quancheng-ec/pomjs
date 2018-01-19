@@ -115,7 +115,7 @@ function getLogger(opts, requestId) {
     };
   });
 
-  log4js.configure(opts.log4js);
+  log4js.configure(formatConfig(opts.log4js));
   return log4js.getLogger('request');
 }
 
