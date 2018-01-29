@@ -39,7 +39,7 @@ const log4js = require('log4js'),
 
 import _ from 'lodash'
 
-function getLogger(opts, requestId) {
+function getLogger(opts) {
   if (!opts.log4js) {
     return null
   }
@@ -53,7 +53,7 @@ function getLogger(opts, requestId) {
         // CAUTION: currently only support [message_string, context_object]
         // logevent is supposed to be like: [aaa %s bbb, aaa, ... , {context}]
         let context = {
-          requestId: requestId || uuidV4()
+          //   requestId: requestId || uuidV4()
         }
 
         if (Array.isArray(logEvent.data) && logEvent.data.length > 0) {
@@ -132,6 +132,8 @@ function InnerTimer(logger, context) {
   //this.timePoints = [this.start];
   this.context = context || {}
 
+  this.context.requestId = this.logger.requestId || uuidV4()
+
   this.logger.info(
     'timer starting...',
     _.assign(this.context, { timerType: 'start' })
@@ -159,10 +161,11 @@ function InnerTimer(logger, context) {
 }
 
 export default function(opts = {}) {
+  const logger = getLogger(opts)
   return async function log(ctx, next) {
     ctx.requestId = uuidV4()
-    let logger = getLogger(opts, ctx.requestId)
     ctx.logger = logger || getNullLogger()
+    ctx.logger.requestId = ctx.requestId
     ctx.logger.Timer = _.bind(InnerTimer, {}, ctx.logger)
 
     let timer = new ctx.logger.Timer({

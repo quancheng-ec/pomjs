@@ -42,11 +42,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports.default = function () {
   var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+  var logger = getLogger(opts);
   return function () {
     var _ref = _asyncToGenerator(function* (ctx, next) {
       ctx.requestId = uuidV4();
-      var logger = getLogger(opts, ctx.requestId);
       ctx.logger = logger || getNullLogger();
+      ctx.logger.requestId = ctx.requestId;
       ctx.logger.Timer = _lodash2.default.bind(InnerTimer, {}, ctx.logger);
 
       var timer = new ctx.logger.Timer({
@@ -79,7 +80,7 @@ var log4js = require('log4js'),
     util = require('util'),
     uuidV4 = require('uuid/v4');
 
-function getLogger(opts, requestId) {
+function getLogger(opts) {
   if (!opts.log4js) {
     return null;
   }
@@ -91,7 +92,7 @@ function getLogger(opts, requestId) {
       // CAUTION: currently only support [message_string, context_object]
       // logevent is supposed to be like: [aaa %s bbb, aaa, ... , {context}]
       var context = {
-        requestId: requestId || uuidV4()
+        //   requestId: requestId || uuidV4()
       };
 
       if (Array.isArray(logEvent.data) && logEvent.data.length > 0) {
@@ -186,6 +187,8 @@ function InnerTimer(logger, context) {
 
   //this.timePoints = [this.start];
   this.context = context || {};
+
+  this.context.requestId = this.logger.requestId || uuidV4();
 
   this.logger.info('timer starting...', _lodash2.default.assign(this.context, { timerType: 'start' }));
 
