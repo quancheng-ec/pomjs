@@ -8,31 +8,33 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var consul = require('./consul');
 var client = require('./client');
+var consulClient = require('./consul-client');
 
 var _apis = {};
 
 module.exports = {
-    init: function () {
-        var _ref = _asyncToGenerator(function* () {
-            var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  init: function () {
+    var _ref = _asyncToGenerator(function* () {
+      var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            if (!opts.saluki) {
-                console.log('no saluki config,ignore this step!');
-                return;
-            }
-            opts.saluki.services = opts.saluki.services || {};
-            yield consul.init(opts);
-            Object.assign(_apis, (yield client.init(opts.saluki)));
-        });
+      if (!opts.saluki) {
+        console.log('no saluki config,ignore this step!');
+        return;
+      }
+      opts.saluki.services = opts.saluki.services || {};
+      consulClient.init(opts);
+      //await consul.init(opts)
+      //Object.assign(_apis, await client.init(opts.saluki))
+    });
 
-        function init() {
-            return _ref.apply(this, arguments);
-        }
+    function init() {
+      return _ref.apply(this, arguments);
+    }
 
-        return init;
-    }(),
-    services: function services() {
-        return _apis;
-    },
-    grpcOptions: client.grpcOptions
+    return init;
+  }(),
+  services: function services() {
+    return _apis;
+  },
+  grpcOptions: client.grpcOptions
 };
