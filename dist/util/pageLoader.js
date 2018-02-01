@@ -202,17 +202,30 @@ module.exports = {
   },
   readServerFileSync: function readServerFileSync(pageName) {
     var rootPath = Path.resolve(staticDir, '../');
-    var p = _isProduction ? Path.resolve(rootPath, build.server[pageName]) : serverStats.compilation.assets[pageName].existsAt;
-    return (_isProduction ? FS : serverFs).readFileSync(p, 'utf8');
+    try {
+      var p = _isProduction ? Path.resolve(rootPath, build.server[pageName]) : serverStats.compilation.assets[pageName].existsAt;
+      return (_isProduction ? FS : serverFs).readFileSync(p, 'utf8');
+    } catch (e) {
+      return null;
+    }
   },
   readClientFile: function readClientFile(pageName) {
     var rootPath = Path.resolve(staticDir, '../');
-    var p = _isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientBuildAssets[pageName];
-    return clientFs.readFileSync(p);
+
+    try {
+      var p = _isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientBuildAssets[pageName];
+      return clientFs.readFileSync(p);
+    } catch (e) {
+      return null;
+    }
   },
   getClientFilePath: function getClientFilePath(pageName) {
     var rootPath = Path.resolve(staticDir, '../');
-    var p = _isProduction ? Path.resolve(rootPath, build.client[pageName]) : '/bundle/' + pageName;
-    return p;
+    try {
+      var p = _isProduction ? Path.resolve(rootPath, build.client[pageName]) : '/bundle/' + pageName;
+      return p;
+    } catch (e) {
+      return null;
+    }
   }
 };

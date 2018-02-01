@@ -67,7 +67,8 @@ const find = function(f) {
   const dir = f.substring(0, f.length - 1)
   const pageName = dir.substring(dir.lastIndexOf('/') + 1)
   if (!fs.exists(vue)) {
-    const serverEntry = process.env.serverEntry || Path.join(__dirname, '../../vue.js')
+    const serverEntry =
+      process.env.serverEntry || Path.join(__dirname, '../../vue.js')
     fs.copy(serverEntry, vue)
   }
   serverEntry[pageName] = vue
@@ -75,7 +76,8 @@ const find = function(f) {
   const c = Path.join(f, '.c')
   temps.push(c)
   if (!fs.exists(c)) {
-    const clientEntry = process.env.clientEntry || Path.join(__dirname, '../../client.js')
+    const clientEntry =
+      process.env.clientEntry || Path.join(__dirname, '../../client.js')
     fs.copy(clientEntry, c)
   }
   clientEntry[pageName] = c
@@ -156,12 +158,16 @@ module.exports = {
   },
   compileRun: async function(cb) {
     serverStats = await webpackCompileRun('server build:', serverCompiler)
-    clientStats = await webpackCompileRun('client build:', clientCompiler, function(stats) {
-      clear()
-      if (cb) {
-        cb(stats)
+    clientStats = await webpackCompileRun(
+      'client build:',
+      clientCompiler,
+      function(stats) {
+        clear()
+        if (cb) {
+          cb(stats)
+        }
       }
-    })
+    )
     for (let i in clientStats.compilation.assets) {
       const is = i.split('.')
       let name = i
@@ -171,7 +177,9 @@ module.exports = {
       }
       clientBuildAssets[name] = clientStats.compilation.assets[i].existsAt
       if (isProduction) {
-        clientBuildAssets[name] = clientBuildAssets[name].substring(staticDir.length)
+        clientBuildAssets[name] = clientBuildAssets[name].substring(
+          staticDir.length
+        )
       }
     }
     if (isProduction) {
@@ -193,17 +201,36 @@ module.exports = {
   },
   readServerFileSync: function(pageName) {
     const rootPath = Path.resolve(staticDir, '../')
-    const p = isProduction ? Path.resolve(rootPath, build.server[pageName]) : serverStats.compilation.assets[pageName].existsAt
-    return (isProduction ? FS : serverFs).readFileSync(p, 'utf8')
+    try {
+      const p = isProduction
+        ? Path.resolve(rootPath, build.server[pageName])
+        : serverStats.compilation.assets[pageName].existsAt
+      return (isProduction ? FS : serverFs).readFileSync(p, 'utf8')
+    } catch (e) {
+      return null
+    }
   },
   readClientFile: function(pageName) {
     const rootPath = Path.resolve(staticDir, '../')
-    const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : clientBuildAssets[pageName]
-    return clientFs.readFileSync(p)
+
+    try {
+      const p = isProduction
+        ? Path.resolve(rootPath, build.client[pageName])
+        : clientBuildAssets[pageName]
+      return clientFs.readFileSync(p)
+    } catch (e) {
+      return null
+    }
   },
   getClientFilePath: function(pageName) {
     const rootPath = Path.resolve(staticDir, '../')
-    const p = isProduction ? Path.resolve(rootPath, build.client[pageName]) : '/bundle/' + pageName
-    return p
+    try {
+      const p = isProduction
+        ? Path.resolve(rootPath, build.client[pageName])
+        : '/bundle/' + pageName
+      return p
+    } catch (e) {
+      return null
+    }
   }
 }

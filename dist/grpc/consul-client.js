@@ -46,7 +46,7 @@ function findNode(group) {
   };
 }
 
-var consulClient = {};
+var consulClient = void 0;
 
 var services = {};
 
@@ -58,8 +58,6 @@ var init = function init(opts) {
     host: saluki.host || '127.0.0.1',
     port: saluki.port || '8500'
   });
-
-  saluki.group.forEach(watchService);
 
   return consulClient;
 };
@@ -73,7 +71,7 @@ var handleServiceCheck = function handleServiceCheck(group) {
       debug('service: %o', service);(_services[service.name] || (_services[service.name] = [])).push(service);
     });
 
-    Object.assign(services, _services);
+    services[group] = _services;
   };
 };
 
@@ -85,26 +83,23 @@ var watchService = function watchService(group) {
       service: serviceName,
       passing: true
     }
-  });
-
-  watcher.on('change', function (data) {
+  }).on('change', function (data) {
     console.log('%s on consul has changed on %s', serviceName, new Date());
     handleServiceCheck(group)(data);
-  });
-
-  watcher.on('error', function (err) {
+  }).on('error', function (err) {
     console.log('watch service %s on consul error:', serviceName, err);
   });
 };
 
 module.exports = exports = {
   init: init,
+  watchService: watchService,
   getALL: function getALL() {
     return services;
   },
   getService: function getService(api) {
     if (services[api.group]) {
-      return services[api.group][api.name];
+      return services[api.group][api.name] || [];
     }
     return null;
   }

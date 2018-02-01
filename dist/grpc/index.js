@@ -6,7 +6,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
  * Created by joe on 2016/10/23.
  */
 
-var consul = require('./consul');
 var client = require('./client');
 var consulClient = require('./consul-client');
 
@@ -23,8 +22,9 @@ module.exports = {
       }
       opts.saluki.services = opts.saluki.services || {};
       consulClient.init(opts);
+
       //await consul.init(opts)
-      //Object.assign(_apis, await client.init(opts.saluki))
+      Object.assign(_apis, (yield client.init(opts.saluki)));
     });
 
     function init() {

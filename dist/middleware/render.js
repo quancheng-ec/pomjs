@@ -30,36 +30,38 @@ exports.default = function () {
       body = body.replace('{{ keywords }}', ctx.context.keywords || '');
       body = body.replace('{{ description }}', ctx.context.description || '');
 
-      var scriptName = pageContext.pageName + '.bundle.js';
-      var script = pageLoader.getClientFilePath(scriptName);
-      var vendor = pageLoader.getClientFilePath('vendor.bundle.js');
-      var manifest = pageLoader.getClientFilePath('manifest.bundle.js');
-      //如果配置了cdn域名
-      if (opts.cdndomain) {
-        script = opts.cdndomain + script;
-        vendor = opts.cdndomain + vendor;
-        manifest = opts.cdndomain + manifest;
-      }
+      var chunkNames = ['manifest', 'vendor', 'common', pageContext.pageName];
 
-      var contextData = 'var __vue_context_data=' + JSON.stringify(ctx.context) + ';';
-      var sr = ' <script>' + contextData + "</script>\n <script src='" + manifest + "'></script>\n <script src='" + vendor + "'></script>\n <script src='" + script + "'></script>";
-      body = body.replace('{{ page.js }}', sr);
+      var sr = chunkNames.map(function (c) {
+        var cPath = pageLoader.getClientFilePath(c + '.bundle.js');
+        if (!cPath) return '';
+        return '<script src="' + (opts.cdndomain || '') + cPath + '"></script>';
+      }).join('\n');
+
+      var css = chunkNames.map(function (c) {
+        if (process.env.NODE_ENV === 'production') {
+          var _cPath = pageLoader.getClientFilePath(c + '.style.css');
+          if (!_cPath) return '';
+          return '<link \n            href="' + (opts.cdndomain || '') + _cPath + '" rel=\'stylesheet\'>\n          </link>';
+        }
+        var cPath = pageLoader.readClientFile(c + '.style.css');
+        if (!cPath) return '';
+        return cPath.toString();
+      }).join('\n');
+
+      var contextData = '<script>\n      var __vue_context_data=' + JSON.stringify(ctx.context) + '\n    </script>';
+
+      body = body.replace('{{ page.js }}', contextData + sr);
 
       if (process.env.NODE_ENV !== 'production') {
         yield pageLoader.compileRun();
       }
 
-      var html = yield renderPromise(scriptName, pageLoader.readServerFileSync(scriptName), ctx.context);
+      var html = yield renderPromise(pageContext.pageName + '.bundle.js', pageLoader.readServerFileSync(pageContext.pageName + '.bundle.js'), ctx.context);
 
       body = body.replace('{{ html }}', html);
-      var cssFileName = pageContext.pageName + '.style.css';
-      if (process.env.NODE_ENV === 'production') {
-        var csspath = pageLoader.getClientFilePath(cssFileName);
-        body = body.replace('{{ stylesheet }}', "<link href='" + csspath + "' rel='stylesheet'></link>");
-      } else {
-        var styles = pageLoader.readClientFile(cssFileName).toString();
-        body = body.replace('{{ stylesheet }}', "<style rel='stylesheet'>" + styles + '</style>');
-      }
+
+      body = body.replace('{{ stylesheet }}', process.env.NODE_ENV === 'production' ? css : '<style rel=\'stylesheet\'>' + css + '</style>');
 
       ctx.body = body;
 

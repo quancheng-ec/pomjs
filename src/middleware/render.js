@@ -48,56 +48,55 @@ export default function(opts = {}) {
     body = body.replace('{{ keywords }}', ctx.context.keywords || '')
     body = body.replace('{{ description }}', ctx.context.description || '')
 
-    const scriptName = pageContext.pageName + '.bundle.js'
-    let script = pageLoader.getClientFilePath(scriptName)
-    let vendor = pageLoader.getClientFilePath('vendor.bundle.js')
-    let manifest = pageLoader.getClientFilePath('manifest.bundle.js')
-    //如果配置了cdn域名
-    if (opts.cdndomain) {
-      script = opts.cdndomain + script
-      vendor = opts.cdndomain + vendor
-      manifest = opts.cdndomain + manifest
-    }
+    const chunkNames = ['manifest', 'vendor', 'common', pageContext.pageName]
 
-    const contextData =
-      'var __vue_context_data=' + JSON.stringify(ctx.context) + ';'
-    const sr =
-      ' <script>' +
-      contextData +
-      "</script>\n <script src='" +
-      manifest +
-      "'></script>\n <script src='" +
-      vendor +
-      "'></script>\n <script src='" +
-      script +
-      "'></script>"
-    body = body.replace('{{ page.js }}', sr)
+    const sr = chunkNames
+      .map(c => {
+        let cPath = pageLoader.getClientFilePath(`${c}.bundle.js`)
+        if (!cPath) return ''
+        return `<script src="${opts.cdndomain || ''}${cPath}"></script>`
+      })
+      .join('\n')
+
+    const css = chunkNames
+      .map(c => {
+        if (process.env.NODE_ENV === 'production') {
+          let cPath = pageLoader.getClientFilePath(`${c}.style.css`)
+          if (!cPath) return ''
+          return `<link 
+            href="${opts.cdndomain || ''}${cPath}" rel='stylesheet'>
+          </link>`
+        }
+        let cPath = pageLoader.readClientFile(`${c}.style.css`)
+        if (!cPath) return ''
+        return cPath.toString()
+      })
+      .join('\n')
+
+    const contextData = `<script>
+      var __vue_context_data=${JSON.stringify(ctx.context)}
+    </script>`
+
+    body = body.replace('{{ page.js }}', contextData + sr)
 
     if (process.env.NODE_ENV !== 'production') {
       await pageLoader.compileRun()
     }
 
     const html = await renderPromise(
-      scriptName,
-      pageLoader.readServerFileSync(scriptName),
+      `${pageContext.pageName}.bundle.js`,
+      pageLoader.readServerFileSync(`${pageContext.pageName}.bundle.js`),
       ctx.context
     )
 
     body = body.replace('{{ html }}', html)
-    const cssFileName = pageContext.pageName + '.style.css'
-    if (process.env.NODE_ENV === 'production') {
-      let csspath = pageLoader.getClientFilePath(cssFileName)
-      body = body.replace(
-        '{{ stylesheet }}',
-        "<link href='" + csspath + "' rel='stylesheet'></link>"
-      )
-    } else {
-      const styles = pageLoader.readClientFile(cssFileName).toString()
-      body = body.replace(
-        '{{ stylesheet }}',
-        "<style rel='stylesheet'>" + styles + '</style>'
-      )
-    }
+
+    body = body.replace(
+      '{{ stylesheet }}',
+      process.env.NODE_ENV === 'production'
+        ? css
+        : `<style rel='stylesheet'>${css}</style>`
+    )
 
     ctx.body = body
 

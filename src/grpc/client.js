@@ -7,7 +7,7 @@ const FS = require('fs')
 const grpc = require('grpc')
 const glob = require('glob')
 const _ = require('lodash')
-const consul = require('./consul')
+const { watchService, getService } = require('./consul-client')
 const debug = require('debug')('pomjs-grpc')
 
 var grpcOptions = {
@@ -95,7 +95,8 @@ async function initClient(saluki) {
  */
 async function initConsuls(groups) {
   for (let i in groups) {
-    await consul.initWidthGroup(i)
+    watchService(i)
+    //await consul.initWidthGroup(i)
   }
 }
 
@@ -114,7 +115,7 @@ function getClient(api, index) {
   //   return api.client;
   // }
 
-  const provider = consul.getService(api)
+  const provider = getService(api)
   if (!provider) {
     console.error('the service provider not found', api.name)
     return null
@@ -147,7 +148,7 @@ function getClient(api, index) {
     //   }
     // }
     // api._clientPool = {}
-    console.log('=== retring: ',index)
+    console.log('=== retring: ', index)
   }
   const pool = api._clientPool
   const host = randomLoadbalancer(providerHosts)

@@ -77,7 +77,8 @@ var initClient = function () {
 var initConsuls = function () {
   var _ref2 = _asyncToGenerator(function* (groups) {
     for (var i in groups) {
-      yield consul.initWidthGroup(i);
+      watchService(i);
+      //await consul.initWidthGroup(i)
     }
   });
 
@@ -104,7 +105,11 @@ var FS = require('fs');
 var grpc = require('grpc');
 var glob = require('glob');
 var _ = require('lodash');
-var consul = require('./consul');
+
+var _require = require('./consul-client'),
+    watchService = _require.watchService,
+    getService = _require.getService;
+
 var debug = require('debug')('pomjs-grpc');
 
 var grpcOptions = {
@@ -144,7 +149,7 @@ function getClient(api, index) {
   //   return api.client;
   // }
 
-  var provider = consul.getService(api);
+  var provider = getService(api);
   if (!provider) {
     console.error('the service provider not found', api.name);
     return null;

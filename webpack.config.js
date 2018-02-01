@@ -3,9 +3,10 @@ const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const autoprefixer = require('autoprefixer')
 const fs = require('fs')
-//var HashAssetsPlugin = require('hash-assets-webpack-plugin');
+
 let jsName = '[name].bundle.js'
 let cssName = '[name].style.css'
+
 if (process.env.BUILD === 'true') {
   jsName = '[name].[chunkhash].bundle.js'
   cssName = '[name].[chunkhash].style.css'
@@ -19,7 +20,6 @@ module.exports = {
     path: path.resolve('.', './static/bundle/'),
     publicPath: '/bundle/',
     filename: jsName
-    //filename: "[name].bundle.js"
   },
   module: {
     rules: [
@@ -72,16 +72,12 @@ module.exports = {
     },
     symlinks: false
   },
-  devServer: {
-    historyApiFallback: true,
-    noInfo: true
-  },
   plugins: [
     new ExtractTextPlugin(cssName),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: Infinity
+      names: ['common', 'vendor'],
+      minChunks: 2
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest'
