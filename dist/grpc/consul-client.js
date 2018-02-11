@@ -84,7 +84,7 @@ var watchService = function watchService(group) {
       passing: true
     }
   }).on('change', function (data) {
-    console.log('%s on consul has changed on %s', serviceName, new Date());
+    //console.log('%s on consul has changed on %s', serviceName, new Date())
     handleServiceCheck(group)(data);
   }).on('error', function (err) {
     console.log('watch service %s on consul error:', serviceName, err);

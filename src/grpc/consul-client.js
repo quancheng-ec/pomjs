@@ -73,7 +73,7 @@ const watchService = group => {
       }
     })
     .on('change', data => {
-      console.log('%s on consul has changed on %s', serviceName, new Date())
+      //console.log('%s on consul has changed on %s', serviceName, new Date())
       handleServiceCheck(group)(data)
     })
     .on('error', err => {
