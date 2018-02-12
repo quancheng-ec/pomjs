@@ -3,6 +3,7 @@
  */
 
 import fs from 'fs'
+import _ from 'lodash'
 const Path = require('path')
 const renderer = require('vue-server-renderer').createRenderer()
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer
@@ -44,9 +45,6 @@ export default function(opts = {}) {
     let body = fs
       .readFileSync(Path.join(layouts, ctx.context.layout || 'default.html'))
       .toString()
-    body = body.replace('{{ title }}', ctx.context.title || 'hello pomjs!')
-    body = body.replace('{{ keywords }}', ctx.context.keywords || '')
-    body = body.replace('{{ description }}', ctx.context.description || '')
 
     const chunkNames = ['manifest', 'vendor', 'common', pageContext.pageName]
 
@@ -77,8 +75,6 @@ export default function(opts = {}) {
       var __vue_context_data=${JSON.stringify(ctx.context)}
     </script>`
 
-    body = body.replace('{{ page.js }}', contextData + sr)
-
     if (process.env.NODE_ENV !== 'production') {
       await pageLoader.compileRun()
     }
@@ -89,16 +85,36 @@ export default function(opts = {}) {
       ctx.context
     )
 
-    body = body.replace('{{ html }}', html)
+    const insertRaven = sdn => {
+      if (!sdn) return ''
+      return `
+      <script src="https://cdn.ravenjs.com/3.22.2/raven.min.js"></script>
+      <script src="/assets/cyclops.js"></script>
+      <script>
+          Raven.config('${sdn}').install()
+          var c = new Cyclops({
+              performance: {
+                  max_duration: 5000
+              }
+          })
+          c.start()
+      </script>
+      `
+    }
 
-    body = body.replace(
-      '{{ stylesheet }}',
-      process.env.NODE_ENV === 'production'
-        ? css
-        : `<style rel='stylesheet'>${css}</style>`
-    )
-
-    ctx.body = body
+    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
+    ctx.body = _.template(body)({
+      raven: opts.raven ? insertRaven(opts.raven.sdn) : '',
+      title: ctx.context.title || 'hello pomjs!',
+      keywords: ctx.context.keywords || '',
+      description: ctx.context.description || '',
+      page: contextData + sr,
+      html,
+      stylesheet:
+        process.env.NODE_ENV === 'production'
+          ? css
+          : `<style rel='stylesheet'>${css}</style>`
+    })
 
     ctx.type = 'text/html; charset=utf-8'
 

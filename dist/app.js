@@ -92,6 +92,7 @@ var convert = require('koa-convert');
 var bodyParser = require('koa-bodyparser');
 var cors = require('koa-cors');
 var session = require('koa-session');
+var Raven = require('raven');
 
 var Path = require('path');
 

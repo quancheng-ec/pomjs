@@ -7,6 +7,7 @@ const convert = require('koa-convert')
 const bodyParser = require('koa-bodyparser')
 const cors = require('koa-cors')
 const session = require('koa-session')
+const Raven = require('raven')
 
 const Path = require('path')
 

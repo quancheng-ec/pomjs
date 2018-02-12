@@ -26,9 +26,6 @@ exports.default = function () {
       var pageContext = ctx.context.pageContext;
 
       var body = _fs2.default.readFileSync(Path.join(layouts, ctx.context.layout || 'default.html')).toString();
-      body = body.replace('{{ title }}', ctx.context.title || 'hello pomjs!');
-      body = body.replace('{{ keywords }}', ctx.context.keywords || '');
-      body = body.replace('{{ description }}', ctx.context.description || '');
 
       var chunkNames = ['manifest', 'vendor', 'common', pageContext.pageName];
 
@@ -51,19 +48,27 @@ exports.default = function () {
 
       var contextData = '<script>\n      var __vue_context_data=' + JSON.stringify(ctx.context) + '\n    </script>';
 
-      body = body.replace('{{ page.js }}', contextData + sr);
-
       if (process.env.NODE_ENV !== 'production') {
         yield pageLoader.compileRun();
       }
 
       var html = yield renderPromise(pageContext.pageName + '.bundle.js', pageLoader.readServerFileSync(pageContext.pageName + '.bundle.js'), ctx.context);
 
-      body = body.replace('{{ html }}', html);
+      var insertRaven = function insertRaven(sdn) {
+        if (!sdn) return '';
+        return '\n      <script src="https://cdn.ravenjs.com/3.22.2/raven.min.js"></script>\n      <script src="/assets/cyclops.js"></script>\n      <script>\n          Raven.config(\'' + sdn + '\').install()\n          var c = new Cyclops({\n              performance: {\n                  max_duration: 5000\n              }\n          })\n          c.start()\n      </script>\n      ';
+      };
 
-      body = body.replace('{{ stylesheet }}', process.env.NODE_ENV === 'production' ? css : '<style rel=\'stylesheet\'>' + css + '</style>');
-
-      ctx.body = body;
+      _lodash2.default.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+      ctx.body = _lodash2.default.template(body)({
+        raven: opts.raven ? insertRaven(opts.raven.sdn) : '',
+        title: ctx.context.title || 'hello pomjs!',
+        keywords: ctx.context.keywords || '',
+        description: ctx.context.description || '',
+        page: contextData + sr,
+        html: html,
+        stylesheet: process.env.NODE_ENV === 'production' ? css : '<style rel=\'stylesheet\'>' + css + '</style>'
+      });
 
       ctx.type = 'text/html; charset=utf-8';
 
@@ -81,6 +86,10 @@ exports.default = function () {
 var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
