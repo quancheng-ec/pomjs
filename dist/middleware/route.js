@@ -124,7 +124,7 @@ exports.default = function () {
                       args[_key] = arguments[_key];
                     }
 
-                    (args[1] || (args[1] = {})).companyId = ctx.response.header.companyid;
+                    (args[1] || (args[1] = {})).companyId = ctx.response.header.companyid || '';
                     var result = yield origMethod.apply(this, args);
                     timer.split();
                     return result;

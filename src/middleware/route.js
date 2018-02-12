@@ -126,7 +126,7 @@ export default function(opts = {}) {
                   path: `${key}.${propKey}`
                 })
                 ;(args[1] || (args[1] = {})).companyId =
-                  ctx.response.header.companyid
+                  ctx.response.header.companyid || ''
                 let result = await origMethod.apply(this, args)
                 timer.split()
                 return result
