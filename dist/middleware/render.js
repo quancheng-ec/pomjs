@@ -56,7 +56,7 @@ exports.default = function () {
 
       var insertRaven = function insertRaven(sdn) {
         if (!sdn) return '';
-        return '\n      <script src="https://cdn.ravenjs.com/3.22.2/raven.min.js"></script>\n      <script src="/assets/cyclops.js"></script>\n      <script>\n          Raven.config(\'' + sdn + '\').install()\n          var c = new Cyclops({\n              performance: {\n                  max_duration: 5000\n              }\n          })\n          c.start()\n      </script>\n      ';
+        return '\n      <script src="//qc-style.oss-cn-hangzhou.aliyuncs.com/raven/3.22.2/raven.min.js"></script>\n      <script src="/assets/cyclops.js"></script>\n      <script>\n          Raven.config(\'' + sdn + '\').install()\n          var c = new Cyclops({\n              performance: {\n                  max_duration: 5000\n              }\n          })\n          c.start()\n      </script>\n      ';
       };
 
       _lodash2.default.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
