@@ -12,8 +12,6 @@ const pageLoader = require('../util/pageLoader')
 const DEFAULT_NAME = 'index.js'
 const DEFAULT_FILE = 'index/index.js'
 
-const services = require('../grpc/index').services()
-
 export default function(opts = {}) {
   pageLoader.init(opts)
   const pageDir = opts.isProduction ? opts.page.build : opts.page.src
@@ -113,10 +111,10 @@ export default function(opts = {}) {
 
     try {
       let proxyedServices = {}
-      for (let key in services) {
-        if (!services.hasOwnProperty(key)) continue
+      for (let key in ctx.services) {
+        if (!ctx.services.hasOwnProperty(key)) continue
 
-        proxyedServices[key] = new Proxy(services[key], {
+        proxyedServices[key] = new Proxy(ctx.services[key], {
           get: function(target, propKey, receiver) {
             const origMethod = target[propKey]
             if (typeof origMethod === 'function') {
@@ -125,8 +123,7 @@ export default function(opts = {}) {
                   group: 'service',
                   path: `${key}.${propKey}`
                 })
-                ;(args[1] || (args[1] = {})).companyId =
-                  ctx.response.header.companyid || ''
+                ;(args[1] || (args[1] = {})).companyId = ctx.response.header.companyid || ''
                 let result = await origMethod.apply(this, args)
                 timer.split()
                 return result

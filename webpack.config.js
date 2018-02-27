@@ -41,7 +41,7 @@ module.exports = {
         }
       },
       {
-        test: /\.js$/,
+        test: /\.(js|c)$/,
         loader: 'babel-loader',
         options: {
           presets: ['latest'],

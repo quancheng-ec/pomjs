@@ -1,31 +1,8 @@
 'use strict';
 
-var middleware = function () {
-  var _ref = _asyncToGenerator(function* (opts) {
-    _grpc2.default.grpcOptions = Object.assign(_grpc2.default.grpcOptions, opts.saluki.grpcOptions);
-    yield _grpc2.default.init(opts);
-  });
-
-  return function middleware(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-/**
- * 合并环境变量和配置变量，以环境变量为准
- * 将 pomjs_ 开头的环境变量作为config参数给应用
- * 如 pomjs_saluki.group=123
- * @param opts
- */
-
-
 var _koaCsrf = require('koa-csrf');
 
 var _koaCsrf2 = _interopRequireDefault(_koaCsrf);
-
-var _lruCache = require('lru-cache');
-
-var _lruCache2 = _interopRequireDefault(_lruCache);
 
 var _http = require('./middleware/http');
 
@@ -55,7 +32,7 @@ var _user = require('./middleware/user');
 
 var _user2 = _interopRequireDefault(_user);
 
-var _saluki = require('./middleware/saluki');
+var _saluki = require('./middleware/saluki2');
 
 var _saluki2 = _interopRequireDefault(_saluki);
 
@@ -67,17 +44,9 @@ var _logger = require('./middleware/logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _healthCheck = require('./middleware/healthCheck');
-
-var _healthCheck2 = _interopRequireDefault(_healthCheck);
-
 var _spartaSession = require('./middleware/spartaSession');
 
 var _spartaSession2 = _interopRequireDefault(_spartaSession);
-
-var _grpc = require('./grpc');
-
-var _grpc2 = _interopRequireDefault(_grpc);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -101,6 +70,12 @@ var serve = require('koa-static');
 
 var root = {};
 
+/**
+ * 合并环境变量和配置变量，以环境变量为准
+ * 将 pomjs_ 开头的环境变量作为config参数给应用
+ * 如 pomjs_saluki.group=123
+ * @param opts
+ */
 function mergeEnv(opts) {
   var env = process.env;
   Object.assign(process.env, opts);
@@ -142,7 +117,7 @@ module.exports = function () {
   root = opts.root;
   var staticPath = opts.static || Path.join(root, 'static');
 
-  middleware(opts);
+  //middleware(opts)
 
   app.use((0, _logger2.default)(opts));
 
@@ -167,10 +142,6 @@ module.exports = function () {
     app.use(cors(opts.cors));
   }
 
-  var appCache = (0, _lruCache2.default)(opts.cache || { maxAge: 1000 * 60 * 60, max: 10000 });
-  app.use((0, _cache2.default)({
-    cache: appCache
-  }));
   // add multipart/form-data parsing
   app.use((0, _multer2.default)(opts.uploadConfig || {}));
 
@@ -191,10 +162,11 @@ module.exports = function () {
   }, opts.csrf)));
 
   app.use((0, _error2.default)(opts));
-  app.use((0, _saluki2.default)(opts));
+  if (opts.saluki2) {
+    app.use((0, _saluki2.default)(app, opts));
+  }
   app.use((0, _http2.default)(opts));
   app.use((0, _bundle2.default)(opts));
-  app.use((0, _healthCheck2.default)(opts));
 
   if (opts.sparta) {
     app.use((0, _spartaSession2.default)(opts));
@@ -206,7 +178,7 @@ module.exports = function () {
   if (opts.middlewares) {
     opts.middlewares.forEach(function (js) {
       var t = function () {
-        var _ref2 = _asyncToGenerator(function* (ctx, next) {
+        var _ref = _asyncToGenerator(function* (ctx, next) {
           var m = js.split('/').pop();
           var timer = new ctx.logger.Timer({
             group: 'middleware',
@@ -216,8 +188,8 @@ module.exports = function () {
           timer.split();
         });
 
-        return function t(_x3, _x4) {
-          return _ref2.apply(this, arguments);
+        return function t(_x2, _x3) {
+          return _ref.apply(this, arguments);
         };
       }();
       app.use(t);

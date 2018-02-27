@@ -12,7 +12,6 @@ const Raven = require('raven')
 const Path = require('path')
 
 import CSRF from 'koa-csrf'
-import LRU from 'lru-cache'
 
 import httpWrap from './middleware/http'
 import route from './middleware/route'
@@ -21,25 +20,15 @@ import error from './middleware/error'
 import bundle from './middleware/bundle'
 import multer from './middleware/multer'
 import user from './middleware/user'
-import saluki from './middleware/saluki'
+import saluki from './middleware/saluki2'
 import cache from './middleware/cache'
 import log from './middleware/logger'
-import healthCheck from './middleware/healthCheck'
 import spartaSession from './middleware/spartaSession'
-import grpcClient from './grpc'
 
 const app = new Koa()
 const serve = require('koa-static')
 
 var root = {}
-
-async function middleware(opts) {
-  grpcClient.grpcOptions = Object.assign(
-    grpcClient.grpcOptions,
-    opts.saluki.grpcOptions
-  )
-  await grpcClient.init(opts)
-}
 
 /**
  * 合并环境变量和配置变量，以环境变量为准
@@ -86,7 +75,7 @@ module.exports = function(opts = {}) {
   root = opts.root
   const staticPath = opts.static || Path.join(root, 'static')
 
-  middleware(opts)
+  //middleware(opts)
 
   app.use(log(opts))
 
@@ -111,12 +100,6 @@ module.exports = function(opts = {}) {
     app.use(cors(opts.cors))
   }
 
-  const appCache = LRU(opts.cache || { maxAge: 1000 * 60 * 60, max: 10000 })
-  app.use(
-    cache({
-      cache: appCache
-    })
-  )
   // add multipart/form-data parsing
   app.use(multer(opts.uploadConfig || {}))
 
@@ -146,10 +129,11 @@ module.exports = function(opts = {}) {
   )
 
   app.use(error(opts))
-  app.use(saluki(opts))
+  if (opts.saluki2) {
+    app.use(saluki(app, opts))
+  }
   app.use(httpWrap(opts))
   app.use(bundle(opts))
-  app.use(healthCheck(opts))
 
   if (opts.sparta) {
     app.use(spartaSession(opts))
