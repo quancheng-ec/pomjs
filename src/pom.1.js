@@ -33,11 +33,8 @@ const serve = require('koa-static')
 
 var root = {}
 
-async function middleware(opts) {
-  grpcClient.grpcOptions = Object.assign(
-    grpcClient.grpcOptions,
-    opts.saluki.grpcOptions
-  )
+async function middleware (opts) {
+  grpcClient.grpcOptions = Object.assign(grpcClient.grpcOptions, opts.saluki.grpcOptions)
   await grpcClient.init(opts)
 }
 
@@ -47,10 +44,10 @@ async function middleware(opts) {
  * 如 pomjs_saluki.group=123
  * @param opts
  */
-function mergeEnv(opts) {
+function mergeEnv (opts) {
   const env = process.env
   Object.assign(process.env, opts)
-  //用环境变量替换当前配置
+  // 用环境变量替换当前配置
   for (let i in env) {
     if (i.startsWith('pomjs_')) {
       const config = i.substring(6)
@@ -72,7 +69,7 @@ function mergeEnv(opts) {
   }
 }
 
-module.exports = function(opts = {}) {
+module.exports = function (opts = {}) {
   if (!opts.root) {
     const index = __dirname.indexOf('node_modules')
     if (index != -1) {
@@ -106,7 +103,7 @@ module.exports = function(opts = {}) {
   }
   app.use(convert(session(Object.assign(sessionConfig, opts.session), app)))
 
-  //如果配置了cors（解决跨域问题）, 则加入中间件
+  // 如果配置了cors（解决跨域问题）, 则加入中间件
   if (opts.cors) {
     app.use(cors(opts.cors))
   }
@@ -157,10 +154,10 @@ module.exports = function(opts = {}) {
 
   app.use(user(opts))
 
-  //外接中间件
+  // 外接中间件
   if (opts.middlewares) {
-    opts.middlewares.forEach(function(js) {
-      let t = async function(ctx, next) {
+    opts.middlewares.forEach(function (js) {
+      let t = async function (ctx, next) {
         let m = js.split('/').pop()
         let timer = new ctx.logger.Timer({
           group: 'middleware',

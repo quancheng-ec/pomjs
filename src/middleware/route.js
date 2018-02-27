@@ -14,13 +14,13 @@ const DEFAULT_FILE = 'index/index.js'
 
 const services = require('../grpc/index').services()
 
-export default function(opts = {}) {
+export default function (opts = {}) {
   pageLoader.init(opts)
   const pageDir = opts.isProduction ? opts.page.build : opts.page.src
 
-  return async function route(ctx, next) {
-    let reqPath = ctx.path,
-      ext = ''
+  return async function route (ctx, next) {
+    let reqPath = ctx.path
+    let ext = ''
 
     if (reqPath.indexOf('.') !== -1) {
       await next()
@@ -41,7 +41,7 @@ export default function(opts = {}) {
       control = pageLoader.getAPI(controlPath, action)
     } else {
       if (reqPath.endsWith('/')) {
-        //去掉末尾的 ／
+        // 去掉末尾的 ／
         reqPath = reqPath.substring(0, reqPath.length - 1)
       }
 
@@ -117,16 +117,15 @@ export default function(opts = {}) {
         if (!services.hasOwnProperty(key)) continue
 
         proxyedServices[key] = new Proxy(services[key], {
-          get: function(target, propKey, receiver) {
+          get: function (target, propKey, receiver) {
             const origMethod = target[propKey]
             if (typeof origMethod === 'function') {
-              return async function(...args) {
+              return async function (...args) {
                 let timer = new ctx.logger.Timer({
                   group: 'service',
                   path: `${key}.${propKey}`
                 })
-                ;(args[1] || (args[1] = {})).companyId =
-                  ctx.response.header.companyid || ''
+                ;(args[1] || (args[1] = {})).companyId = ctx.response.header.companyid || ''
                 let result = await origMethod.apply(this, args)
                 timer.split()
                 return result
