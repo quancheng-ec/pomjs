@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _bluebird = require('bluebird');
+
 exports.default = function () {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -11,7 +13,7 @@ exports.default = function () {
     // const maxAge = 60 * 60 * 24 * 365;//1年
 
     return function () {
-        var _ref = _asyncToGenerator(function* (ctx, next) {
+        var _ref = (0, _bluebird.coroutine)(function* (ctx, next) {
             var reqPath = ctx.url;
             if (pageLoader.isProduction() || !reqPath.startsWith('/bundle')) {
                 yield next();
@@ -35,8 +37,6 @@ exports.default = function () {
         return bundle;
     }();
 };
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 /**
  *

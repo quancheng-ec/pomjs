@@ -1,7 +1,9 @@
 'use strict';
 
+var _bluebird = require('bluebird');
+
 var _init = function () {
-    var _ref = _asyncToGenerator(function* (consulNode, group) {
+    var _ref = (0, _bluebird.coroutine)(function* (consulNode, group) {
 
         var checks = yield _consul.health.service({
             service: consulNode,
@@ -35,8 +37,6 @@ var _init = function () {
         return _ref.apply(this, arguments);
     };
 }();
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 /**
  *
@@ -78,7 +78,7 @@ var _services = {};
 module.exports = {
 
     init: function () {
-        var _ref2 = _asyncToGenerator(function* () {
+        var _ref2 = (0, _bluebird.coroutine)(function* () {
             var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             var saluki = opts.saluki || {};
@@ -103,11 +103,11 @@ module.exports = {
      * @param group
      */
     initWidthGroup: function () {
-        var _ref3 = _asyncToGenerator(function* (group) {
+        var _ref3 = (0, _bluebird.coroutine)(function* (group) {
             console.log('init consul client widthgroup ' + group);
             var sgroup = 'saluki_' + group;
             var func = function () {
-                var _ref4 = _asyncToGenerator(function* () {
+                var _ref4 = (0, _bluebird.coroutine)(function* () {
                     try {
                         _services[group] = yield _init(sgroup, group);
                     } catch (e) {

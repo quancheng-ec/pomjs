@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _bluebird = require('bluebird');
+
 exports.default = function () {
   var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -11,7 +13,7 @@ exports.default = function () {
   var pageDir = opts.isProduction ? opts.page.build : opts.page.src;
 
   return function () {
-    var _ref = _asyncToGenerator(function* (ctx, next) {
+    var _ref = (0, _bluebird.coroutine)(function* (ctx, next) {
       var reqPath = ctx.path,
           ext = '';
 
@@ -114,26 +116,20 @@ exports.default = function () {
             get: function get(target, propKey, receiver) {
               var origMethod = target[propKey];
               if (typeof origMethod === 'function') {
-                return function () {
-                  var _ref2 = _asyncToGenerator(function* () {
-                    var timer = new ctx.logger.Timer({
-                      group: 'service',
-                      path: key + '.' + propKey
-                    });
-                    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-                      args[_key] = arguments[_key];
-                    }
-
-                    (args[1] || (args[1] = {})).companyId = ctx.response.header.companyid || '';
-                    var result = yield origMethod.apply(this, args);
-                    timer.split();
-                    return result;
+                return (0, _bluebird.coroutine)(function* () {
+                  var timer = new ctx.logger.Timer({
+                    group: 'service',
+                    path: key + '.' + propKey
                   });
+                  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                    args[_key] = arguments[_key];
+                  }
 
-                  return function () {
-                    return _ref2.apply(this, arguments);
-                  };
-                }();
+                  (args[1] || (args[1] = {})).companyId = ctx.response.header.companyid || '';
+                  var result = yield origMethod.apply(this, args);
+                  timer.split();
+                  return result;
+                });
               } else {
                 return origMethod;
               }
@@ -198,13 +194,11 @@ var _path2 = _interopRequireDefault(_path);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            * 处理Route模块，并执行Control逻辑
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            * Created by joe on 16/9/23.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            */
-
-var fetch = require('node-fetch');
+var fetch = require('node-fetch'); /**
+                                    * 处理Route模块，并执行Control逻辑
+                                    *
+                                    * Created by joe on 16/9/23.
+                                    */
 
 var pageLoader = require('../util/pageLoader');
 

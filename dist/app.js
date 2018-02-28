@@ -1,5 +1,7 @@
 'use strict';
 
+var _bluebird = require('bluebird');
+
 var _koaCsrf = require('koa-csrf');
 
 var _koaCsrf2 = _interopRequireDefault(_koaCsrf);
@@ -49,8 +51,6 @@ var _spartaSession = require('./middleware/spartaSession');
 var _spartaSession2 = _interopRequireDefault(_spartaSession);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 /**
  * Created by joe on 16/9/22.
@@ -172,13 +172,15 @@ module.exports = function () {
     app.use((0, _spartaSession2.default)(opts));
   }
 
-  app.use((0, _user2.default)(opts));
+  if (opts.auth) {
+    app.use((0, _user2.default)(opts));
+  }
 
   //外接中间件
   if (opts.middlewares) {
     opts.middlewares.forEach(function (js) {
       var t = function () {
-        var _ref = _asyncToGenerator(function* (ctx, next) {
+        var _ref = (0, _bluebird.coroutine)(function* (ctx, next) {
           var m = js.split('/').pop();
           var timer = new ctx.logger.Timer({
             group: 'middleware',

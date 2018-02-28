@@ -1,7 +1,9 @@
 'use strict';
 
+var _bluebird = require('bluebird');
+
 var initClient = function () {
-  var _ref = _asyncToGenerator(function* (saluki) {
+  var _ref = (0, _bluebird.coroutine)(function* (saluki) {
     console.log('init saluki client!');
     loadPem();
     var root = saluki.root; //'/Users/joe/work/service-all/api/src/main/proto/';
@@ -75,7 +77,7 @@ var initClient = function () {
 
 
 var initConsuls = function () {
-  var _ref2 = _asyncToGenerator(function* (groups) {
+  var _ref2 = (0, _bluebird.coroutine)(function* (groups) {
     for (var i in groups) {
       watchService(i);
       //await consul.initWidthGroup(i)
@@ -93,8 +95,6 @@ var initConsuls = function () {
  * @returns {*}
  */
 
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 /**
  * Created by joe on 2016/10/22.

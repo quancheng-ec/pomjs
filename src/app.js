@@ -139,7 +139,9 @@ module.exports = function(opts = {}) {
     app.use(spartaSession(opts))
   }
 
-  app.use(user(opts))
+  if (opts.auth) {
+    app.use(user(opts))
+  }
 
   //外接中间件
   if (opts.middlewares) {
