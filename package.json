@@ -1,22 +1,23 @@
 {
   "name": "pomjs-qccost",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
-    "example-dev":
-      "cross-env VUE_ENV=server node --debug example/src/index.js ",
-    "example-build":
-      "cross-env BUILD=true node example/src/index.js && babel example/src -d example/dist",
-    "server":
-      "cross-env VUE_ENV=server NODE_ENV=production node example/dist/index.js",
+    "example-dev": "cross-env VUE_ENV=server node --debug example/src/index.js ",
+    "example-build": "cross-env BUILD=true node example/src/index.js && babel example/src -d example/dist",
+    "server": "cross-env VUE_ENV=server NODE_ENV=production node example/dist/index.js",
     "build": "babel src -d dist"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:quancheng-ec/pomjs.git"
   },
-  "keywords": ["module", "vue", "koa"],
+  "keywords": [
+    "module",
+    "vue",
+    "koa"
+  ],
   "license": "AGPL-3.0",
   "author": "yingjunjiao",
   "dependencies": {
@@ -57,7 +58,7 @@
     "node-fetch": "1.6.3",
     "path-to-regexp": "^1.7.0",
     "postcss-loader": "1.1.1",
-    "qccost-saluki2-node": "1.0.0",
+    "qccost-saluki2-node": "^1.0.2",
     "raven": "^2.4.1",
     "style-loader": "^0.16.1",
     "stylus": "0.54.5",
