@@ -1,6 +1,6 @@
 {
   "name": "pomjs-qccost",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
