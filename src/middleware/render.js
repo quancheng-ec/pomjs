@@ -90,14 +90,15 @@ export default function(opts = {}) {
       return `
       <script src="/assets/cyclops.js"></script>
       <script>
-        new Cyclops({
+        var cyclops = new Cyclops({
           raven: {
             dsn: '${sdn}'
           },
           performance: {
             max_duration: 5000
           }
-        }).start()
+        })
+        cyclops.start()
       </script>
       `
     }

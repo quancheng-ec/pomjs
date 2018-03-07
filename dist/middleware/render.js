@@ -58,7 +58,7 @@ exports.default = function () {
 
       var insertRaven = function insertRaven(sdn) {
         if (!sdn) return '';
-        return '\n      <script src="/assets/cyclops.js"></script>\n      <script>\n        new Cyclops({\n          raven: {\n            dsn: \'' + sdn + '\'\n          },\n          performance: {\n            max_duration: 5000\n          }\n        }).start()\n      </script>\n      ';
+        return '\n      <script src="/assets/cyclops.js"></script>\n      <script>\n        var cyclops = new Cyclops({\n          raven: {\n            dsn: \'' + sdn + '\'\n          },\n          performance: {\n            max_duration: 5000\n          }\n        })\n        cyclops.start()\n      </script>\n      ';
       };
 
       _lodash2.default.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
