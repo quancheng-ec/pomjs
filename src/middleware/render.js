@@ -88,16 +88,16 @@ export default function(opts = {}) {
     const insertRaven = sdn => {
       if (!sdn) return ''
       return `
-      <script src="//qc-style.oss-cn-hangzhou.aliyuncs.com/raven/3.22.2/raven.min.js"></script>
       <script src="/assets/cyclops.js"></script>
       <script>
-          Raven.config('${sdn}').install()
-          var c = new Cyclops({
-              performance: {
-                  max_duration: 5000
-              }
-          })
-          c.start()
+        new Cyclops({
+          raven: {
+            dsn: '${sdn}'
+          },
+          performance: {
+            max_duration: 5000
+          }
+        }).start()
       </script>
       `
     }
