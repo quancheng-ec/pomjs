@@ -131,7 +131,7 @@ function formatConfig(config) {
     categories: {
       default: {
         appenders: ['out'],
-        level: 'info'
+        level: 'error'
       }
     }
   };
