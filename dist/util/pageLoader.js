@@ -58,7 +58,11 @@ var find = function find(f) {
   var api = Path.join(f, 'index.js');
   //只有开发环境才会打开热更新逻辑，热更新会导致webstorm debug 失败，所以可以接受 DEBUG参数
   if (!_isProduction && apis[api] && !process.env.DEBUG) {
-    delete require.cache[api];
+    var apiModule = require.cache[api];
+    if (apiModule.parent) {
+      apiModule.parent.children.splice(apiModule.parent.children.indexOf(apiModule), 1);
+    }
+    require.cache[api] = null;
   }
 
   apis[api] = new (require(api).default)();

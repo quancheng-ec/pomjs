@@ -1,6 +1,6 @@
 {
   "name": "pomjs-qccost",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Module Solution base on Vue ",
   "main": "dist/app.js",
   "scripts": {
@@ -57,7 +57,7 @@
     "node-fetch": "1.6.3",
     "path-to-regexp": "^1.7.0",
     "postcss-loader": "1.1.1",
-    "qccost-saluki2-node": "^1.0.2",
+    "qccost-saluki2-node": "^1.0.6",
     "raven": "^2.4.1",
     "style-loader": "^0.16.1",
     "stylus": "0.54.5",

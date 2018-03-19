@@ -9,7 +9,7 @@ var _bluebird = require('bluebird');
 exports.default = function () {
   var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-  pageLoader.init(opts);
+  _pageLoader2.default.init(opts);
   var pageDir = opts.isProduction ? opts.page.build : opts.page.src;
 
   return function () {
@@ -33,7 +33,7 @@ exports.default = function () {
         controlPath = _path2.default.join(pageDir, 'index/index.js');
         pagePath = _path2.default.join(pageDir, pageName);
         action = 'view';
-        control = pageLoader.getAPI(controlPath, action);
+        control = _pageLoader2.default.getAPI(controlPath, action);
       } else {
         if (reqPath.endsWith('/')) {
           //去掉末尾的 ／
@@ -59,16 +59,16 @@ exports.default = function () {
           controlPath = _path2.default.join(pageDir, DEFAULT_FILE);
           pagePath = _path2.default.join(pageDir, pageName);
           action = parrs[0];
-          control = pageLoader.getAPI(controlPath, action);
+          control = _pageLoader2.default.getAPI(controlPath, action);
         } else if (parrs.length === 2) {
           controlPath = _path2.default.join(pageDir, parrs[0], DEFAULT_NAME);
           pagePath = _path2.default.join(pageDir, parrs[0]);
           pageName = parrs[0];
           action = parrs[1];
-          control = pageLoader.getAPI(controlPath, action);
+          control = _pageLoader2.default.getAPI(controlPath, action);
           if (!control) {
             controlPath = _path2.default.join(__dirname, '../pages', parrs[0], DEFAULT_NAME);
-            control = pageLoader.getAPI(controlPath, action);
+            control = _pageLoader2.default.getAPI(controlPath, action);
           }
         } else {
           var e = new Error('the path:' + ctx.path + ' not found!');
@@ -121,11 +121,16 @@ exports.default = function () {
                     group: 'service',
                     path: key + '.' + propKey
                   });
+
                   for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
                     args[_key] = arguments[_key];
                   }
 
-                  (args[1] || (args[1] = {})).companyId = ctx.response.header.companyid || '';
+                  _lodash2.default.assign(args[1] || (args[1] = {}), {
+                    companyId: ctx.response.header.companyid || '',
+                    'qc-logid': ctx.tracer && ctx.tracer.id
+                  });
+
                   var result = yield origMethod.apply(this, args);
                   timer.split();
                   return result;
@@ -192,15 +197,25 @@ var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
+var _nodeFetch = require('node-fetch');
+
+var _nodeFetch2 = _interopRequireDefault(_nodeFetch);
+
+var _pageLoader = require('../util/pageLoader');
+
+var _pageLoader2 = _interopRequireDefault(_pageLoader);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var fetch = require('node-fetch'); /**
-                                    * 处理Route模块，并执行Control逻辑
-                                    *
-                                    * Created by joe on 16/9/23.
-                                    */
-
-var pageLoader = require('../util/pageLoader');
+/**
+ * 处理Route模块，并执行Control逻辑
+ *
+ * Created by joe on 16/9/23.
+ */
 
 var DEFAULT_NAME = 'index.js';
 var DEFAULT_FILE = 'index/index.js';

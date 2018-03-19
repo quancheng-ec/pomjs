@@ -47,7 +47,7 @@ exports.default = function () {
   var logger = getLogger(opts);
   return function () {
     var _ref = (0, _bluebird.coroutine)(function* (ctx, next) {
-      ctx.requestId = uuidV4();
+      ctx.requestId = ctx.tracer && ctx.tracer.id || uuidV4();
       ctx.logger = logger || getNullLogger();
       ctx.logger.requestId = ctx.requestId;
       ctx.logger.Timer = _lodash2.default.bind(InnerTimer, {}, ctx.logger);

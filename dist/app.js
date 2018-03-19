@@ -46,6 +46,10 @@ var _logger = require('./middleware/logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
+var _tracer = require('./middleware/tracer');
+
+var _tracer2 = _interopRequireDefault(_tracer);
+
 var _spartaSession = require('./middleware/spartaSession');
 
 var _spartaSession2 = _interopRequireDefault(_spartaSession);
@@ -118,7 +122,7 @@ module.exports = function () {
   var staticPath = opts.static || Path.join(root, 'static');
 
   //middleware(opts)
-
+  app.use((0, _tracer2.default)(opts));
   app.use((0, _logger2.default)(opts));
 
   app.use(convert(serve(staticPath, { maxage: 60 * 60 * 24 * 365 })));

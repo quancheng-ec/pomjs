@@ -5,9 +5,10 @@
  */
 
 import Path from 'path'
-var fetch = require('node-fetch')
+import fetch from 'node-fetch'
 
-const pageLoader = require('../util/pageLoader')
+import pageLoader from '../util/pageLoader'
+import _ from 'lodash'
 
 const DEFAULT_NAME = 'index.js'
 const DEFAULT_FILE = 'index/index.js'
@@ -123,7 +124,12 @@ export default function(opts = {}) {
                   group: 'service',
                   path: `${key}.${propKey}`
                 })
-                ;(args[1] || (args[1] = {})).companyId = ctx.response.header.companyid || ''
+
+                _.assign(args[1] || (args[1] = {}), {
+                  companyId: ctx.response.header.companyid || '',
+                  'qc-logid': ctx.tracer && ctx.tracer.id
+                })
+
                 let result = await origMethod.apply(this, args)
                 timer.split()
                 return result

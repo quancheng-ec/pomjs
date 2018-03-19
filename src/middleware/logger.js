@@ -163,7 +163,7 @@ function InnerTimer(logger, context) {
 export default function(opts = {}) {
   const logger = getLogger(opts)
   return async function log(ctx, next) {
-    ctx.requestId = uuidV4()
+    ctx.requestId = (ctx.tracer && ctx.tracer.id) || uuidV4()
     ctx.logger = logger || getNullLogger()
     ctx.logger.requestId = ctx.requestId
     ctx.logger.Timer = _.bind(InnerTimer, {}, ctx.logger)

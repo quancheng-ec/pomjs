@@ -23,6 +23,7 @@ import user from './middleware/user'
 import saluki from './middleware/saluki2'
 import cache from './middleware/cache'
 import log from './middleware/logger'
+import tracer from './middleware/tracer'
 import spartaSession from './middleware/spartaSession'
 
 const app = new Koa()
@@ -76,7 +77,7 @@ module.exports = function(opts = {}) {
   const staticPath = opts.static || Path.join(root, 'static')
 
   //middleware(opts)
-
+  app.use(tracer(opts))
   app.use(log(opts))
 
   app.use(convert(serve(staticPath, { maxage: 60 * 60 * 24 * 365 })))
