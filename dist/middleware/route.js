@@ -127,7 +127,7 @@ exports.default = function () {
                   }
 
                   _lodash2.default.assign(args[1] || (args[1] = {}), {
-                    companyId: ctx.response.header.companyid || '',
+                    companyId: args[1].companyId || ctx.response.header.companyid || '',
                     'qc-logid': ctx.tracer && ctx.tracer.id
                   });
 
