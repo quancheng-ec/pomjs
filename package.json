@@ -20,7 +20,7 @@
   "license": "AGPL-3.0",
   "author": "yingjunjiao",
   "dependencies": {
-    "@quancheng/saluki2-node": "1.2.7",
+    "@quancheng/saluki2-node": "1.2.8",
     "autoprefixer": "6.5.3",
     "babel-cli": "6.16.0",
     "babel-core": "6.17.0",
