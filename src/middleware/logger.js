@@ -134,7 +134,8 @@ export default function (opts = {}) {
 
         let timer = new ctx.logger.Timer({
             group: 'request',
-            path: `${ctx.method} ${ctx.url}`
+            path: `${ctx.method} ${ctx.url}`,
+            logid: ctx.requestId
         });
 
         await next();

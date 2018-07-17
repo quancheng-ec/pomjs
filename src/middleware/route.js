@@ -122,7 +122,9 @@ export default function (opts = {}) {
                                 });
                                 let result
                                 try {
-
+                                    // set logid for services
+                                    args[1] = Object.assign({'qc-logid': ctx.requestId}, args[1] ? args[1] : {})
+                                    
                                     result = await origMethod.apply(this, args);
                                 } catch (e) {
                                     console.error('error method:' + propKey, e)
